@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="Resource">
+    <file>axial view.png</file>
+    <file>coronal_view.png</file>
+    <file>dow_narrow.png</file>
+    <file>expand_window.png</file>
+    <file>four_viewers.png</file>
+    <file>sagital_view.png</file>
+  </qresource>
+</RCC>

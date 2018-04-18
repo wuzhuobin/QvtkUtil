@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuDemo">
+    <property name="title">
+     <string>Demo</string>
+    </property>
+    <addaction name="actionPrepare_Viewers"/>
+    <addaction name="actionDisplay_Axis_Actor"/>
+    <addaction name="actionDisplayCube"/>
+    <addaction name="actionTest_Switch_Interactor"/>
+    <addaction name="actionDescync_Upper_Left_Viewer"/>
+   </widget>
+   <addaction name="menuDemo"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionPrepare_Viewers">
+   <property name="text">
+    <string>Prepare Viewers</string>
+   </property>
+  </action>
+  <action name="actionDisplayCube">
+   <property name="text">
+    <string>Display Cubes</string>
+   </property>
+  </action>
+  <action name="actionTest_Switch_Interactor">
+   <property name="text">
+    <string>Test Switch Interactor</string>
+   </property>
+  </action>
+  <action name="actionDescync_Upper_Left_Viewer">
+   <property name="text">
+    <string>Descync Upper Left Viewer</string>
+   </property>
+  </action>
+  <action name="actionDisplay_Axis_Actor">
+   <property name="text">
+    <string>Display Axis Actor</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
