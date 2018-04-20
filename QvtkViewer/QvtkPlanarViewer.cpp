@@ -89,10 +89,10 @@ void QvtkPlanarViewer::SetOrientation(int orientation)
 		break;
 	}
 
-	QList<QvtkAbstractProp*> props = this->propToRenderer->keys();
+	QList<Prop*> props = this->propToRenderer->keys();
 
-	foreach(QvtkAbstractProp* prop, props) {
-		QvtkAbstractPlanarProp* slice = qobject_cast<QvtkAbstractPlanarProp*>(prop);
+	foreach(Prop* prop, props) {
+		PlanarProp* slice = qobject_cast<PlanarProp*>(prop);
 		if (slice) {
 			slice->setPlanarOrientation(orientation);
 		}
@@ -213,10 +213,10 @@ void QvtkPlanarViewer::UpdateAxes(bool flag)
 }
 void QvtkPlanarViewer::UpdateCursorPosition(double x, double y, double z)
 {
-	QList<QvtkAbstractProp*> props = this->propToRenderer->keys();
+	QList<Prop*> props = this->propToRenderer->keys();
 
-	foreach(QvtkAbstractProp* prop, props) {
-		QvtkAbstractPlanarProp* planarProp = qobject_cast<QvtkAbstractPlanarProp*>(prop);
+	foreach(Prop* prop, props) {
+		PlanarProp* planarProp = qobject_cast<PlanarProp*>(prop);
 		if (planarProp) {
 			planarProp->setPlanarOrigin(x, y, z);
 		}

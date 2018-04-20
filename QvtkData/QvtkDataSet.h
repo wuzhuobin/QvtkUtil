@@ -1,9 +1,13 @@
-#ifndef __Qvtk_ABSTRACT_DATA_SET_H__
-#define __Qvtk_ABSTRACT_DATA_SET_H__
+#ifndef __QVTK_DATA_SET_H__
+#define __QVTK_DATA_SET_H__
 
 // me
-#include "Data.h"
-class QvtkAbstractProp;
+#include "QvtkData.h"
+namespace Q {
+namespace vtk{
+	class Prop;
+}
+}
 
 // vtk
 class vtkMatrix4x4;
@@ -16,11 +20,18 @@ class vtkTransform;
 // qt
 template <typename T>
 class QList;
+namespace Q{
+namespace vtk{
 
-
-class ABSTRACTDATA_EXPORT DataSet: public Data
+class QVTKDATA_EXPORT DataSet: public Data
 {
 	Q_OBJECT;
+	//Q_PROPERTY(
+	//	QVariantList	Origin
+	//	READ			getOrigin
+	//	WRITE			setOrigin
+	//	NOTIFY			originChanged
+	//);
 	Q_VTK_DATAH(
 		DataSet,
 		Q_VTK_KEY(Origin)
@@ -122,11 +133,11 @@ public:
 
 	virtual void getWorldBounds(double bounds[6]) const;
 
-	virtual void addReference(QvtkAbstractProp* prop);
+	virtual void addReference(Prop* prop);
 	
-	virtual void removeReference(QvtkAbstractProp* prop);
+	virtual void removeReference(Prop* prop);
 	
-	virtual const QList<QvtkAbstractProp*>* getReferenceProps() const { return this->referenceProps; }
+	virtual const QList<Prop*>* getReferenceProps() const { return this->referenceProps; }
 
 
 public slots:
@@ -229,11 +240,12 @@ private:
 	vtkDataSet* data;
 	vtkTrivialProducer* portProducer;
 
-	QList<QvtkAbstractProp*>* referenceProps;
+	QList<Prop*>* referenceProps;
 
 private slots:
 
 };
+}
+}
 
-
-#endif // !__Qvtk_ABSTRACT_DATA_SET_H__
+#endif // !__QVTK_DATA_SET_H__

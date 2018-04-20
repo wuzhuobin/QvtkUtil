@@ -1,5 +1,5 @@
-#ifndef __Qvtk_IMAGE_LABEL_H__
-#define __Qvtk_IMAGE_LABEL_H__
+#ifndef __Qvtk_IMAGE_LABEL2_H__
+#define __Qvtk_IMAGE_LABEL2_H__
 
 // me
 #include "QvtkImage.h"
@@ -297,12 +297,13 @@ class vtkPassThroughFilter;
  * id: 282 Name: yellowgreen       RGBA: (0.603922, 0.803922, 0.196078, 1)
  * id: 283 Name: zinc_white        RGBA: (0.988235, 0.968627, 1, 1) 
 */
-
-class ABSTRACTDATA_EXPORT QvtkImageLabel2 : public QvtkImage
+namespace Q{
+namespace vtk{
+class QVTKDATA_EXPORT ImageLabel2 : public Image
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkImageLabel2,
+		ImageLabel2,
 		Q_VTK_KEY(Label)
 		//Q_VTK_KEY(LabelName)
 		Q_VTK_KEY(LabelId)
@@ -312,14 +313,14 @@ class ABSTRACTDATA_EXPORT QvtkImageLabel2 : public QvtkImage
 
 public:
 
-	QvtkImageLabel2();
-	virtual ~QvtkImageLabel2() override;
+	ImageLabel2();
+	virtual ~ImageLabel2() override;
 	virtual void printSelf() const override;
 
 	virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 	virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
 
-	virtual void addReference(QvtkAbstractProp* prop) override;
+	virtual void addReference(Prop* prop) override;
 
 	virtual vtkAlgorithmOutput* getOutputPort() const;
 	virtual vtkLookupTable* getLookupTable() const { return this->lookupTable; }
@@ -390,14 +391,14 @@ public slots:
 	virtual void setColor(QString labelName, int value, double r, double g, double b, double a);
 
 
-	virtual void initializeLabel(QvtkImage* image, int type = 3);
+	virtual void initializeLabel(Image* image, int type = 3);
 
 protected:
 
 	template<typename ScalarType>
 	static void zeroImage(vtkImageData* image);
 
-	virtual Data* newInstance() const override { return new QvtkImageLabel2; }
+	virtual Data* newInstance() const override { return new ImageLabel2; }
 
 	/**
 	 * void rebuildLookupTable
@@ -442,5 +443,7 @@ private:
 	vtkSmartPointer<vtkPassThroughFilter> outputfilter;
 };
 
+}
+}
 
-#endif // !__Qvtk_IMAGE_LABEL_H__
+#endif // !__Qvtk_IMAGE_LABEL2_H__

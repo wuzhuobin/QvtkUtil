@@ -33,19 +33,20 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
-
-Q_VTK_DATACPP(QvtkImage)
-QvtkImage::QvtkImage()
+namespace Q {
+namespace vtk{
+Q_VTK_DATACPP(Image)
+Image::Image()
 {
 	vtkImageData* data = vtkImageData::New();
 	setDataSet(data);
 	data->Delete();
 
 	this->window = createAttribute(K.Window, static_cast<double>(0), true);
-	insertSlotFunction(this->window, &QvtkImage::setWindow);
+	insertSlotFunction(this->window, &Image::setWindow);
 
 	this->level = createAttribute(K.Level, static_cast<double>(0), true);
-	insertSlotFunction(this->level, &QvtkImage::setLevel);
+	insertSlotFunction(this->level, &Image::setLevel);
 
 
 	this->imageChangeInformation = vtkImageChangeInformation::New();
@@ -57,19 +58,19 @@ QvtkImage::QvtkImage()
 	this->imageReslice->TransformInputSamplingOn();
 }
 
-QvtkImage::~QvtkImage()
+Image::~Image()
 {
 	this->imageReslice->Delete();
 }
 
-void QvtkImage::printSelf() const
+void Image::printSelf() const
 {
 	DataSet::printSelf();
 
 }
 
 
-bool QvtkImage::readData(QString rootDirectory)
+bool Image::readData(QString rootDirectory)
 {
 	QStringList paths;
 	if (rootDirectory.isEmpty())
@@ -128,7 +129,7 @@ bool QvtkImage::readData(QString rootDirectory)
 	return returnValue;
 }
 
-bool QvtkImage::writeData(QString rootDirectory) const
+bool Image::writeData(QString rootDirectory) const
 {
 	QStringList paths;
 	if (rootDirectory.isEmpty())
@@ -179,14 +180,14 @@ bool QvtkImage::writeData(QString rootDirectory) const
 		this->getScale(scale);
 		switch (type)
 		{
-		case QvtkImage::NIFTI:
-		case QvtkImage::DICOM:
+		case Image::NIFTI:
+		case Image::DICOM:
 		{
 			returnValue = writeITKImage(paths, this->getImageData(), orientation, position, scale);
 		}
 		break;
-		case QvtkImage::VTI:
-		case QvtkImage::VTK:
+		case Image::VTI:
+		case Image::VTK:
 		{
 			returnValue = writeDataSuffix(paths.first(), this->getTransformImageData());
 		}
@@ -199,14 +200,14 @@ bool QvtkImage::writeData(QString rootDirectory) const
 	else {
 		switch (type)
 		{
-		case QvtkImage::NIFTI:
-		case QvtkImage::DICOM:
+		case Image::NIFTI:
+		case Image::DICOM:
 		{
 			returnValue = writeITKImage(paths, this->getImageData(), orientation, position, scale);
 		}
 		break;
-		case QvtkImage::VTI:
-		case QvtkImage::VTK:
+		case Image::VTI:
+		case Image::VTK:
 		{
 			returnValue = writeDataSuffix(paths.first(), this->getImageData());
 			break;
@@ -219,16 +220,16 @@ bool QvtkImage::writeData(QString rootDirectory) const
 	return returnValue;
 }
 
-void QvtkImage::addReference(QvtkAbstractProp * prop)
+void Image::addReference(Prop * prop)
 {
 	DataSet::addReference(prop);
-	QvtkImageSlice* slice = qobject_cast<QvtkImageSlice*>(prop);
+	ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
 	if (slice) {
 		slice->getImageActor()->GetProperty()->SetInterpolationTypeToLinear();
 	}
 }
 
-bool QvtkImage::readITKImage(QStringList paths, vtkImageData * image, double orientation[3], double position[3], double scale[3])
+bool Image::readITKImage(QStringList paths, vtkImageData * image, double orientation[3], double position[3], double scale[3])
 {
 	itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(
 		paths.first().toStdString().c_str(), itk::ImageIOFactory::ReadMode);
@@ -256,7 +257,7 @@ bool QvtkImage::readITKImage(QStringList paths, vtkImageData * image, double ori
 }
 
 template<typename PixelType>
-bool QvtkImage::_VTKImageToITKImage(itk::Image<PixelType, 3> * output, vtkImageData * input, const double orientation[3], const double position[3], const double scale[3])
+bool Image::_VTKImageToITKImage(itk::Image<PixelType, 3> * output, vtkImageData * input, const double orientation[3], const double position[3], const double scale[3])
 {
 	using namespace itk;
 	if (!input) {
@@ -324,7 +325,7 @@ bool QvtkImage::_VTKImageToITKImage(itk::Image<PixelType, 3> * output, vtkImageD
 }
 
 template<typename PixelType>
-bool QvtkImage::_ITKImageToVTKImage(vtkImageData * output, itk::Image<PixelType, 3>* input, double orientation[3], double position[3], double scale[3])
+bool Image::_ITKImageToVTKImage(vtkImageData * output, itk::Image<PixelType, 3>* input, double orientation[3], double position[3], double scale[3])
 {
 	using namespace itk;
 	typedef itk::Image<PixelType, 3> TImageType;
@@ -371,7 +372,7 @@ bool QvtkImage::_ITKImageToVTKImage(vtkImageData * output, itk::Image<PixelType,
 }
 
 template<typename PixelType>
-bool QvtkImage::readImage(QStringList paths, vtkImageData * image, double orientation[3], double position[3], double scale[3])
+bool Image::readImage(QStringList paths, vtkImageData * image, double orientation[3], double position[3], double scale[3])
 {
 	using namespace itk;
 	//typedef float PixelType;
@@ -443,7 +444,7 @@ bool QvtkImage::readImage(QStringList paths, vtkImageData * image, double orient
 }
 
 template<typename OPixelType, typename IPixelType>
-void QvtkImage::_ITKImageCasting(itk::Image<OPixelType, 3>* output, vtkImageData* input)
+void Image::_ITKImageCasting(itk::Image<OPixelType, 3>* output, vtkImageData* input)
 {
 	using namespace itk;
 	typedef Image<OPixelType, 3> OutputImageType;
@@ -464,11 +465,11 @@ void QvtkImage::_ITKImageCasting(itk::Image<OPixelType, 3>* output, vtkImageData
 	output->Graft(castImageFilter->GetOutput());
 
 }
-template void QvtkImage::_ITKImageCasting<double, double>(itk::Image<double, 3>* output, vtkImageData* image);
+template void Image::_ITKImageCasting<double, double>(itk::Image<double, 3>* output, vtkImageData* image);
 
 //
 //template<typename PixelType>
-//bool QvtkImage::writeImage(QStringList paths) const
+//bool Image::writeImage(QStringList paths) const
 //{
 //	using namespace itk;
 ////	typedef float PixelType;
@@ -548,7 +549,7 @@ template void QvtkImage::_ITKImageCasting<double, double>(itk::Image<double, 3>*
 //	return true;
 //}
 
-bool QvtkImage::writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3])
+bool Image::writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3])
 {
 	switch (image->GetScalarType())
 	{
@@ -558,7 +559,7 @@ bool QvtkImage::writeITKImage(QStringList paths, vtkImageData* image, const doub
 }
 
 template<typename PixelType>
-bool QvtkImage::writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3])
+bool Image::writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3])
 {
 	using namespace itk;
 //	typedef float PixelType;
@@ -603,33 +604,33 @@ bool QvtkImage::writeImage(QStringList paths, vtkImageData* image, const double 
 }
 
 template<typename PixelType>
-void QvtkImage::getITKImageData(itk::Image<PixelType, 3>* itkImage) const
+void Image::getITKImageData(itk::Image<PixelType, 3>* itkImage) const
 {
 	_VTKImageToITKImage(itkImage, this->getImageData(), this->getOrientation(), this->getPosition(), this->getScale());
 }
-template void QvtkImage::getITKImageData(itk::Image<unsigned char, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<char, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<unsigned short, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<short, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<unsigned int, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<int, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<unsigned long, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<long, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<float, 3>* itkImage) const;
-template void QvtkImage::getITKImageData(itk::Image<double, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<unsigned char, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<char, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<unsigned short, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<short, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<unsigned int, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<int, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<unsigned long, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<long, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<float, 3>* itkImage) const;
+template void Image::getITKImageData(itk::Image<double, 3>* itkImage) const;
 
-vtkImageData* QvtkImage::getImageData() const
+vtkImageData* Image::getImageData() const
 {
 	return vtkImageData::SafeDownCast(this->getDataSet());
 }
 
-vtkImageData * QvtkImage::getTransformImageData() const
+vtkImageData * Image::getTransformImageData() const
 {
 	this->getTransformOutputPort();
 	return this->imageReslice->GetOutput();
 }
 
-bool QvtkImage::readDataSuffix(QStringList fileNames, vtkImageData * data, double orientation[3], double position[3], double scale[3], int suffix)
+bool Image::readDataSuffix(QStringList fileNames, vtkImageData * data, double orientation[3], double position[3], double scale[3], int suffix)
 {
 	if (data == nullptr) {
 		qCritical() << "data is nullptr";
@@ -661,12 +662,12 @@ bool QvtkImage::readDataSuffix(QStringList fileNames, vtkImageData * data, doubl
 		scale[2] = 1;
 		switch (suffixType)
 		{
-		case QvtkImage::UNKNOWN:
+		case Image::UNKNOWN:
 		default:
 			qCritical() << "Cannot read this file";
 			data = nullptr;
 			return false;
-		case QvtkImage::VTK:
+		case Image::VTK:
 		{
 			vtkNew<vtkImageReader> reader;
 			reader->SetFileName(fileName.toStdString().c_str());
@@ -676,7 +677,7 @@ bool QvtkImage::readDataSuffix(QStringList fileNames, vtkImageData * data, doubl
 			data->ShallowCopy(reader->GetOutput());
 		}
 		return true;
-		case QvtkImage::VTI:
+		case Image::VTI:
 		{
 			vtkNew<vtkXMLImageDataReader> reader;
 			reader->SetFileName(fileName.toStdString().c_str());
@@ -686,14 +687,14 @@ bool QvtkImage::readDataSuffix(QStringList fileNames, vtkImageData * data, doubl
 			data->ShallowCopy(reader->GetOutput());
 		}
 		return true;
-		case QvtkImage::NIFTI:
-		case QvtkImage::DICOM:
+		case Image::NIFTI:
+		case Image::DICOM:
 			return readITKImage(fileNames, data, orientation, position, scale);
 		}
 	}
 }
 
-bool QvtkImage::writeDataSuffix(QString fileName, vtkImageData * data, int suffix)
+bool Image::writeDataSuffix(QString fileName, vtkImageData * data, int suffix)
 {
 	if (data == nullptr) {
 		qCritical() << "data is nullptr"; 
@@ -708,12 +709,12 @@ bool QvtkImage::writeDataSuffix(QString fileName, vtkImageData * data, int suffi
 	}
 	switch (suffixType)
 	{
-	case QvtkImage::UNKNOWN:
+	case Image::UNKNOWN:
 	default:
 		qCritical() << "Cannot write this file." << fileName;
 		return false;
 		break;
-	case QvtkImage::VTK:
+	case Image::VTK:
 	{
 		vtkNew<vtkImageWriter> writer;
 		writer->SetInputData(data);
@@ -722,7 +723,7 @@ bool QvtkImage::writeDataSuffix(QString fileName, vtkImageData * data, int suffi
 
 	}
 	return true;
-	case QvtkImage::VTI:
+	case Image::VTI:
 	{
 		vtkNew<vtkXMLImageDataWriter> writer;
 		writer->SetInputData(data);
@@ -730,15 +731,15 @@ bool QvtkImage::writeDataSuffix(QString fileName, vtkImageData * data, int suffi
 		writer->Write();
 	}
 	return true;
-	case QvtkImage::NIFTI:
-	case QvtkImage::DICOM:
+	case Image::NIFTI:
+	case Image::DICOM:
 		qCritical() << "Writing image using this function is not supported. " <<
 			"Please using Write ITK Image instead. ";
 		return false;
 	}
 }
 
-bool QvtkImage::writeDataSuffix(QStringList fileNames, vtkImageData * data, double orientation[3], double position[3], double scale[3], int suffix)
+bool Image::writeDataSuffix(QStringList fileNames, vtkImageData * data, double orientation[3], double position[3], double scale[3], int suffix)
 {
 	if (data == nullptr) {
 		qCritical() << "data is nullptr";
@@ -760,12 +761,12 @@ bool QvtkImage::writeDataSuffix(QStringList fileNames, vtkImageData * data, doub
 		}
 		switch (suffixType)
 		{
-		case QvtkImage::UNKNOWN:
+		case Image::UNKNOWN:
 		default:
 			qCritical() << "Cannot write this file." << fileName;
 			return false;
-		case QvtkImage::VTK:
-		case QvtkImage::VTI:
+		case Image::VTK:
+		case Image::VTI:
 		{
 			vtkNew<vtkImageData> _data;
 			_data->DeepCopy(data);
@@ -773,40 +774,40 @@ bool QvtkImage::writeDataSuffix(QStringList fileNames, vtkImageData * data, doub
 			_data->SetOrigin(position);
 			return writeDataSuffix(fileName, _data.GetPointer());
 		}
-		case QvtkImage::NIFTI:
+		case Image::NIFTI:
 		{
 			return writeITKImage(fileNames, data, orientation, position, scale);
 		}
-		case QvtkImage::DICOM:
+		case Image::DICOM:
 			qCritical() << "Writing DICOM format was not supported yet. ";
 		return false;
 		}
 	}
 }
 
-void QvtkImage::setWindow(double window)
+void Image::setWindow(double window)
 {
 	setAttribute(this->window, window);
 	emit windowChanged(window);
 }
 
-double QvtkImage::getWindow() const
+double Image::getWindow() const
 {
 	return getAttribute(this->window).toDouble();
 }
 
-void QvtkImage::setLevel(double level)
+void Image::setLevel(double level)
 {
 	setAttribute(this->level, level);
 	emit levelChanged(level);
 }
 
-double QvtkImage::getLevel() const
+double Image::getLevel() const
 {
 	return getAttribute(this->level).toDouble();
 }
 
-vtkAlgorithmOutput * QvtkImage::getTransformOutputPort() const
+vtkAlgorithmOutput * Image::getTransformOutputPort() const
 {
 	double spacing[3];
 	this->getScale(spacing);
@@ -840,26 +841,26 @@ vtkAlgorithmOutput * QvtkImage::getTransformOutputPort() const
 	return this->imageReslice->GetOutputPort();
 }
 
-void QvtkImage::resetWindowLevel()
+void Image::resetWindowLevel()
 {
 	const double* range = getImageData()->GetScalarRange();
 	setWindow(range[1] - range[0]);
 	setLevel((range[1] + range[0]) * 0.5);
 }
 
-void QvtkImage::setWindow(Data * self, QStandardItem * item)
+void Image::setWindow(Data * self, QStandardItem * item)
 {
-	QvtkImage* _self = static_cast<QvtkImage*>(self);
+	Image* _self = static_cast<Image*>(self);
 	_self->setWindow(getAttribute(item).toDouble());
 }
 
-void QvtkImage::setLevel(Data * self, QStandardItem * item)
+void Image::setLevel(Data * self, QStandardItem * item)
 {
-	QvtkImage* _self = static_cast<QvtkImage*>(self);
+	Image* _self = static_cast<Image*>(self);
 	_self->setLevel(getAttribute(item).toDouble());
 }
 
-unsigned int QvtkImage::suffixTranslate(QString suffix)
+unsigned int Image::suffixTranslate(QString suffix)
 {
 	if (suffix.contains("vtk")) {
 		return VTK;
@@ -878,3 +879,6 @@ unsigned int QvtkImage::suffixTranslate(QString suffix)
 	}
 }
 
+
+}
+}

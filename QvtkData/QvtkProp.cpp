@@ -1,7 +1,6 @@
-#include "QvtkAbstractProp.h"
-
 // me
-#include "DataSet.h"
+#include "QvtkProp.h"
+#include "QvtkDataSet.h"
 #include "QvtkScene.h"
 
 
@@ -18,40 +17,42 @@
 
 // std
 #include <sstream>
+namespace Q {
+namespace vtk{
 
-Q_VTK_DATACPP(QvtkAbstractProp)
-class QvtkMatrixCallback final: public vtkCommand
+Q_VTK_DATACPP(Prop)
+class MatrixCallback final: public vtkCommand
 {
 public:
-	static QvtkMatrixCallback* New() { return new QvtkMatrixCallback; }
-	vtkTypeMacro(QvtkMatrixCallback, vtkCommand);
+	static MatrixCallback* New() { return new MatrixCallback; }
+	vtkTypeMacro(MatrixCallback, vtkCommand);
 	virtual void Execute(vtkObject *caller, unsigned long eventId,
 		void *callData) override {
 		self->propMatrixUpdate();
 	}
-	QvtkAbstractProp* self;
+	Prop* self;
 
 };
 
-class QvtkPickedCallback final : public vtkCommand
+class PickedCallback final : public vtkCommand
 {
 public:
-	static QvtkPickedCallback* New() { return new QvtkPickedCallback; }
-	vtkTypeMacro(QvtkPickedCallback, vtkCommand);
+	static PickedCallback* New() { return new PickedCallback; }
+	vtkTypeMacro(PickedCallback, vtkCommand);
 	virtual void Execute(vtkObject* caller, unsigned long eventId,
 		void* callData) override {
 		emit self->picked();
 	}
-	QvtkAbstractProp* self;
+	Prop* self;
 };
 
-const QString QvtkAbstractProp::DISPLAY_REGION_PREFIX[2] = { "Min", "Max" };
+const QString Prop::DISPLAY_REGION_PREFIX[2] = { "Min", "Max" };
 
-QvtkAbstractProp::QvtkAbstractProp()
+Prop::Prop()
 {
-	this->matrixCallback = QvtkMatrixCallback::New();
+	this->matrixCallback = MatrixCallback::New();
 	this->matrixCallback->self = this;
-	this->pickedCallback = QvtkPickedCallback::New();
+	this->pickedCallback = PickedCallback::New();
 	this->pickedCallback->self = this;
 	this->cachedInverstedMatrix = vtkMatrix4x4::New();
 	this->prop3D = nullptr;
@@ -82,15 +83,15 @@ QvtkAbstractProp::QvtkAbstractProp()
 	this->viewerID = -1;
 	this->rendererID = -1;
 
-	insertSlotFunction(this->displayRegionX[0], &QvtkAbstractProp::setDisplayRegion);
-	insertSlotFunction(this->displayRegionX[1], &QvtkAbstractProp::setDisplayRegion);
-	insertSlotFunction(this->displayRegionY[0], &QvtkAbstractProp::setDisplayRegion);
-	insertSlotFunction(this->displayRegionY[1], &QvtkAbstractProp::setDisplayRegion);
-	insertSlotFunction(this->displayRegionZ[0], &QvtkAbstractProp::setDisplayRegion);
-	insertSlotFunction(this->displayRegionZ[1], &QvtkAbstractProp::setDisplayRegion);
+	insertSlotFunction(this->displayRegionX[0], &Prop::setDisplayRegion);
+	insertSlotFunction(this->displayRegionX[1], &Prop::setDisplayRegion);
+	insertSlotFunction(this->displayRegionY[0], &Prop::setDisplayRegion);
+	insertSlotFunction(this->displayRegionY[1], &Prop::setDisplayRegion);
+	insertSlotFunction(this->displayRegionZ[0], &Prop::setDisplayRegion);
+	insertSlotFunction(this->displayRegionZ[1], &Prop::setDisplayRegion);
 }
 
-QvtkAbstractProp::~QvtkAbstractProp()
+Prop::~Prop()
 {
 	setRenderDataSet(nullptr);
 
@@ -104,7 +105,7 @@ QvtkAbstractProp::~QvtkAbstractProp()
 
 }
 
-void QvtkAbstractProp::setRenderDataSet(DataSet* data)
+void Prop::setRenderDataSet(DataSet* data)
 {
 	// the same data has already been set.
 	if(data == this->renderDataSet){
@@ -119,15 +120,15 @@ void QvtkAbstractProp::setRenderDataSet(DataSet* data)
 		// a checking for disable disconnect warning 
 		if (this->renderDataSet) {
 			disconnect(this->renderDataSet, &DataSet::opacityChanged,
-				this, &QvtkAbstractProp::setOpacity);
+				this, &Prop::setOpacity);
 			disconnect(this->renderDataSet, &DataSet::orientationChanged,
-				this, &QvtkAbstractProp::setOrigin);
+				this, &Prop::setOrigin);
 			disconnect(this->renderDataSet, &DataSet::positionChanged,
-				this, &QvtkAbstractProp::setPosition);
+				this, &Prop::setPosition);
 			disconnect(this->renderDataSet, &DataSet::orientationChanged,
-				this, &QvtkAbstractProp::setOrientation);
+				this, &Prop::setOrientation);
 			disconnect(this->renderDataSet, &DataSet::scaleChanged,
-				this, &QvtkAbstractProp::setScale);
+				this, &Prop::setScale);
 			//disconnect(this->renderDataSet, SIGNAL(originChanged(const double*)), this, SLOT(propMatrixUpdate()));
 			//disconnect(this->renderDataSet, SIGNAL(positionChanged(const double*)), this, SLOT(propMatrixUpdate()));
 			//disconnect(this->renderDataSet, SIGNAL(orientationChanged(const double*)), this, SLOT(propMatrixUpdate()));
@@ -162,7 +163,7 @@ void QvtkAbstractProp::setRenderDataSet(DataSet* data)
 			this->renderDataSet->getOrigin()[2]
 		);
 		connect(this->renderDataSet, &DataSet::originChanged,
-			this, &QvtkAbstractProp::setOrigin);
+			this, &Prop::setOrigin);
 		//connect(this->renderDataSet, SIGNAL(originChanged(const double*)), this, SLOT(propMatrixUpdate()));
 		this->prop3D->SetPosition(
 			this->renderDataSet->getPosition()[0],
@@ -170,7 +171,7 @@ void QvtkAbstractProp::setRenderDataSet(DataSet* data)
 			this->renderDataSet->getPosition()[2]
 		);
 		connect(this->renderDataSet, &DataSet::positionChanged,
-			this, &QvtkAbstractProp::setPosition);
+			this, &Prop::setPosition);
 		//connect(this->renderDataSet, SIGNAL(positionChanged(const double*)), this, SLOT(propMatrixUpdate()));
 
 		this->prop3D->SetOrientation(
@@ -179,7 +180,7 @@ void QvtkAbstractProp::setRenderDataSet(DataSet* data)
 			this->renderDataSet->getOrientation()[2]
 		);
 		connect(this->renderDataSet, &DataSet::orientationChanged,
-			this, &QvtkAbstractProp::setOrientation);
+			this, &Prop::setOrientation);
 		//connect(this->renderDataSet, SIGNAL(orientationChanged(const double*)), this, SLOT(propMatrixUpdate()));
 
 		this->prop3D->SetScale(
@@ -188,7 +189,7 @@ void QvtkAbstractProp::setRenderDataSet(DataSet* data)
 			this->renderDataSet->getScale()[2]
 		);
 		connect(this->renderDataSet, &DataSet::scaleChanged,
-			this, &QvtkAbstractProp::setScale);
+			this, &Prop::setScale);
 		//connect(this->renderDataSet, SIGNAL(scaleChanged(const double*)), this, SLOT(propMatrixUpdate()));
 
 		setUserMatrix(this->renderDataSet->getUserMatrix());
@@ -196,7 +197,7 @@ void QvtkAbstractProp::setRenderDataSet(DataSet* data)
 		this->prop3D->SetPickable(this->renderDataSet->getPickable());
 		setOpacity(this->renderDataSet->getOpacity());
 		connect(this->renderDataSet, &DataSet::opacityChanged,
-			this, &QvtkAbstractProp::setOpacity);
+			this, &Prop::setOpacity);
 		//userTransForm->Delete();
 
 		// update the display region to largest region, if it is default value.
@@ -214,7 +215,7 @@ void QvtkAbstractProp::setRenderDataSet(DataSet* data)
 
 }
 
-void QvtkAbstractProp::setUserMatrix(vtkMatrix4x4 * matrix)
+void Prop::setUserMatrix(vtkMatrix4x4 * matrix)
 {
 	if (getProp()->GetUserTransform()&& getProp()->GetUserMatrix() == matrix) {
 		return;
@@ -230,31 +231,31 @@ void QvtkAbstractProp::setUserMatrix(vtkMatrix4x4 * matrix)
 	}
 }
 
-void QvtkAbstractProp::setOrigin(const double origin[3])
+void Prop::setOrigin(const double origin[3])
 {
 	this->prop3D->SetOrigin(origin);
 	this->propMatrixUpdate();
 }
 
-void QvtkAbstractProp::setPosition(const double position[3])
+void Prop::setPosition(const double position[3])
 {
 	this->prop3D->SetPosition(position[0], position[1], position[2]);
 	this->propMatrixUpdate();
 }
 
-void QvtkAbstractProp::setOrientation(const double orientation[3])
+void Prop::setOrientation(const double orientation[3])
 {
 	this->prop3D->SetOrientation(orientation[0], orientation[1], orientation[2]);
 	this->propMatrixUpdate();
 }
 
-void QvtkAbstractProp::setScale(const double scale[3])
+void Prop::setScale(const double scale[3])
 {
 	this->prop3D->SetScale(scale[0], scale[1], scale[2]);
 	this->propMatrixUpdate();
 }
 
-void QvtkAbstractProp::propMatrixUpdate()
+void Prop::propMatrixUpdate()
 {
 	double world[6], dataSet[6];
 
@@ -275,7 +276,7 @@ void QvtkAbstractProp::propMatrixUpdate()
 	this->setDisplayRegion(world);
 }
 
-void QvtkAbstractProp::updateUniqueReferences(QString newName, QString oldName, QDomElement & xml) const
+void Prop::updateUniqueReferences(QString newName, QString oldName, QDomElement & xml) const
 {
 	Data::updateUniqueReferences(newName, oldName, xml);
 	QString uniqueName = xml.attribute(K.RenderDataSet);
@@ -284,7 +285,7 @@ void QvtkAbstractProp::updateUniqueReferences(QString newName, QString oldName, 
 	}
 }
 
-void QvtkAbstractProp::setProp(vtkProp3D * prop)
+void Prop::setProp(vtkProp3D * prop)
 {
 	if (this->prop3D == prop)
 	{
@@ -302,20 +303,20 @@ void QvtkAbstractProp::setProp(vtkProp3D * prop)
 	}
 }
 
-void QvtkAbstractProp::setDisplayRegion(Data * self, QStandardItem * item)
+void Prop::setDisplayRegion(Data * self, QStandardItem * item)
 {
-	QvtkAbstractProp* _self = static_cast<QvtkAbstractProp*>(self);
+	Prop* _self = static_cast<Prop*>(self);
 	double region[6];
 	_self->getDisplayRegion(region);
 	_self->setDisplayRegion(region);
 
 }
-vtkProp3D* QvtkAbstractProp::getProp() const
+vtkProp3D* Prop::getProp() const
 {
 	return this->prop3D;
 }
 
-void QvtkAbstractProp::setDisplayRegion(const double region[6])
+void Prop::setDisplayRegion(const double region[6])
 {
 	//if (!this->renderDataSet) {
 	//	qWarning() << "renderDataSet is nullptr.";
@@ -327,7 +328,7 @@ void QvtkAbstractProp::setDisplayRegion(const double region[6])
 	setAttributes(this->displayRegionZ, QVariantList() << region[4] << region[5]);
 }
 
-void QvtkAbstractProp::resetDisplayRegion()
+void Prop::resetDisplayRegion()
 {
 	double bounds[6] = { 0, 0, 0, 0, 0, 0 };
 	if (this->getRenderDataSet()) {
@@ -336,7 +337,7 @@ void QvtkAbstractProp::resetDisplayRegion()
 	this->setDisplayRegion(bounds);
 }
 
-void QvtkAbstractProp::printSelf() const
+void Prop::printSelf() const
 {
 	Data::printSelf();
 	std::stringstream ss;
@@ -349,7 +350,7 @@ void QvtkAbstractProp::printSelf() const
 
 }
 
-void QvtkAbstractProp::readXML(const QDomElement& xml, QString directoryPath)
+void Prop::readXML(const QDomElement& xml, QString directoryPath)
 {
 	Data::readXML(xml, directoryPath);
 
@@ -359,7 +360,7 @@ void QvtkAbstractProp::readXML(const QDomElement& xml, QString directoryPath)
 	readDataSet(xml);
 }
 
-void QvtkAbstractProp::writeXML(QDomElement& xml, QString directoryPath) const
+void Prop::writeXML(QDomElement& xml, QString directoryPath) const
 {
 	Data::writeXML(xml, directoryPath);
 
@@ -369,14 +370,14 @@ void QvtkAbstractProp::writeXML(QDomElement& xml, QString directoryPath) const
 	writeDataSet(xml);
 }
 
-void QvtkAbstractProp::reset()
+void Prop::reset()
 {
 	Data::reset();
 	double region[6] = {0,0,0,0,0,0};
 	setDisplayRegion(region);
 }
 
-void QvtkAbstractProp::dataSetCoordinateToWorldCoordinate(const double dataSet[3], double world[3]) const
+void Prop::dataSetCoordinateToWorldCoordinate(const double dataSet[3], double world[3]) const
 {
 	vtkMatrix4x4* matrix = this->getProp()->GetMatrix();
 	//double _dataSet[4] = { dataSet[0], dataSet[1], dataSet[2], 1 };
@@ -388,7 +389,7 @@ void QvtkAbstractProp::dataSetCoordinateToWorldCoordinate(const double dataSet[3
 	}
 }
 
-void QvtkAbstractProp::worldCoordinateToDataSetCoordinate(const double world[3], double dataSet[3]) const
+void Prop::worldCoordinateToDataSetCoordinate(const double world[3], double dataSet[3]) const
 {
 	vtkNew<vtkMatrix4x4> matrix;
 	vtkMatrix4x4::Invert(this->getProp()->GetMatrix(), matrix.GetPointer());
@@ -403,7 +404,7 @@ void QvtkAbstractProp::worldCoordinateToDataSetCoordinate(const double world[3],
 	}
 }
 
-void QvtkAbstractProp::dataSetRegionToWorldRegion(const double dataSet[6], double world[6]) const
+void Prop::dataSetRegionToWorldRegion(const double dataSet[6], double world[6]) const
 {
 	vtkMatrix4x4* matrix = this->getProp()->GetMatrix();
 	for (int i = 0; i < 3; i++) {
@@ -418,7 +419,7 @@ void QvtkAbstractProp::dataSetRegionToWorldRegion(const double dataSet[6], doubl
 	}
 }
 
-void QvtkAbstractProp::worldRegionToDataSetRegion(const double world[6], double dataSet[6]) const
+void Prop::worldRegionToDataSetRegion(const double world[6], double dataSet[6]) const
 {
 	vtkNew<vtkMatrix4x4> matrix;
 	//vtkNew<vtkTransform> transform;
@@ -439,7 +440,7 @@ void QvtkAbstractProp::worldRegionToDataSetRegion(const double world[6], double 
 
 
 
-void QvtkAbstractProp::getDisplayRegion(double region[6]) const
+void Prop::getDisplayRegion(double region[6]) const
 {
 	const QVariantList& regionX = getAttributes(this->displayRegionX);
 	const QVariantList& regionY = getAttributes(this->displayRegionY);
@@ -454,10 +455,10 @@ void QvtkAbstractProp::getDisplayRegion(double region[6]) const
 
 }
 
-void QvtkAbstractProp::readDataSet(const QDomElement& xml)
+void Prop::readDataSet(const QDomElement& xml)
 {
 	QString uniqueName = xml.attribute(K.RenderDataSet);
-	DataSet* dataSet = qobject_cast<DataSet*>(QvtkScene::getCurrentScene()->getDataByUniqueName(uniqueName));
+	DataSet* dataSet = qobject_cast<DataSet*>(Scene::getCurrentScene()->getDataByUniqueName(uniqueName));
 	if(!dataSet){
 		//qDebug() << "Render data is not created yet.";
 		//qDebug() << "Waiting redner data to set data";
@@ -469,11 +470,14 @@ void QvtkAbstractProp::readDataSet(const QDomElement& xml)
 
 }
 
-void QvtkAbstractProp::writeDataSet(QDomElement& xml) const
+void Prop::writeDataSet(QDomElement& xml) const
 {
 	if(!this->renderDataSet){
 		qWarning() << "renderDataSet is nullptr";
 		return;
 	}
 	xml.setAttribute(K.RenderDataSet, this->renderDataSet->getUniqueName());
+}
+
+}
 }

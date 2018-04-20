@@ -18,7 +18,7 @@ class vtkTriangleFilter;
 class vtkPolyDataMapper;
 //class vtkLinesToPolysFilter;
 
-class ABSTRACTDATA_EXPORT QvtkPolyDataActor2D : public QvtkAbstractPlanarProp
+class QVTKDATA_EXPORT QvtkPolyDataActor2D : public PlanarProp
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(QvtkPolyDataActor2D)

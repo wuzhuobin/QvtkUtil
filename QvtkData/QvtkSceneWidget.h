@@ -2,7 +2,7 @@
 #define __Qvtk_SCENE_WIDGET_H__
 
 // me
-#include "abstractdata_export.h"
+#include "QVTKDATA_EXPORT.h"
 namespace Ui {
 	class QvtkSceneWidget;
 };
@@ -12,7 +12,7 @@ class Data;
 #include <QWidget>
 class QListWidgetItem;
 
-class ABSTRACTDATA_EXPORT QvtkSceneWidget : public QWidget
+class QVTKDATA_EXPORT QvtkSceneWidget : public QWidget
 {
 	Q_OBJECT;
 public:

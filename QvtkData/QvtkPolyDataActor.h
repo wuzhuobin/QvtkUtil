@@ -2,14 +2,14 @@
 #define __Qvtk_POLY_DATA_ACTOR_H__
 
 // me
-#include "QvtkAbstractProp.h"
+#include "Prop.h"
 
 class vtkActor;
 class vtkPolyDataMapper;
 class vtkClipPolyData;
 class vtkBox;
 
-class ABSTRACTDATA_EXPORT QvtkPolyDataActor: public QvtkAbstractProp
+class QVTKDATA_EXPORT QvtkPolyDataActor: public Prop
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(QvtkPolyDataActor)

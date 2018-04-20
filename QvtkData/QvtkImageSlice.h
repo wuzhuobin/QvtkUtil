@@ -2,21 +2,23 @@
 #define __Qvtk_IMAGE_SLICE_H__
 
 // me
-#include "QvtkAbstractPlanarProp.h"
+#include "QvtkPlanarProp.h"
 
 // vtk
 class vtkImageActor;
 class vtkImageResliceMapper;
 class vtkExtractVOI;
+namespace Q {
+namespace vtk{
 
-class ABSTRACTDATA_EXPORT QvtkImageSlice : public QvtkAbstractPlanarProp
+class QVTKDATA_EXPORT ImageSlice : public PlanarProp
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(QvtkImageSlice)
+	Q_VTK_DATAH(ImageSlice)
 public:
-	QvtkImageSlice();
+	ImageSlice();
 
-	virtual ~QvtkImageSlice() override;
+	virtual ~ImageSlice() override;
 
 	virtual void printSelf() const override;
 
@@ -42,7 +44,7 @@ public slots:
 	
 protected:
 
-	virtual Data* newInstance() const override { return new QvtkImageSlice; }
+	virtual Data* newInstance() const override { return new ImageSlice; }
 
 	vtkImageResliceMapper* imageResliceMapper;
 
@@ -55,5 +57,7 @@ private:
 
 };
 
-
+}
+}
 #endif // !__Qvtk_IMAGE_SLICE_H__
+

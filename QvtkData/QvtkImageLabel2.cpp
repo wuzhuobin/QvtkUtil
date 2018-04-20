@@ -21,8 +21,10 @@
 #include <QMap>
 #include <QDebug>
 
-Q_VTK_DATACPP(QvtkImageLabel2)
-QvtkImageLabel2::QvtkImageLabel2()
+namespace Q {
+namespace vtk{
+Q_VTK_DATACPP(ImageLabel2)
+ImageLabel2::ImageLabel2()
 {
 	this->lookupTable = vtkLookupTable::New();
 	this->outputfilter = vtkSmartPointer<vtkPassThroughFilter>::New();
@@ -39,31 +41,31 @@ QvtkImageLabel2::QvtkImageLabel2()
 	this->valueToColorMap[0] = d;
 }
 
-QvtkImageLabel2::~QvtkImageLabel2()
+ImageLabel2::~ImageLabel2()
 {
 }
 
-void QvtkImageLabel2::printSelf() const
+void ImageLabel2::printSelf() const
 {
-	QvtkImage::printSelf();
+	Image::printSelf();
 }
 
-void QvtkImageLabel2::readXML(const QDomElement & xml, QString directoryPath)
+void ImageLabel2::readXML(const QDomElement & xml, QString directoryPath)
 {
-	QvtkImage::readXML(xml, directoryPath);
+	Image::readXML(xml, directoryPath);
 	this->readLabel(xml);
 }
 
-void QvtkImageLabel2::writeXML(QDomElement & xml, QString directoryPath) const
+void ImageLabel2::writeXML(QDomElement & xml, QString directoryPath) const
 {
-	QvtkImage::writeXML(xml, directoryPath);
+	Image::writeXML(xml, directoryPath);
 	this->writeLabel(xml);
 }
 
-void QvtkImageLabel2::addReference(QvtkAbstractProp * prop)
+void ImageLabel2::addReference(Prop * prop)
 {
 	DataSet::addReference(prop);
-	QvtkImageSlice* slice = qobject_cast<QvtkImageSlice*>(prop);
+	ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
 	if (slice) {
 		slice->getImageActor()->GetProperty()->SetInterpolationTypeToNearest();
 		slice->getImageActor()->GetProperty()->SetLookupTable(this->lookupTable);
@@ -71,28 +73,28 @@ void QvtkImageLabel2::addReference(QvtkAbstractProp * prop)
 	}
 }
 
-vtkAlgorithmOutput * QvtkImageLabel2::getOutputPort() const
+vtkAlgorithmOutput * ImageLabel2::getOutputPort() const
 {
 	return this->outputfilter->GetOutputPort();
 }
 
 
-int QvtkImageLabel2::getLabelIdFromName(QString labelName) const
+int ImageLabel2::getLabelIdFromName(QString labelName) const
 {
 	return this->nameToValueMap[labelName];
 }
 
-const double * QvtkImageLabel2::getColor(int id) const 
+const double * ImageLabel2::getColor(int id) const 
 {
 	return this->getLookupTable()->GetTableValue(id);
 }
 
-void QvtkImageLabel2::getColor(int id, double rgba[4]) const 
+void ImageLabel2::getColor(int id, double rgba[4]) const 
 {
 	this->getLookupTable()->GetTableValue(id, rgba);
 }
 
-const double * QvtkImageLabel2::getColor(QString labelName) const 
+const double * ImageLabel2::getColor(QString labelName) const 
 {
 	int id = this->getLabelIdFromName(labelName);
 	if (id < 0) {
@@ -102,7 +104,7 @@ const double * QvtkImageLabel2::getColor(QString labelName) const
 	return this->getLookupTable()->GetTableValue(id);
 }
 
-void QvtkImageLabel2::getColor(QString labelName, double rgba[4]) const 
+void ImageLabel2::getColor(QString labelName, double rgba[4]) const 
 {
 	int id = this->getLabelIdFromName(labelName);
 	if (id < 0) {
@@ -113,12 +115,12 @@ void QvtkImageLabel2::getColor(QString labelName, double rgba[4]) const
 }
 
 
-const QMap<QString, int> QvtkImageLabel2::getNameToValueMap()
+const QMap<QString, int> ImageLabel2::getNameToValueMap()
 {
 	return this->nameToValueMap;
 }
 
-QString QvtkImageLabel2::getColorName(int val) const
+QString ImageLabel2::getColorName(int val) const
 {
 	for (QMap<QString, int>::const_iterator iter = this->nameToValueMap.cbegin();
 		iter != this->nameToValueMap.cend();iter++)
@@ -136,12 +138,12 @@ QString QvtkImageLabel2::getColorName(int val) const
 /*=================================================================================================*/
 /*=================================================================================================*/
 /* Depict these */
-void QvtkImageLabel2::setColor(int id, double r, double g, double b, double a)
+void ImageLabel2::setColor(int id, double r, double g, double b, double a)
 {
 	this->setColor(this->getColorName(id), id, r, g, b, a);
 }
 
-void QvtkImageLabel2::setColor(QString labelName, double r, double g, double b, double a)
+void ImageLabel2::setColor(QString labelName, double r, double g, double b, double a)
 {
 	if (this->getLabelIdFromName(labelName) >= 0)
 	{
@@ -152,7 +154,7 @@ void QvtkImageLabel2::setColor(QString labelName, double r, double g, double b, 
 /*=================================================================================================*/
 
 
-void QvtkImageLabel2::setColor(QString labelName, int value, double r, double g, double b, double a)
+void ImageLabel2::setColor(QString labelName, int value, double r, double g, double b, double a)
 {
 	/* Ensure unique key */
 	if (this->nameToValueMap.keys().contains(labelName) && value != this->nameToValueMap[labelName])
@@ -172,12 +174,12 @@ void QvtkImageLabel2::setColor(QString labelName, int value, double r, double g,
 }
 
 
-void QvtkImageLabel2::setColor(QString labelName, int value, double d[4])
+void ImageLabel2::setColor(QString labelName, int value, double d[4])
 {
 	this->setColor(labelName, value, d[0], d[1], d[2], d[3]);
 }
 
-void QvtkImageLabel2::rebuildLookupTable()
+void ImageLabel2::rebuildLookupTable()
 {
 	/* Alwasy has zero label */
 	if (!this->nameToValueMap.keys().contains("None") || this->nameToValueMap["None"] != 0)
@@ -208,7 +210,7 @@ void QvtkImageLabel2::rebuildLookupTable()
 	}
 }
 
-void QvtkImageLabel2::readLabel(const QDomElement & xml)
+void ImageLabel2::readLabel(const QDomElement & xml)
 {
 	QDomElement labelElem = xml.firstChildElement(K.Label);
 	QDomElement labelNameElem = labelElem.firstChildElement(/*K.LabelName*/);
@@ -231,7 +233,7 @@ void QvtkImageLabel2::readLabel(const QDomElement & xml)
 	//this->rebuildLookupTable();
 }
 
-void QvtkImageLabel2::writeLabel(QDomElement & xml) const
+void ImageLabel2::writeLabel(QDomElement & xml) const
 {
 	QDomDocument dom = xml.ownerDocument();
 	QDomElement labelElem = dom.createElement(K.Label);
@@ -266,7 +268,7 @@ void QvtkImageLabel2::writeLabel(QDomElement & xml) const
 	}
 }
 
-void QvtkImageLabel2::initializeLabel(QvtkImage* image, int type)
+void ImageLabel2::initializeLabel(Image* image, int type)
 {
 	vtkSmartPointer<vtkImageCast> imageCast = vtkSmartPointer<vtkImageCast>::New();
 	imageCast->SetInputConnection(image->getOutputPort());
@@ -283,12 +285,12 @@ void QvtkImageLabel2::initializeLabel(QvtkImage* image, int type)
 
 	switch (type)
 	{
-		vtkTemplateMacro(QvtkImageLabel2::zeroImage<VTK_TT>(this->getImageData()));
+		vtkTemplateMacro(ImageLabel2::zeroImage<VTK_TT>(this->getImageData()));
 	}
 }
 
 template<typename ScalarType>
-void QvtkImageLabel2::zeroImage(vtkImageData* image)
+void ImageLabel2::zeroImage(vtkImageData* image)
 {
 	for (vtkImageIterator<ScalarType> it(image, image->GetExtent());
 		!it.IsAtEnd(); it.NextSpan()) {
@@ -297,4 +299,7 @@ void QvtkImageLabel2::zeroImage(vtkImageData* image)
 			*valIt = 0;
 		}
 	}
+}
+
+}
 }

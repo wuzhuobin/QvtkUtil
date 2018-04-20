@@ -1,7 +1,6 @@
-#include "DataSet.h"
-
 // me
-#include "QvtkAbstractProp.h"
+#include "QvtkDataSet.h"
+#include "QvtkProp.h"
 #include "QvtkScene.h"
 
 // qt
@@ -19,6 +18,11 @@
 
 // std
 #include <sstream>
+
+namespace Q{
+namespace vtk{
+
+
 const QString DataSet::ARRAY_PREFIX[3]{"X", "Y", "Z"};
 const QString DataSet::MATRIX_PREFIX("Matrix_");
 const QString DataSet::PATH_SEPERATOR(";");
@@ -58,13 +62,13 @@ DataSet::DataSet():
 	this->data = nullptr;
 	this->portProducer = vtkTrivialProducer::New();
 
-	this->referenceProps = new QList<QvtkAbstractProp*>;
+	this->referenceProps = new QList<Prop*>;
 
 }
 
 DataSet::~DataSet()
 {
-	for(QList<QvtkAbstractProp*>::const_iterator cit = this->referenceProps->cbegin();
+	for(QList<Prop*>::const_iterator cit = this->referenceProps->cbegin();
 			cit != this->referenceProps->cend(); ++cit){
 		removeReference(*cit);
 	}
@@ -224,7 +228,7 @@ void DataSet::readProp(const QDomElement& xml)
 	int index = 0;
 	QString uniqueName = element.attribute(REFERENCE_PROPS_PREFIX + QString::number(index));
 	while(!uniqueName.isEmpty()){
-		QvtkAbstractProp* prop = qobject_cast<QvtkAbstractProp*>(QvtkScene::getCurrentScene()->getDataByUniqueName(uniqueName));
+		Prop* prop = qobject_cast<Prop*>(Scene::getCurrentScene()->getDataByUniqueName(uniqueName));
 		uniqueName = element.attribute(REFERENCE_PROPS_PREFIX + QString::number(++index));
 		if(!prop){
 			//qDebug() << "Reference prop is not created yet.";
@@ -243,7 +247,7 @@ void DataSet::writeProp(QDomElement& xml) const
 	QDomElement element = dom.createElement(K.ReferenceProps);
 	xml.appendChild(element);
 
-	QList<QvtkAbstractProp*>::const_iterator cit = this->referenceProps->cbegin();
+	QList<Prop*>::const_iterator cit = this->referenceProps->cbegin();
 	int index = 0;
 	while(cit != this->referenceProps->cend()){
 		element.setAttribute(REFERENCE_PROPS_PREFIX + QString::number(index), (*cit)->getUniqueName());
@@ -259,7 +263,7 @@ void DataSet::setPosition(double x, double y, double z)
 	this->position[1] = y;
 	this->position[2] = z;
 
-	//foreach(QvtkAbstractProp* prop, *referenceProps)
+	//foreach(Prop* prop, *referenceProps)
 	//{
 	//	prop->getProp()->SetPosition(
 	//		this->position[0],
@@ -275,7 +279,7 @@ void DataSet::setOrigin(double x, double y, double z)
 	this->origin[0] = x;
 	this->origin[1] = y;
 	this->origin[2] = z;
-	//foreach(QvtkAbstractProp* prop, *referenceProps)
+	//foreach(Prop* prop, *referenceProps)
 	//{
 	//	prop->getProp()->SetOrigin(
 	//		this->origin[0],
@@ -292,7 +296,7 @@ void DataSet::setScale(double x, double y, double z)
 	this->scale[0] = x;
 	this->scale[1] = y;
 	this->scale[2] = z;
-	//foreach(QvtkAbstractProp* prop, *referenceProps)
+	//foreach(Prop* prop, *referenceProps)
 	//{
 	//	prop->getProp()->SetScale(
 	//		this->scale[0],
@@ -309,7 +313,7 @@ void DataSet::setOrientation(double x, double y, double z)
 	this->orientation[1] = y;
 	this->orientation[2] = z;
 
-	//foreach(QvtkAbstractProp* prop, *referenceProps)
+	//foreach(Prop* prop, *referenceProps)
 	//{
 	//	prop->getProp()->SetOrientation(
 	//		this->orientation[0],
@@ -458,7 +462,7 @@ void DataSet::setPickable(bool flag)
 {
 	this->pickable = flag;
 	emit pickableChanged(flag);
-	foreach(QvtkAbstractProp* prop, *referenceProps)
+	foreach(Prop* prop, *referenceProps)
 	{
 		prop->getProp()->SetPickable(this->pickable);
 	}
@@ -499,7 +503,7 @@ void DataSet::printSelf() const
 
 }
 
-void DataSet::addReference(QvtkAbstractProp* prop)
+void DataSet::addReference(Prop* prop)
 {
 	if(!prop){
 		qCritical() << "input is a nullptr";
@@ -515,7 +519,7 @@ void DataSet::addReference(QvtkAbstractProp* prop)
 	prop->setRenderDataSet(this);
 }
 
-void DataSet::removeReference(QvtkAbstractProp* prop)
+void DataSet::removeReference(Prop* prop)
 {
 	if(!prop){
 		qCritical() << "input is a nullptr";
@@ -545,4 +549,6 @@ void DataSet::reset()
 
 	this->setOpacity(1);
 
+}
+}
 }

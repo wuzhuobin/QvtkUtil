@@ -1,3 +1,4 @@
+// me
 #include "QvtkPolyData.h"
 
 // qt
@@ -20,10 +21,12 @@
 #include <vtkNew.h>
 #include <vtkTransform.h>
 
-Q_VTK_DATACPP(QvtkPolyData);
-const QString QvtkPolyData::COLOR_RGB[3]{ "R", "G", "B" };
+namespace Q {
+namespace vtk{
+Q_VTK_DATACPP(PolyData);
+const QString PolyData::COLOR_RGB[3]{ "R", "G", "B" };
 
-QvtkPolyData::QvtkPolyData()
+PolyData::PolyData()
 {
 	vtkPolyData* data = vtkPolyData::New();
 	setDataSet(data);
@@ -48,27 +51,27 @@ QvtkPolyData::QvtkPolyData()
 	this->color = createAttributesByColumns(colorKeys, colorValues, true, colorItem);
 	for (int i= 0; i< 3; i++)
 	{
-		insertSlotFunction(this->color[i], &QvtkPolyData::setColor);
+		insertSlotFunction(this->color[i], &PolyData::setColor);
 	}
 
 }
 
-QvtkPolyData::~QvtkPolyData()
+PolyData::~PolyData()
 {
 	this->transformPolyDataFilter->Delete();
 }
 
-void QvtkPolyData::readXML(const QDomElement & element, QString directoryPath)
+void PolyData::readXML(const QDomElement & element, QString directoryPath)
 {
 	DataSet::readXML(element, directoryPath);
 }
 
-void QvtkPolyData::writeXML(QDomElement & element, QString directoryPath) const
+void PolyData::writeXML(QDomElement & element, QString directoryPath) const
 {
 	DataSet::writeXML(element, directoryPath);
 }
 
-bool QvtkPolyData::readData(QString rootDirectory)
+bool PolyData::readData(QString rootDirectory)
 {
 	QString path;
 	if (rootDirectory.isEmpty())
@@ -109,7 +112,7 @@ bool QvtkPolyData::readData(QString rootDirectory)
 	}
 }
 
-bool QvtkPolyData::writeData(QString rootDirectory) const
+bool PolyData::writeData(QString rootDirectory) const
 {
 	QString path;
 	// rootDirectory is empty, write absolute path. 
@@ -157,14 +160,14 @@ bool QvtkPolyData::writeData(QString rootDirectory) const
 	}
 }
 
-void QvtkPolyData::setColor(const double color[3])
+void PolyData::setColor(const double color[3])
 {
 	setAttributes(this->color, QVariantList() << color[0]
 		<< color[1] << color[2]);
 	emit colorChanged(color);
 }
 
-void QvtkPolyData::getColor(double color[3]) const
+void PolyData::getColor(double color[3]) const
 {
 	QVariantList list = getAttributes(this->color);
 	for (int i = 0; i < 3; ++i)
@@ -173,7 +176,7 @@ void QvtkPolyData::getColor(double color[3]) const
 	}
 }
 
-vtkAlgorithmOutput * QvtkPolyData::getTransformOutputPort() const
+vtkAlgorithmOutput * PolyData::getTransformOutputPort() const
 {
 	vtkTransform* transform = vtkTransform::New();
 	this->getTransform(transform);
@@ -183,15 +186,15 @@ vtkAlgorithmOutput * QvtkPolyData::getTransformOutputPort() const
 	return this->transformPolyDataFilter->GetOutputPort();
 }
 
-void QvtkPolyData::setColor(Data * self, QStandardItem * item)
+void PolyData::setColor(Data * self, QStandardItem * item)
 {
-	QvtkPolyData* _self = static_cast<QvtkPolyData*>(self);
+	PolyData* _self = static_cast<PolyData*>(self);
 	double color[3];
 	_self->getColor(color);
 	_self->setColor(color);
 }
 
-bool QvtkPolyData::readDataSuffix(QString fileName, vtkPolyData * data, int suffix)
+bool PolyData::readDataSuffix(QString fileName, vtkPolyData * data, int suffix)
 {
 	if (data == nullptr) {
 		qCritical() << "data is nullptr"; 
@@ -206,12 +209,12 @@ bool QvtkPolyData::readDataSuffix(QString fileName, vtkPolyData * data, int suff
 	}
 	switch (suffixType)
 	{
-	case QvtkPolyData::UNKNOWN:
+	case PolyData::UNKNOWN:
 	default:
 		qCritical() << "Cannot not read this file" << fileName;
 		data = nullptr;
 		return false;
-	case QvtkPolyData::VTK:
+	case PolyData::VTK:
 		{
 		vtkNew<vtkPolyDataReader> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -219,7 +222,7 @@ bool QvtkPolyData::readDataSuffix(QString fileName, vtkPolyData * data, int suff
 		data->ShallowCopy(reader->GetOutput());
 		}
 		return true;
-	case QvtkPolyData::VTP:
+	case PolyData::VTP:
 		{
 		vtkNew<vtkXMLPolyDataReader> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -227,7 +230,7 @@ bool QvtkPolyData::readDataSuffix(QString fileName, vtkPolyData * data, int suff
 		data->ShallowCopy(reader->GetOutput());
 		}
 		return true;
-	case QvtkPolyData::STL:
+	case PolyData::STL:
 		{
 		vtkNew<vtkSTLReader> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -235,7 +238,7 @@ bool QvtkPolyData::readDataSuffix(QString fileName, vtkPolyData * data, int suff
 		data->ShallowCopy(reader->GetOutput());
 		}
 		return true;
-	case QvtkPolyData::OBJ:
+	case PolyData::OBJ:
 		{
 		vtkNew<vtkOBJReader> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -246,7 +249,7 @@ bool QvtkPolyData::readDataSuffix(QString fileName, vtkPolyData * data, int suff
 	}
 }
 
-bool QvtkPolyData::readQRC(QString fileName, vtkPolyData * data, int suffix)
+bool PolyData::readQRC(QString fileName, vtkPolyData * data, int suffix)
 {
 	POLY_DATA_SUFFIX suffixType;
 	if (suffix == -1) {
@@ -257,12 +260,12 @@ bool QvtkPolyData::readQRC(QString fileName, vtkPolyData * data, int suffix)
 	}
 	switch (suffixType)
 	{
-	case QvtkPolyData::UNKNOWN:
+	case PolyData::UNKNOWN:
 	default:
 		qCritical() << "Cannot read this file" << fileName;
 		data = nullptr;
 		return false;
-	case QvtkPolyData::VTK:
+	case PolyData::VTK:
 	{
 		vtkNew<vtkQRCFileReader<vtkPolyDataReader>> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -270,7 +273,7 @@ bool QvtkPolyData::readQRC(QString fileName, vtkPolyData * data, int suffix)
 		data->ShallowCopy(reader->GetOutput());
 	}
 	return true;
-	case QvtkPolyData::VTP:
+	case PolyData::VTP:
 	{
 		vtkNew<vtkQRCFileReader<vtkXMLPolyDataReader>> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -278,7 +281,7 @@ bool QvtkPolyData::readQRC(QString fileName, vtkPolyData * data, int suffix)
 		data->ShallowCopy(reader->GetOutput());
 	}
 	return true;
-	case QvtkPolyData::STL:
+	case PolyData::STL:
 	{
 		vtkNew<vtkQRCFileReader<vtkSTLReader>> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -286,7 +289,7 @@ bool QvtkPolyData::readQRC(QString fileName, vtkPolyData * data, int suffix)
 		data->ShallowCopy(reader->GetOutput());
 	}
 	return true;
-	case QvtkPolyData::OBJ:
+	case PolyData::OBJ:
 	{
 		vtkNew<vtkQRCFileReader<vtkOBJReader>> reader;
 		reader->SetFileName(fileName.toStdString().c_str());
@@ -297,7 +300,7 @@ bool QvtkPolyData::readQRC(QString fileName, vtkPolyData * data, int suffix)
 	}
 }
 
-bool QvtkPolyData::writeDataSuffix(QString fileName, vtkPolyData * data, int suffix)
+bool PolyData::writeDataSuffix(QString fileName, vtkPolyData * data, int suffix)
 {
 	POLY_DATA_SUFFIX suffixType;
 	if (suffix == -1) {
@@ -308,13 +311,13 @@ bool QvtkPolyData::writeDataSuffix(QString fileName, vtkPolyData * data, int suf
 	}
 	switch (suffixType)
 	{
-	case QvtkPolyData::UNKNOWN:
-	case QvtkPolyData::OBJ:
+	case PolyData::UNKNOWN:
+	case PolyData::OBJ:
 	default:
 		qCritical() << "Cannot write this file" << fileName;
 		data = nullptr;
 		return false;
-	case QvtkPolyData::VTK:
+	case PolyData::VTK:
 	{
 		vtkNew<vtkPolyDataWriter> writer;
 		writer->SetInputData(data);
@@ -322,7 +325,7 @@ bool QvtkPolyData::writeDataSuffix(QString fileName, vtkPolyData * data, int suf
 		writer->Write();
 	}
 	return true;
-	case QvtkPolyData::VTP:
+	case PolyData::VTP:
 	{
 		vtkNew<vtkXMLPolyDataWriter> writer;
 		writer->SetInputData(data);
@@ -330,7 +333,7 @@ bool QvtkPolyData::writeDataSuffix(QString fileName, vtkPolyData * data, int suf
 		writer->Write();
 	}
 	return true;
-	case QvtkPolyData::STL:
+	case PolyData::STL:
 	{
 		vtkNew<vtkSTLWriter> writer;
 		writer->SetInputData(data);
@@ -341,7 +344,7 @@ bool QvtkPolyData::writeDataSuffix(QString fileName, vtkPolyData * data, int suf
 	}
 }
 
-unsigned int QvtkPolyData::suffixTranslate(QString suffix)
+unsigned int PolyData::suffixTranslate(QString suffix)
 {
 	if (suffix.contains("vtk")) {
 		return VTK;
@@ -360,27 +363,30 @@ unsigned int QvtkPolyData::suffixTranslate(QString suffix)
 	}
 }
 
-vtkPolyData* QvtkPolyData::getPolyData() const
+vtkPolyData* PolyData::getPolyData() const
 {
 	return vtkPolyData::SafeDownCast(this->getDataSet());
 }
 
-vtkPolyData * QvtkPolyData::getTransformPolyData() const
+vtkPolyData * PolyData::getTransformPolyData() const
 {
 	this->getTransformOutputPort();
 	return this->transformPolyDataFilter->GetOutput();
 }
 
 
-void QvtkPolyData::printSelf() const
+void PolyData::printSelf() const
 {
 	DataSet::printSelf();
 
 }
 
-void QvtkPolyData::reset()
+void PolyData::reset()
 {
 	DataSet::reset();
 	this->setColor(0, 0, 0);
 
+}
+
+}
 }

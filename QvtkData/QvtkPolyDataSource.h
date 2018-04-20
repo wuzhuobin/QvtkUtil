@@ -16,7 +16,7 @@ class vtkRegularPolygonSource;
 class vtkParametricEllipsoid;
 class vtkPassArrays;
 
-class ABSTRACTDATA_EXPORT QvtkPolyDataSource : public QvtkAnnotationPolyData
+class QVTKDATA_EXPORT QvtkPolyDataSource : public QvtkAnnotationPolyData
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(

@@ -1,5 +1,5 @@
 /*!
- * \file QvtkAbstractPlanarProp.h
+ * \file PlanarProp.h
  * \date 2017/08/10 14:09
  *
  * \author 		Wong, Matthew Lun
@@ -18,16 +18,18 @@
  * \note
 */
 
-#ifndef __Qvtk_ABSTRACT_PLANAR_PROP_H__
-#define __Qvtk_ABSTRACT_PLANAR_PROP_H__
+#ifndef __QVTK_PLANAR_PROP_H__
+#define __QVTK_PLANAR_PROP_H__
 
-#include "QvtkAbstractProp.h"
+#include "QvtkProp.h"
+namespace Q {
+namespace vtk{
 
-class ABSTRACTDATA_EXPORT QvtkAbstractPlanarProp: public QvtkAbstractProp
+class QVTKDATA_EXPORT PlanarProp: public Prop
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkAbstractPlanarProp,
+		PlanarProp,
 		Q_VTK_KEY(PlanarOrientation)
 		Q_VTK_KEY(PlanarNormal)
 		Q_VTK_KEY(PlanarOrigin)
@@ -42,8 +44,8 @@ public:
 		ORIENTATION_OBLIQUE = 3
 	};
 
-    QvtkAbstractPlanarProp();
-    virtual ~QvtkAbstractPlanarProp() override;
+    PlanarProp();
+    virtual ~PlanarProp() override;
 	virtual void printSelf() const override;
 
 	virtual void getPlanarNormal(double normal[3]);
@@ -88,5 +90,7 @@ private:
 
 };
 
+}
+}
 
-#endif // !__Qvtk_ABSTRACT_PLANAR_PROP_H__
+#endif // !__QVTK_PLANAR_PROP_H__

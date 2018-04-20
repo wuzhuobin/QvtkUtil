@@ -1,5 +1,5 @@
 /**
- * @file	QvtkUtilProject\Project\code\system\core\QvtkImage.h.
+ * @file	QvtkUtilProject\Project\code\system\core\Image.h.
  *
  * @brief	Declares the Qvtko scene class.
  *
@@ -26,7 +26,7 @@ Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::FLOAT, float, call); \
 Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::DOUBLE, double, call); \
 
 // me
-#include "DataSet.h"
+#include "QvtkDataSet.h"
 
 // vtk
 class vtkImageData;
@@ -35,14 +35,14 @@ class vtkImageChangeInformation;
 
 // itk
 namespace itk {template< typename TPixel, unsigned int VImageDimension > class Image; }
-// qt
-class QStandardItem;
+namespace Q {
+namespace vtk{
 
-class ABSTRACTDATA_EXPORT QvtkImage: public DataSet
+class QVTKDATA_EXPORT Image: public DataSet
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkImage,
+		Image,
 		Q_VTK_KEY(Window)
 		Q_VTK_KEY(Level)
 	);
@@ -66,9 +66,9 @@ public:
 
 	static bool writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3]);
 
-	QvtkImage();
+	Image();
 
-	virtual ~QvtkImage() override;
+	virtual ~Image() override;
 
 	virtual void printSelf() const override;
 
@@ -76,7 +76,7 @@ public:
 
 	virtual bool writeData(QString rootDirectory = QString()) const override;
 
-	virtual void addReference(QvtkAbstractProp* prop) override;
+	virtual void addReference(Prop* prop) override;
 
 	virtual double getWindow() const;
 
@@ -125,7 +125,7 @@ signals:
 
 protected:
 
-	virtual Data* newInstance() const override { return new QvtkImage; }
+	virtual Data* newInstance() const override { return new Image; }
 
 	static void setWindow(Data* self, QStandardItem* item);
 
@@ -154,4 +154,6 @@ private:
 
 };
 
+}
+}
 #endif // !__Qvtk_IMAGE_H__

@@ -63,7 +63,7 @@ QvtkVolume::~QvtkVolume()
 
 void QvtkVolume::printSelf() const
 {
-	QvtkAbstractProp::printSelf();
+	Prop::printSelf();
 
 	std::stringstream ss;
 
@@ -79,12 +79,12 @@ void QvtkVolume::printSelf() const
 
 void QvtkVolume::readXML(const QDomElement& xml, QString directoryPath)
 {
-	QvtkAbstractProp::readXML(xml, directoryPath);
+	Prop::readXML(xml, directoryPath);
 }
 
 void QvtkVolume::writeXML(QDomElement& xml, QString directoryPath) const
 {
-	QvtkAbstractProp::writeXML(xml, directoryPath);
+	Prop::writeXML(xml, directoryPath);
 }
 
 void QvtkVolume::setShift(double shift)
@@ -897,10 +897,10 @@ void QvtkVolume::setRenderDataSet(DataSet* data)
 		//getVolume()->GetMapper()->SetInputConnection(nullptr);
 		this->imageShiftScale->SetInputConnection(nullptr);
 	}
-	QvtkAbstractProp::setRenderDataSet(data);
+	Prop::setRenderDataSet(data);
 	if (this->getRenderDataSet()) {
-		if (!data->isClass("QvtkImage")) {
-			qCritical() << "data is not QvtkImage.";
+		if (!data->isClass("Image")) {
+			qCritical() << "data is not Image.";
 		}
 		//getVolume()->GetMapper()->SetInputConnection(data->getOutputPort());
 		// Make shift work;
@@ -923,7 +923,7 @@ void QvtkVolume::setOpacity(double opacity)
 
 void QvtkVolume::setDisplayRegion(const double region[6])
 {
-	QvtkAbstractProp::setDisplayRegion(region);
+	Prop::setDisplayRegion(region);
 	double _region[6];
 	if (this->getRenderDataSet()) {
 		/*this->getRenderDataSet()->*/worldRegionToDataSetRegion(region, _region);

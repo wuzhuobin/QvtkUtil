@@ -1,6 +1,6 @@
 // me
 #include "QvtkAbstractViewer.h"
-#include "QvtkAbstractProp.h"
+#include "Prop.h"
 
 // vtk
 #include <vtkSmartPointer.h>
@@ -170,12 +170,12 @@ void QvtkAbstractViewer::RemoveRenderer(vtkRenderer* ren)
 	RemoveRenderer(index);
 }
 
-void QvtkAbstractViewer::AddProp(QvtkAbstractProp * prop)
+void QvtkAbstractViewer::AddProp(Prop * prop)
 {
 	AddProp(prop, this->renderers[0]);
 }
 
-void QvtkAbstractViewer::AddProp(QvtkAbstractProp * prop, vtkRenderer * renderer)
+void QvtkAbstractViewer::AddProp(Prop * prop, vtkRenderer * renderer)
 {
 	if (!this->renderers.contains(renderer)) {
 		qWarning() << "The renderer does not belong to this viewer.";
@@ -188,12 +188,12 @@ void QvtkAbstractViewer::AddProp(QvtkAbstractProp * prop, vtkRenderer * renderer
 	propToRenderer->insert(prop, renderer);
 }
 
-QList<QvtkAbstractProp*> QvtkAbstractViewer::GetProps()
+QList<Prop*> QvtkAbstractViewer::GetProps()
 {
 	return this->propToRenderer->keys();
 }
 
-void QvtkAbstractViewer::RemoveProp(QvtkAbstractProp * prop)
+void QvtkAbstractViewer::RemoveProp(Prop * prop)
 {
 	if (!this->propToRenderer->contains(prop)) {
 		qWarning() << "Remove prop" << prop->getUniqueName() << "fail.";
@@ -230,9 +230,9 @@ void QvtkAbstractViewer::RemoveAllProp(vtkRenderer * renderer)
 	if (!this->renderers.contains(renderer)) {
 		qWarning() << "The renderer does not belong to this viewer.";
 	}
-	QList<QvtkAbstractProp* > keys = this->propToRenderer->keys(renderer);
+	QList<Prop* > keys = this->propToRenderer->keys(renderer);
 
-	for (QList<QvtkAbstractProp* >::ConstIterator cit = keys.cbegin();
+	for (QList<Prop* >::ConstIterator cit = keys.cbegin();
 		cit != keys.cend(); ++cit) {
 		RemoveProp(*cit);
 	}

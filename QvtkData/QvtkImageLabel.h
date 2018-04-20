@@ -295,12 +295,14 @@ class vtkNamedColors;
  * id: 282 Name: yellowgreen       RGBA: (0.603922, 0.803922, 0.196078, 1)
  * id: 283 Name: zinc_white        RGBA: (0.988235, 0.968627, 1, 1) 
 */
+namespace Q {
+namespace vtk{
 
-class ABSTRACTDATA_EXPORT QvtkImageLabel : public QvtkImage
+class QVTKDATA_EXPORT ImageLabel : public Image
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkImageLabel,
+		ImageLabel,
 		Q_VTK_KEY(Label)
 		//Q_VTK_KEY(LabelName)
 		Q_VTK_KEY(LabelId)
@@ -310,14 +312,14 @@ class ABSTRACTDATA_EXPORT QvtkImageLabel : public QvtkImage
 
 public:
 
-	QvtkImageLabel();
-	virtual ~QvtkImageLabel() override;
+	ImageLabel();
+	virtual ~ImageLabel() override;
 	virtual void printSelf() const override;
 
 	virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 	virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
 
-	virtual void addReference(QvtkAbstractProp* prop) override;
+	virtual void addReference(Prop* prop) override;
 
 	virtual vtkAlgorithmOutput* getOutputPort() const;
 	virtual vtkImageData* getLabelImageData() const;
@@ -338,14 +340,14 @@ public slots:
 	virtual void setColor(QString labelName, const double* rgba) { this->setColor(labelName, rgba[0], rgba[1], rgba[2], rgba[3]); }
 	virtual void setColor(QString labelName, double r, double g, double b, double a);
 
-	virtual void initializeLabel(QvtkImage* image, int type = 3);
+	virtual void initializeLabel(Image* image, int type = 3);
 
 protected:
 
 	template<typename ScalarType>
 	static void zeroImage(vtkImageData* image);
 
-	virtual Data* newInstance() const override { return new QvtkImageLabel; }
+	virtual Data* newInstance() const override { return new ImageLabel; }
 
 	virtual void rebuildLookupTable() const;
 
@@ -361,5 +363,8 @@ private:
 
 };
 
+}
+}
 
 #endif // !__Qvtk_IMAGE_LABEL_H__
+

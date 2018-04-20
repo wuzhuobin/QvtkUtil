@@ -2,17 +2,20 @@
 #define __Qvtk_POLY_DATA_H__
 
 // me 
-#include "DataSet.h"
+#include "QvtkDataSet.h"
 
 //vtk
 #include <vtkTransformPolyDataFilter.h>
 class vtkPolyData;
 
-class ABSTRACTDATA_EXPORT QvtkPolyData: public DataSet
+namespace Q {
+namespace vtk{
+
+class QVTKDATA_EXPORT PolyData: public DataSet
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkPolyData, 
+		PolyData, 
 		Q_VTK_KEY(Color)
 	)
 public:
@@ -26,8 +29,8 @@ public:
 		OBJ = 4
 	};
 
-	QvtkPolyData();
-	virtual ~QvtkPolyData() override;
+	PolyData();
+	virtual ~PolyData() override;
 	virtual void printSelf() const override;
 
 	virtual void readXML(const QDomElement& element, QString rootDirectory = QString()) override;
@@ -68,7 +71,7 @@ signals:
 
 protected:
 	
-	virtual Data* newInstance() const override { return new QvtkPolyData; }
+	virtual Data* newInstance() const override { return new PolyData; }
 
 	static void setColor(Data* self, QStandardItem* item);
 
@@ -83,6 +86,8 @@ private:
 
 };
 
-
+}
+}
 
 #endif // !__Qvtk_POLY_DATA_H__
+

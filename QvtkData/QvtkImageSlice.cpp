@@ -4,9 +4,6 @@
 
 // vtk 
 #include <vtkImageActor.h>
-//#include <vtkImageActor.h>
-//#include <vtkImageActorMapper.h>
-//#include <vtkImageMapToWindowLevelColors.h>
 #include <vtkImageProperty.h>
 #include <vtkImageResliceMapper.h>
 #include <vtkNew.h>
@@ -18,7 +15,10 @@
 #include <QDomElement>
 #include <QDebug>
 
-Q_VTK_DATACPP(QvtkImageSlice);
+namespace Q {
+namespace vtk{
+
+Q_VTK_DATACPP(ImageSlice);
 class vtkImageActor2 : public vtkImageActor
 {
 public:
@@ -26,7 +26,7 @@ public:
 	virtual double *GetBounds() VTK_OVERRIDE { return vtkImageSlice::GetBounds(); }
 };
 
-QvtkImageSlice::QvtkImageSlice()
+ImageSlice::ImageSlice()
 {
 	vtkNew<vtkExtractVOI> extractVOI;
 	this->extractVOI = extractVOI.GetPointer();
@@ -58,44 +58,44 @@ QvtkImageSlice::QvtkImageSlice()
 	//mapper->Register(this->prop3D);
 }
 
-QvtkImageSlice::~QvtkImageSlice()
+ImageSlice::~ImageSlice()
 {
 	setRenderDataSet(nullptr);
 }
 
-void QvtkImageSlice::printSelf() const
+void ImageSlice::printSelf() const
 {
-	QvtkAbstractPlanarProp::printSelf();
+	PlanarProp::printSelf();
 }
 
-//bool QvtkImageSlice::isClass(QString className) const
+//bool ImageSlice::isClass(QString className) const
 //{
 //	if (className != getClassName()) {
-//		return QvtkAbstractPlanarProp::isClass(className);
+//		return PlanarProp::isClass(className);
 //	}
 //	return true;
 //}
 
-void QvtkImageSlice::reset()
+void ImageSlice::reset()
 {
-	QvtkAbstractPlanarProp::reset();
+	PlanarProp::reset();
 }
 
-void QvtkImageSlice::setPlanarNormal(double x, double y, double z)
+void ImageSlice::setPlanarNormal(double x, double y, double z)
 {
-	QvtkAbstractPlanarProp::setPlanarNormal(x, y, z);
+	PlanarProp::setPlanarNormal(x, y, z);
 	this->imageResliceMapper->GetSlicePlane()->SetNormal(x, y, z);
 }
 
-void QvtkImageSlice::setPlanarOrigin(double x, double y, double z)
+void ImageSlice::setPlanarOrigin(double x, double y, double z)
 {
-	QvtkAbstractPlanarProp::setPlanarOrigin(x, y, z);
+	PlanarProp::setPlanarOrigin(x, y, z);
 	this->imageResliceMapper->GetSlicePlane()->SetOrigin(x, y, z);
 }
 
-void QvtkImageSlice::setDisplayRegion(const double region[6])
+void ImageSlice::setDisplayRegion(const double region[6])
 {
-	QvtkAbstractPlanarProp::setDisplayRegion(region);
+	PlanarProp::setDisplayRegion(region);
 
 	double _region[6];
 
@@ -116,12 +116,12 @@ void QvtkImageSlice::setDisplayRegion(const double region[6])
 	}
 }
 
-vtkImageActor * QvtkImageSlice::getImageActor() const
+vtkImageActor * ImageSlice::getImageActor() const
 {
 	return static_cast<vtkImageActor*>(this->getProp());
 }
 
-void QvtkImageSlice::setRenderDataSet(DataSet * data)
+void ImageSlice::setRenderDataSet(DataSet * data)
 {
 	if (this->getRenderDataSet() == data) {
 		return;
@@ -129,27 +129,27 @@ void QvtkImageSlice::setRenderDataSet(DataSet * data)
 	// nullptr to remove connection
 	if (this->getRenderDataSet()) {
 		this->extractVOI->SetInputConnection(nullptr);
-		QvtkImage* image = qobject_cast<QvtkImage*>(this->getRenderDataSet());
+		Image* image = qobject_cast<Image*>(this->getRenderDataSet());
 		if (image) {
-			disconnect(image, &QvtkImage::windowChanged,
-				this, &QvtkImageSlice::setWindow);
-			disconnect(image, &QvtkImage::levelChanged,
-				this, &QvtkImageSlice::setLevel);
+			disconnect(image, &Image::windowChanged,
+				this, &ImageSlice::setWindow);
+			disconnect(image, &Image::levelChanged,
+				this, &ImageSlice::setLevel);
 		}
 	}
-	QvtkAbstractPlanarProp::setRenderDataSet(data);
+	PlanarProp::setRenderDataSet(data);
 	if(this->getRenderDataSet())
 	{
 		this->extractVOI->SetInputConnection(data->getOutputPort());
-		QvtkImage* image = qobject_cast<QvtkImage*>(data);
+		Image* image = qobject_cast<Image*>(data);
 		if (!image) {
-			qCritical() << "data is not QvtkImage.";
+			qCritical() << "data is not Image.";
 		}
 		else {
-			connect(image, &QvtkImage::windowChanged,
-				this, &QvtkImageSlice::setWindow);
-			connect(image, &QvtkImage::levelChanged,
-				this, &QvtkImageSlice::setLevel);
+			connect(image, &Image::windowChanged,
+				this, &ImageSlice::setWindow);
+			connect(image, &Image::levelChanged,
+				this, &ImageSlice::setLevel);
 			setWindow(image->getWindow());
 			setLevel(image->getLevel());
 		}
@@ -157,19 +157,22 @@ void QvtkImageSlice::setRenderDataSet(DataSet * data)
 	}
 }
 
-void QvtkImageSlice::setOpacity(double opacity)
+void ImageSlice::setOpacity(double opacity)
 {
 	if (getImageActor()) {
 		getImageActor()->GetProperty()->SetOpacity(opacity);
 	}
 }
 
-void QvtkImageSlice::setWindow(double window)
+void ImageSlice::setWindow(double window)
 {
 	getImageActor()->GetProperty()->SetColorWindow(window);
 }
 
-void QvtkImageSlice::setLevel(double level)
+void ImageSlice::setLevel(double level)
 {
 	getImageActor()->GetProperty()->SetColorLevel(level);
+}
+
+}
 }

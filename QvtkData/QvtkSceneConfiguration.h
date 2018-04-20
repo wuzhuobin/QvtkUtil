@@ -4,10 +4,10 @@
 // me
 #include "QvtkScene.h"
 #include "QvtkPolyData.h"
-#include "QvtkImage.h"
+#include "Image.h"
 #include "QvtkVolume.h"
 #include "QvtkPolyDataActor.h"
-#include "QvtkImageSlice.h"
+#include "ImageSlice.h"
 #include "QvtkPolyDataActor2D.h"
 #include "QvtkAnnotationPolyData.h"
 #include "QvtkPolyDataSource.h"
@@ -79,11 +79,11 @@ struct QvtkSceneConfiguration
 
 		scene->registerData(new QvtkAnnotationPolyData);
 		
-		scene->registerData(new QvtkImage);
+		scene->registerData(new Image);
 
-		scene->registerData(new QvtkImageSlice);
+		scene->registerData(new ImageSlice);
 
-		scene->registerData(new QvtkPolyData);
+		scene->registerData(new PolyData);
 
 		scene->registerData(new QvtkPolyDataActor);
 

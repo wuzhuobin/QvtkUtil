@@ -20,7 +20,7 @@
 
 // me
 #include "abstractviewer_export.h"
-class QvtkAbstractProp;
+class Prop;
 
 // qt
 #include <QWidget>
@@ -49,7 +49,7 @@ class ABSTRACTVIEWER_EXPORT QvtkAbstractViewer: public QWidget
 {
 	Q_OBJECT
 public:
-	typedef QHash<QvtkAbstractProp*, vtkRenderer*> PropToRenderer;
+	typedef QHash<Prop*, vtkRenderer*> PropToRenderer;
 
     /************************************************************************/
     /* Static Functions
@@ -184,17 +184,17 @@ public:
     /**
 	 * @brief AddProp
 	 *
-	 * Add a QvtkProp to the renderer of layer = renlayer
+	 * Add a Prop to the renderer of layer = renlayer
 	 *
-	 * @param prop      QvtkAbstractProp*
+	 * @param prop      Prop*
 	 * @param renlayer  int 
 	 * @return void
 	 */
 
-	virtual void AddProp(QvtkAbstractProp* prop);
-	virtual void AddProp(QvtkAbstractProp* prop, vtkRenderer* renderer);
+	virtual void AddProp(Prop* prop);
+	virtual void AddProp(Prop* prop, vtkRenderer* renderer);
 	
-	virtual QList<QvtkAbstractProp*> GetProps();
+	virtual QList<Prop*> GetProps();
 
     /**
      * @brief void RemoveProp
@@ -202,11 +202,11 @@ public:
      * Remove prop from renlayer if exist.
      * If renlayer = -1, the prop is searched and removed from all layers
      *
-     * @param QvtkAbstractProp * prop 
+     * @param Prop * prop 
      * @param int renlayer 
      * @return void
      */
-    virtual void RemoveProp(QvtkAbstractProp* prop);
+    virtual void RemoveProp(Prop* prop);
 	
     /**
 	 * @brief RemoveProp

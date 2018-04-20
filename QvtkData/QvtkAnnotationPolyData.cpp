@@ -2,7 +2,8 @@
 
 // qt
 #include <QDebug>
-
+namespace Q{
+namespace vtk{
 Q_VTK_DATACPP(QvtkAnnotationPolyData);
 QvtkAnnotationPolyData::QvtkAnnotationPolyData()
 {
@@ -42,7 +43,7 @@ QvtkAnnotationPolyData::~QvtkAnnotationPolyData()
 
 void QvtkAnnotationPolyData::printSelf() const
 {
-	QvtkPolyData::printSelf();
+	PolyData::printSelf();
 	for (int i = 0; i < this->hoverColor.size(); ++i) {
 		qDebug() << "hoverColor" << i << '=' << getAttribute(this->hoverColor[i]);
 	}
@@ -54,7 +55,7 @@ void QvtkAnnotationPolyData::printSelf() const
 
 void QvtkAnnotationPolyData::reset()
 {
-	QvtkPolyData::reset();
+	PolyData::reset();
 	setHoverColor(0, 0, 0);
 	setSelectedColor(0, 0, 0);
 }
@@ -139,4 +140,7 @@ void QvtkAnnotationPolyData::setSelectedColor(Data * self, QStandardItem * item)
 	double color[3];
 	_self->getSelectedColor(color);
 	_self->setSelectedColor(color);
+}
+
+}
 }

@@ -1,21 +1,27 @@
-#ifndef __Qvtk_ABSTRACT_PROP_H__
-#define __Qvtk_ABSTRACT_PROP_H__
+#ifndef __QVTK_PROP_H__
+#define __QVTK_PROP_H__
 
 // me
-#include "Data.h"
+#include "QvtkData.h"
+namespace Q {
+namespace vtk{
 class DataSet;
-class QvtkMatrixCallback;
-class QvtkPickedCallback;
+class MatrixCallback;
+class PickedCallback;
+}
+}
 
 // vtk
 class vtkProp3D;
 class vtkMatrix4x4;
+namespace Q {
+namespace vtk {
 
-class ABSTRACTDATA_EXPORT QvtkAbstractProp: public Data
+class QVTKDATA_EXPORT Prop: public Data
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkAbstractProp, 
+		Prop, 
 		Q_VTK_KEY(DisplayRegionX)
 		Q_VTK_KEY(DisplayRegionY)
 		Q_VTK_KEY(DisplayRegionZ)
@@ -26,8 +32,8 @@ class ABSTRACTDATA_EXPORT QvtkAbstractProp: public Data
 public:
 	static const QString DISPLAY_REGION_PREFIX[2];
 
-	QvtkAbstractProp();
-	virtual ~QvtkAbstractProp() override;
+	Prop();
+	virtual ~Prop() override;
 	virtual void printSelf() const override;
 
 	virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
@@ -116,11 +122,13 @@ private:
 
 	DataSet* renderDataSet;
 
-	QvtkMatrixCallback* matrixCallback;
+	MatrixCallback* matrixCallback;
 
-	QvtkPickedCallback* pickedCallback;
+	PickedCallback* pickedCallback;
 
 };
 
+}
+}
 
-#endif // !__Qvtk_ABSTRACT_PROP_H__
+#endif // !__QVTK_PROP_H__

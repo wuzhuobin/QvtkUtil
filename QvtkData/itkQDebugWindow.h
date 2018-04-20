@@ -2,7 +2,7 @@
 #define __ITK_QDEBUQ_WINDOW_H__
 
 // me 
-#include "abstractdata_export.h"
+#include "QVTKDATA_EXPORT.h"
 
 // itk
 #include <itkOutputWindow.h>
@@ -14,7 +14,7 @@
 namespace itk
 {
 // this class is used to send output to stdout and not the itk window
-class ABSTRACTDATA_EXPORT QDebugWindow:public OutputWindow
+class QVTKDATA_EXPORT QDebugWindow:public OutputWindow
 {
 public:
   typedef QDebugWindow                 Self;

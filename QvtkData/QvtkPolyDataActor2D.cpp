@@ -109,7 +109,7 @@ QvtkPolyDataActor2D::~QvtkPolyDataActor2D()
 
 void QvtkPolyDataActor2D::printSelf() const
 {
-    QvtkAbstractPlanarProp::printSelf();
+    PlanarProp::printSelf();
 
  //   Qvtk_PRINT_PROPERTY_VECTOR("Hover Color",	HoverColor, 3);
 	//Qvtk_PRINT_PROPERTY_VECTOR("Idle Color",		IdleColor, 3);
@@ -122,7 +122,7 @@ void QvtkPolyDataActor2D::printSelf() const
 
 
 
-//void QvtkPolyDataActor2D::setBasePolyData(QvtkPolyData* inPD)
+//void QvtkPolyDataActor2D::setBasePolyData(PolyData* inPD)
 //{
 //	this->basePDUniqueName = inPD->getUniqueName();
 //
@@ -131,12 +131,12 @@ void QvtkPolyDataActor2D::printSelf() const
 //    this->initializeProp();
 //}
 
-//QvtkPolyData* QvtkPolyDataActor2D::getBasePolyData()
+//PolyData* QvtkPolyDataActor2D::getBasePolyData()
 //{
-//    QvtkPolyData *castedptr = dynamic_cast<QvtkPolyData *>(this->getRenderDataSet());
+//    PolyData *castedptr = dynamic_cast<PolyData *>(this->getRenderDataSet());
 //    if (NULL != castedptr)
 //    {
-//        return (QvtkPolyData*)this->getRenderDataSet();
+//        return (PolyData*)this->getRenderDataSet();
 //    }
 //    else
 //    {
@@ -147,7 +147,7 @@ void QvtkPolyDataActor2D::printSelf() const
 //
 //void QvtkPolyDataActor2D::readXML(const QDomElement& xml, QString directoryPath /*= QString()*/)
 //{
-//    QvtkAbstractPlanarProp::readXML(xml, directoryPath);
+//    PlanarProp::readXML(xml, directoryPath);
 //
 //	setPickable(static_cast<bool>(xml.attribute(PICKABLE).toInt()));
 //	setOpacity(xml.attribute(OPACITY).toDouble());
@@ -156,7 +156,7 @@ void QvtkPolyDataActor2D::printSelf() const
 //	setHoverColor(csvStringToValues<double>(xml.attribute(IDLE_COLOR)));
 //
 //	/* Load polydata */
-//	QvtkPolyData* basePD = (QvtkPolyData*)QvtkScene::getCurrentScene()
+//	PolyData* basePD = (PolyData*)QvtkScene::getCurrentScene()
 //		->getDataByUniqueName(xml.attribute(BASE_QvtkPOLYDATA_UNIQUE_NAME));
 //	if (!basePD)
 //	{
@@ -170,9 +170,9 @@ void QvtkPolyDataActor2D::printSelf() const
 //
 //void QvtkPolyDataActor2D::writeXML(QDomElement& xml, QString directoryPath /*= QString()*/) const
 //{
-//    QvtkAbstractPlanarProp::writeXML(xml, directoryPath);
+//    PlanarProp::writeXML(xml, directoryPath);
 //
-//	xml.setAttribute(BASE_QvtkPOLYDATA_UNIQUE_NAME, ((QvtkPolyData*)this->getRenderDataSet())->getUniqueName());
+//	xml.setAttribute(BASE_QvtkPOLYDATA_UNIQUE_NAME, ((PolyData*)this->getRenderDataSet())->getUniqueName());
 //    xml.setAttribute(PICKABLE, getPickable());
 //	xml.setAttribute(OPACITY, getOpacity());
 //	xml.setAttribute(HOVER_COLOR,	 Qvtk_QVARIANTLIST_3_TO_CSV_STRING(getAttributes(HoverColor)));
@@ -183,7 +183,7 @@ void QvtkPolyDataActor2D::printSelf() const
 
 void QvtkPolyDataActor2D::reset()
 {
-    QvtkAbstractPlanarProp::reset();
+    PlanarProp::reset();
     //
     //this->setIdleColor(0.8, 0.4, 0.4);
     //this->setHoverColor(0.4, 0.8, 0.8);
@@ -191,7 +191,7 @@ void QvtkPolyDataActor2D::reset()
 
 void QvtkPolyDataActor2D::setPlanarNormal(double x, double y, double z)
 {
-	QvtkAbstractPlanarProp::setPlanarNormal(x, y, z);
+	PlanarProp::setPlanarNormal(x, y, z);
 	// normal does not need translate
 	double _normal[4] = { x, y, z, 1 };
 
@@ -225,7 +225,7 @@ void QvtkPolyDataActor2D::setPlanarNormal(double x, double y, double z)
 
 void QvtkPolyDataActor2D::setPlanarOrigin(double x, double y, double z)
 {
-	QvtkAbstractPlanarProp::setPlanarOrigin(x, y, z);
+	PlanarProp::setPlanarOrigin(x, y, z);
 	double _origin[4] = { x, y, z, 1 };
 
 	// origin does not need rotate
@@ -252,7 +252,7 @@ void QvtkPolyDataActor2D::setPlanarOrigin(double x, double y, double z)
 
 void QvtkPolyDataActor2D::setDisplayRegion(const double region[6])
 {
-	QvtkAbstractPlanarProp::setDisplayRegion(region);
+	PlanarProp::setDisplayRegion(region);
 	//this->box->set
 	//this->box->SetBounds(region);
 	if (this->getRenderDataSet()) {
@@ -276,7 +276,7 @@ void QvtkPolyDataActor2D::propMatrixUpdate()
 	//transform->Inverse();
 	this->plane->SetTransform(transform.GetPointer());
 	//this->box->SetTransform(transform.GetPointer());
-	QvtkAbstractPlanarProp::propMatrixUpdate();
+	PlanarProp::propMatrixUpdate();
 }
 
 void QvtkPolyDataActor2D::setRenderDataSet(DataSet * data)
@@ -290,27 +290,27 @@ void QvtkPolyDataActor2D::setRenderDataSet(DataSet * data)
 	if (this->getRenderDataSet()) {
 		//this->plane->SetTransform(static_cast<vtkTransform*>(nullptr));
 		this->clipper->SetInputConnection(nullptr);
-		QvtkPolyData* polydata = qobject_cast<QvtkPolyData*>(this->getRenderDataSet());
+		PolyData* polydata = qobject_cast<PolyData*>(this->getRenderDataSet());
 		if (polydata) {
-			disconnect(polydata, &QvtkPolyData::colorChanged,
+			disconnect(polydata, &PolyData::colorChanged,
 				this, &QvtkPolyDataActor2D::setColor);
 		}
 	}
-	QvtkAbstractPlanarProp::setRenderDataSet(data);
+	PlanarProp::setRenderDataSet(data);
 	if(this->getRenderDataSet())
 	{
 		//this->plane->SetTransform(this->getProp()->GetUserTransform());
 		this->clipper->SetInputConnection(data->getOutputPort());
-		QvtkPolyData* polydata = qobject_cast<QvtkPolyData*>(data);
+		PolyData* polydata = qobject_cast<PolyData*>(data);
 		if (!polydata) {
-			qCritical() << "data is not QvtkPolyData";
+			qCritical() << "data is not PolyData";
 
 		}
 		else {
 			double rgb[3];
 			polydata->getColor(rgb);
 			setColor(rgb);
-			connect(polydata, &QvtkPolyData::colorChanged,
+			connect(polydata, &PolyData::colorChanged,
 				this, &QvtkPolyDataActor2D::setColor);
 		}
 	}

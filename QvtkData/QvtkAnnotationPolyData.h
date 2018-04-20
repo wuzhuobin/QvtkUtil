@@ -2,8 +2,10 @@
 #define __Qvtk_ANNOTATION_POLY_DATA_H__
 
 #include "QvtkPolyData.h"
+namespace Q {
+namespace vtk{
 
-class ABSTRACTDATA_EXPORT QvtkAnnotationPolyData : public QvtkPolyData
+class QVTKDATA_EXPORT QvtkAnnotationPolyData : public PolyData
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
@@ -75,4 +77,7 @@ private:
 };
 
 
+
+}
+}
 #endif // !__Qvtk_ANNOTATION_POLY_DATA_H__

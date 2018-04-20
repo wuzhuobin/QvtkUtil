@@ -49,20 +49,20 @@ QvtkPolyDataActor::~QvtkPolyDataActor()
 
 void QvtkPolyDataActor::printSelf() const
 {
-	QvtkAbstractProp::printSelf();
+	Prop::printSelf();
 }
 
 //bool QvtkPolyDataActor::isClass(QString className) const
 //{
 //	if(getClassName() != className){
-//		return QvtkAbstractProp::isClass(className);
+//		return Prop::isClass(className);
 //	}
 //	return true;
 //}
 
 void QvtkPolyDataActor::reset()
 {
-	QvtkAbstractProp::reset();
+	Prop::reset();
 }
 
 vtkActor* QvtkPolyDataActor::getActor() const
@@ -75,12 +75,12 @@ void QvtkPolyDataActor::propMatrixUpdate()
 	vtkNew<vtkTransform> transform;
 	transform->SetMatrix(this->getProp()->GetMatrix());
 	//this->box->SetTransform(transform.GetPointer());
-	QvtkAbstractProp::propMatrixUpdate();
+	Prop::propMatrixUpdate();
 }
 
 void QvtkPolyDataActor::setDisplayRegion(const double region[6])
 {
-	QvtkAbstractProp::setDisplayRegion(region);
+	Prop::setDisplayRegion(region);
 	//this->box->SetBounds(region);
 	if (this->getRenderDataSet()) {
 		double _region[6];
@@ -99,27 +99,27 @@ void QvtkPolyDataActor::setRenderDataSet(DataSet* data)
 	if(this->getRenderDataSet()){
 
 		this->clipper->SetInputConnection(nullptr);
-		QvtkPolyData* polydata = qobject_cast<QvtkPolyData*>(this->getRenderDataSet());
+		PolyData* polydata = qobject_cast<PolyData*>(this->getRenderDataSet());
 		if (polydata) {
-			disconnect(polydata, &QvtkPolyData::colorChanged,
+			disconnect(polydata, &PolyData::colorChanged,
 				this, &QvtkPolyDataActor::setColor);
 		}
 	}
-	QvtkAbstractProp::setRenderDataSet(data);
+	Prop::setRenderDataSet(data);
 
 	if(this->getRenderDataSet())
 	{
 		this->clipper->SetInputConnection(this->getRenderDataSet()->getOutputPort());
-		QvtkPolyData* polydata = qobject_cast<QvtkPolyData*>(this->getRenderDataSet());
+		PolyData* polydata = qobject_cast<PolyData*>(this->getRenderDataSet());
 		if (!polydata) {
-			qCritical() << "data is not QvtkPolyData";
+			qCritical() << "data is not PolyData";
 
 		}
 		else {
 			double rgb[3];
 			polydata->getColor(rgb);
 			setColor(rgb);
-			connect(polydata, &QvtkPolyData::colorChanged,
+			connect(polydata, &PolyData::colorChanged,
 				this, &QvtkPolyDataActor::setColor);
 		}
 	}

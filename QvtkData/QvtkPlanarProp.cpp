@@ -1,7 +1,7 @@
-#include "QvtkAbstractPlanarProp.h"
+#include "QvtkPlanarProp.h"
 
 // me
-#include "DataSet.h"
+#include "QvtkDataSet.h"
 #include "QvtkScene.h"
 
 // vtk
@@ -12,10 +12,13 @@
 #include <QDebug>
 #include <QDomElement>
 
-const QString QvtkAbstractPlanarProp::ORIGIN_AND_NORMAL_PREFIX[3] = { "X", "Y", "Z" };
+namespace Q {
+namespace vtk {
 
-Q_VTK_DATACPP(QvtkAbstractPlanarProp);
-QvtkAbstractPlanarProp::QvtkAbstractPlanarProp()
+const QString PlanarProp::ORIGIN_AND_NORMAL_PREFIX[3] = { "X", "Y", "Z" };
+
+Q_VTK_DATACPP(PlanarProp);
+PlanarProp::PlanarProp()
 {
 	//this->slicePlane = nullptr;
 
@@ -26,9 +29,9 @@ QvtkAbstractPlanarProp::QvtkAbstractPlanarProp()
 		true,
 		normal
 	);
-	insertSlotFunction(this->planarNormal[0], &QvtkAbstractPlanarProp::setPlanarNormal);
-	insertSlotFunction(this->planarNormal[1], &QvtkAbstractPlanarProp::setPlanarNormal);
-	insertSlotFunction(this->planarNormal[2], &QvtkAbstractPlanarProp::setPlanarNormal);
+	insertSlotFunction(this->planarNormal[0], &PlanarProp::setPlanarNormal);
+	insertSlotFunction(this->planarNormal[1], &PlanarProp::setPlanarNormal);
+	insertSlotFunction(this->planarNormal[2], &PlanarProp::setPlanarNormal);
 
 	QStandardItem* origin = createAttribute(K.PlanarOrigin);
 	this->planarOrigin = createAttributesByColumns(
@@ -38,33 +41,33 @@ QvtkAbstractPlanarProp::QvtkAbstractPlanarProp()
 		origin
 	);
 
-	insertSlotFunction(this->planarOrigin[0], &QvtkAbstractPlanarProp::setPlanarOrigin);
-	insertSlotFunction(this->planarOrigin[1], &QvtkAbstractPlanarProp::setPlanarOrigin);
-	insertSlotFunction(this->planarOrigin[2], &QvtkAbstractPlanarProp::setPlanarOrigin);
+	insertSlotFunction(this->planarOrigin[0], &PlanarProp::setPlanarOrigin);
+	insertSlotFunction(this->planarOrigin[1], &PlanarProp::setPlanarOrigin);
+	insertSlotFunction(this->planarOrigin[2], &PlanarProp::setPlanarOrigin);
 
 	this->planarOrientation = createAttribute(K.PlanarOrientation, static_cast<unsigned int>(2), true);
-	insertSlotFunction(this->planarOrientation, &QvtkAbstractPlanarProp::setPlanarOrientation);
+	insertSlotFunction(this->planarOrientation, &PlanarProp::setPlanarOrientation);
 
 }
 
-QvtkAbstractPlanarProp::~QvtkAbstractPlanarProp()
+PlanarProp::~PlanarProp()
 {
 
 }
 
-void QvtkAbstractPlanarProp::printSelf() const
+void PlanarProp::printSelf() const
 {
-	QvtkAbstractProp::printSelf();
+	Prop::printSelf();
 }
 
-void QvtkAbstractPlanarProp::reset()
+void PlanarProp::reset()
 {
-	QvtkAbstractProp::reset();
+	Prop::reset();
 	setPlanarNormal(0, 0, 1);
 
 }
 
-void QvtkAbstractPlanarProp::setPlanarNormal(double x, double y, double z)
+void PlanarProp::setPlanarNormal(double x, double y, double z)
 {
 	ENUM_ORIENTATION _orientation = static_cast<ENUM_ORIENTATION>(getPlanarOrientation());
 	// for some reasons, the normal must follow the orientation
@@ -72,16 +75,16 @@ void QvtkAbstractPlanarProp::setPlanarNormal(double x, double y, double z)
 	double _normal[3] = { 0,0,0 };
 	switch (_orientation)
 	{
-	case QvtkAbstractPlanarProp::ORIENTATION_YZ:
+	case PlanarProp::ORIENTATION_YZ:
 		_normal[0] = 1;
 		break;
-	case QvtkAbstractPlanarProp::ORIENTATION_XZ:
+	case PlanarProp::ORIENTATION_XZ:
 		_normal[1] = 1;
 		break;
-	case QvtkAbstractPlanarProp::ORIENTATION_XY:
+	case PlanarProp::ORIENTATION_XY:
 		_normal[2] = 1;
 		break;
-	case QvtkAbstractPlanarProp::ORIENTATION_OBLIQUE:
+	case PlanarProp::ORIENTATION_OBLIQUE:
 		_normal[0] = x;
 		_normal[1] = y;
 		_normal[2] = z;
@@ -93,26 +96,26 @@ void QvtkAbstractPlanarProp::setPlanarNormal(double x, double y, double z)
 
 }
 
-void QvtkAbstractPlanarProp::getPlanarNormal(double normal[3])
+void PlanarProp::getPlanarNormal(double normal[3])
 {
 	normal[0] = getAttributes(this->planarNormal)[0].toDouble();
 	normal[1] = getAttributes(this->planarNormal)[1].toDouble();
 	normal[2] = getAttributes(this->planarNormal)[2].toDouble();
 }
 
-void QvtkAbstractPlanarProp::setPlanarOrigin(double x, double y, double z)
+void PlanarProp::setPlanarOrigin(double x, double y, double z)
 {
 	setAttributes(this->planarOrigin, QVariantList() << x << y << z );
 }
 
-void QvtkAbstractPlanarProp::getPlanarOrigin(double origin[3])
+void PlanarProp::getPlanarOrigin(double origin[3])
 {
 	origin[0] = getAttributes(this->planarOrigin)[0].toDouble();
 	origin[1] = getAttributes(this->planarOrigin)[1].toDouble();
 	origin[2] = getAttributes(this->planarOrigin)[2].toDouble();
 }
 
-void QvtkAbstractPlanarProp::setPlanarOrientation(unsigned int orientation)
+void PlanarProp::setPlanarOrientation(unsigned int orientation)
 {
 	ENUM_ORIENTATION _orientation = static_cast<ENUM_ORIENTATION>(orientation);
 	setAttribute(this->planarOrientation, _orientation);
@@ -121,31 +124,31 @@ void QvtkAbstractPlanarProp::setPlanarOrientation(unsigned int orientation)
 	double normal[3] = { 0,0,0 };
 	switch (_orientation)
 	{
-	case QvtkAbstractPlanarProp::ORIENTATION_YZ:
+	case PlanarProp::ORIENTATION_YZ:
 		normal[0] = 1;
 		setPlanarNormal(normal);
 		break;
-	case QvtkAbstractPlanarProp::ORIENTATION_XZ:
+	case PlanarProp::ORIENTATION_XZ:
 		normal[1] = 1;
 		setPlanarNormal(normal); 
 		break;
-	case QvtkAbstractPlanarProp::ORIENTATION_XY:
+	case PlanarProp::ORIENTATION_XY:
 		normal[2] = 1;
 		setPlanarNormal(normal);
 		break;
-	case QvtkAbstractPlanarProp::ORIENTATION_OBLIQUE:
+	case PlanarProp::ORIENTATION_OBLIQUE:
 		break;
 	default:
 		break;
 	}
 }
 
-int QvtkAbstractPlanarProp::getPlanarOrientation() const
+int PlanarProp::getPlanarOrientation() const
 {
 	return getAttribute(this->planarOrientation).toInt();
 }
 
-void QvtkAbstractPlanarProp::propMatrixUpdate()
+void PlanarProp::propMatrixUpdate()
 {
 	double origin[3], normal[3];
 	getPlanarOrigin(origin);
@@ -154,27 +157,30 @@ void QvtkAbstractPlanarProp::propMatrixUpdate()
 	setPlanarOrigin(origin);
 	setPlanarNormal(normal);
 
-	QvtkAbstractProp::propMatrixUpdate();
+	Prop::propMatrixUpdate();
 }
 
-void QvtkAbstractPlanarProp::setPlanarNormal(Data * self, QStandardItem * item)
+void PlanarProp::setPlanarNormal(Data * self, QStandardItem * item)
 {
-	QvtkAbstractPlanarProp* _self = static_cast<QvtkAbstractPlanarProp*>(self);
+	PlanarProp* _self = static_cast<PlanarProp*>(self);
 	double normal[3];
 	_self->getPlanarNormal(normal);
 	_self->setPlanarNormal(normal);
 }
 
-void QvtkAbstractPlanarProp::setPlanarOrigin(Data * self, QStandardItem * item)
+void PlanarProp::setPlanarOrigin(Data * self, QStandardItem * item)
 {
-	QvtkAbstractPlanarProp* _self = static_cast<QvtkAbstractPlanarProp*>(self);
+	PlanarProp* _self = static_cast<PlanarProp*>(self);
 	double origin[3];
 	_self->getPlanarOrigin(origin);
 	_self->setPlanarOrigin(origin);
 }
 
-void QvtkAbstractPlanarProp::setPlanarOrientation(Data * self, QStandardItem * item)
+void PlanarProp::setPlanarOrientation(Data * self, QStandardItem * item)
 {
-	QvtkAbstractPlanarProp* _self = static_cast<QvtkAbstractPlanarProp*>(self);
+	PlanarProp* _self = static_cast<PlanarProp*>(self);
 	_self->setPlanarOrientation(getAttribute(item).toUInt());
+}
+
+}
 }

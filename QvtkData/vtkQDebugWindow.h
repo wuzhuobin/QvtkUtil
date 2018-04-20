@@ -2,7 +2,7 @@
 #define __VTK_QDEBUG_WINDOW_H__
 
 // me
-#include "abstractdata_export.h"
+#include "QVTKDATA_EXPORT.h"
 
 // vtk
 #include <vtkOutputWindow.h>
@@ -10,7 +10,7 @@
 // qt
 #include <QString>
 
-class ABSTRACTDATA_EXPORT vtkQDebugWindow : public vtkOutputWindow
+class QVTKDATA_EXPORT vtkQDebugWindow : public vtkOutputWindow
 {
 public:
 	vtkTypeMacro(vtkQDebugWindow, vtkOutputWindow);

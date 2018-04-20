@@ -1,14 +1,14 @@
 #ifndef __Qvtk_VOLUME_H__
 #define __Qvtk_VOLUME_H__
 
-#include "QvtkAbstractProp.h"
+#include "Prop.h"
 
 class vtkVolume;
 class vtkSmartVolumeMapper;
 class QStandardItem;
 class vtkImageShiftScale;
 
-class ABSTRACTDATA_EXPORT QvtkVolume: public QvtkAbstractProp
+class QVTKDATA_EXPORT QvtkVolume: public Prop
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(

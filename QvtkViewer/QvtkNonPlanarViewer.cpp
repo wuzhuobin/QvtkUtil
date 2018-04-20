@@ -1,6 +1,6 @@
 // me
 #include "QvtkNonPlanarViewer.h"
-#include "QvtkImageSlice.h"
+#include "ImageSlice.h"
 
 //vtk
 #include <vtkOpenGLCamera.h>
@@ -12,10 +12,10 @@
 
 //void QvtkNonPlanarViewer::SetOrientation(int orientation)
 //{
-//	QList<QvtkAbstractProp*> props = this->propToRenderer->keys();
+//	QList<Prop*> props = this->propToRenderer->keys();
 //
-//	foreach(QvtkAbstractProp* prop, props) {
-//		QvtkImageSlice* slice = qobject_cast<QvtkImageSlice*>(prop);
+//	foreach(Prop* prop, props) {
+//		ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
 //		if (slice) {
 //			slice->setOrientation(orientation);
 //
@@ -130,10 +130,10 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 //			
 //			QvtkNonPlanarViewer* _viewer = qobject_cast<QvtkNonPlanarViewer*>(viewer);
 //			if (_viewer) {
-//				QList<QvtkAbstractProp*> props = _viewer->propToRenderer->keys();
+//				QList<Prop*> props = _viewer->propToRenderer->keys();
 //
-//				foreach(QvtkAbstractProp* prop, props) {
-//					QvtkImageSlice* slice = qobject_cast<QvtkImageSlice*>(prop);
+//				foreach(Prop* prop, props) {
+//					ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
 //					if (slice) {
 //						double region[6];
 //						slice->getDisplayRegion(region);
