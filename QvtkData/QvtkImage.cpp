@@ -270,7 +270,7 @@ bool Image::_VTKImageToITKImage(itk::Image<PixelType, 3> * output, vtkImageData 
 		return false;
 	}
 	//typedef Image<VTK_TT, 3> vtkImageType;
-	typedef Image<PixelType, 3> TImageType;
+	typedef itk::Image<PixelType, 3> TImageType;
 	typename TImageType::Pointer itkImage = TImageType::New();
 	switch (input->GetScalarType())
 	{
@@ -376,7 +376,7 @@ bool Image::readImage(QStringList paths, vtkImageData * image, double orientatio
 {
 	using namespace itk;
 	//typedef float PixelType;
-	typedef Image< PixelType, 3> TImageType;
+	typedef itk::Image< PixelType, 3> TImageType;
 	typename TImageType::Pointer itkImage = nullptr;
 
 	if (paths.isEmpty() && paths.first().isEmpty())
@@ -447,8 +447,8 @@ template<typename OPixelType, typename IPixelType>
 void Image::_ITKImageCasting(itk::Image<OPixelType, 3>* output, vtkImageData* input)
 {
 	using namespace itk;
-	typedef Image<OPixelType, 3> OutputImageType;
-	typedef Image<IPixelType, 3> InputImageType;
+	typedef itk::Image<OPixelType, 3> OutputImageType;
+	typedef itk::Image<IPixelType, 3> InputImageType;
 
 	typedef VTKImageToImageFilter<InputImageType> VTKImageToImageFilter;
 	typename VTKImageToImageFilter::Pointer vtkImageToImageFilter =
@@ -563,7 +563,7 @@ bool Image::writeImage(QStringList paths, vtkImageData* image, const double orie
 {
 	using namespace itk;
 //	typedef float PixelType;
-	typedef Image< PixelType, 3> TImageType;
+	typedef itk::Image< PixelType, 3> TImageType;
 
 	typename TImageType::Pointer itkImage = TImageType::New();
 	bool returnValue = _VTKImageToITKImage<PixelType>(itkImage, image, orientation, position, scale);

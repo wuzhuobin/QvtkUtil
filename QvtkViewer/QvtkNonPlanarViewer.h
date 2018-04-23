@@ -3,7 +3,7 @@
 
 #include "QvtkOrthogonalViewer.h"
 
-class ABSTRACTVIEWER_EXPORT QvtkNonPlanarViewer : public QvtkOrthogonalViewer
+class ABSTRACTVIEWER_EXPORT QvtkNonPlanarViewer : public OrthogonalViewer
 {
 	Q_OBJECT;
 public:

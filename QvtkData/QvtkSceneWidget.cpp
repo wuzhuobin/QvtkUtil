@@ -2,45 +2,47 @@
 #include "QvtkSceneWidget.h"
 #include "ui_QvtkSceneWidget.h"
 #include "QvtkScene.h"
-#include "Data.h"
+#include "QvtkData.h"
 
 //qt
 #include <QStandardItemModel>
 #include <QDebug>
 
+namespace Q {
+	namespace vtk {
 
 
-QvtkSceneWidget::QvtkSceneWidget(QWidget * parent)
+SceneWidget::SceneWidget(QWidget * parent)
 	:QWidget(parent)
 {
-	this->ui = new Ui::QvtkSceneWidget;
+	this->ui = new Ui::SceneWidget;
 	this->ui->setupUi(this);
 
 	this->tmpData = nullptr;
 
-	QvtkScene* scene = QvtkScene::getCurrentScene();
+	Scene* scene = Scene::getCurrentScene();
 
 	// connection 
-	//connect(scene, &QvtkScene::signalImported, this, &QvtkSceneWidget::slotSceneReloaded);
-	connect(scene, &QvtkScene::signalCleared, this, &QvtkSceneWidget::slotSceneReloaded);
-	//connect(scene, SIGNAL(QvtkScene::signalAddedData(QString)), this, SLOT(QvtkSceneWidget::slotSceneAddedData(QString)));
-	connect(scene, &QvtkScene::signalAddedData, this, &QvtkSceneWidget::slotSceneAddedData);
-	connect(scene, &QvtkScene::signalRemovedData, this, &QvtkSceneWidget::slotSceneRemoveData);
+	//connect(scene, &Scene::signalImported, this, &SceneWidget::slotSceneReloaded);
+	connect(scene, &Scene::signalCleared, this, &SceneWidget::slotSceneReloaded);
+	//connect(scene, SIGNAL(Scene::signalAddedData(QString)), this, SLOT(SceneWidget::slotSceneAddedData(QString)));
+	connect(scene, &Scene::signalAddedData, this, &SceneWidget::slotSceneAddedData);
+	connect(scene, &Scene::signalRemovedData, this, &SceneWidget::slotSceneRemoveData);
 	connect(this->ui->listWidgetQvtkScene, &QListWidget::itemClicked, 
-		this, static_cast<void(QvtkSceneWidget::*)(QListWidgetItem*)>(&QvtkSceneWidget::slotSceneClicked));
+		this, static_cast<void(SceneWidget::*)(QListWidgetItem*)>(&SceneWidget::slotSceneClicked));
 
 	
 	
 }
 
-QvtkSceneWidget::~QvtkSceneWidget()
+SceneWidget::~SceneWidget()
 {
 	delete this->ui;
 }
 
-void QvtkSceneWidget::slotSceneReloaded()
+void SceneWidget::slotSceneReloaded()
 {
-	QvtkScene* scene = QvtkScene::getCurrentScene();
+	Scene* scene = Scene::getCurrentScene();
 	this->ui->listWidgetQvtkScene->clear();
 	// checking for removing warning of disconnect nullptr
 	if (this->tmpData) {
@@ -64,16 +66,16 @@ void QvtkSceneWidget::slotSceneReloaded()
 
 }
 
-void QvtkSceneWidget::slotSceneAddedData(QString uniqueName)
+void SceneWidget::slotSceneAddedData(QString uniqueName)
 {
-	QvtkScene* scene = QvtkScene::getCurrentScene();
+	Scene* scene = Scene::getCurrentScene();
 	if (scene->getDataByUniqueName(uniqueName)->getSelectable()) {
 		uniqueName = uniqueNameToItemName(uniqueName);
 		this->ui->listWidgetQvtkScene->addItem(uniqueName);
 	}
 }
 
-void QvtkSceneWidget::slotSceneRemoveData(QString uniqueName)
+void SceneWidget::slotSceneRemoveData(QString uniqueName)
 {
 	// check whether #tmpData is data to be removed.
 	if (this->tmpData && 
@@ -109,14 +111,14 @@ void QvtkSceneWidget::slotSceneRemoveData(QString uniqueName)
 	}
 }
 
-void QvtkSceneWidget::slotSceneClicked(QListWidgetItem * item)
+void SceneWidget::slotSceneClicked(QListWidgetItem * item)
 {
 	slotSceneClicked(itemNameToUniqueName(item->text()));
 }
 
-void QvtkSceneWidget::slotSceneClicked(QString uniqueName)
+void SceneWidget::slotSceneClicked(QString uniqueName)
 {
-	QvtkScene* scene = QvtkScene::getCurrentScene();
+	Scene* scene = Scene::getCurrentScene();
 	Data* data = scene->getDataByUniqueName(uniqueName);
 	if (this->tmpData == data) {
 		return;
@@ -139,18 +141,20 @@ void QvtkSceneWidget::slotSceneClicked(QString uniqueName)
 	this->ui->treeViewQvtkData->expandAll();
 }
 
-QString QvtkSceneWidget::uniqueNameToItemName(QString uniqueName)
+QString SceneWidget::uniqueNameToItemName(QString uniqueName)
 {
-	QvtkScene* scene = QvtkScene::getCurrentScene();
+	Scene* scene = Scene::getCurrentScene();
 	QString itemName = scene->getTagByClassName(scene->getDataByUniqueName(uniqueName)->getClassName());
 	itemName += ": ";
 	itemName += uniqueName;
 	return itemName;
 }
 
-QString QvtkSceneWidget::itemNameToUniqueName(QString uniqueName)
+QString SceneWidget::itemNameToUniqueName(QString uniqueName)
 {
 	return uniqueName.split(": ").last();
 }
 
 
+}
+}

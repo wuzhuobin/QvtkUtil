@@ -1,8 +1,7 @@
 #ifndef __Qvtk_ABSTRACT_ANNOTATION_PROP_H__
 #define __Qvtk_ABSTRACT_ANNOTATION_PROP_H__
 
-#include "QvtkAbstractPlanarProp.h"
-//#include "DataMacro.h"
+#include "QvtkPlanarProp.h"
 
 
 #include <vtkSmartPointer.h>
@@ -14,18 +13,20 @@ class vtkPlane;
 class vtkCutter;
 class vtkStripperPolygon;
 class vtkTriangleFilter;
-//class vtkTransformPolyDataFilter;
 class vtkPolyDataMapper;
-//class vtkLinesToPolysFilter;
 
-class QVTKDATA_EXPORT QvtkPolyDataActor2D : public PlanarProp
+namespace Q{
+namespace vtk{
+
+
+class QVTKDATA_EXPORT PolyDataActor2D : public PlanarProp
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(QvtkPolyDataActor2D)
+	Q_VTK_DATAH(PolyDataActor2D)
 public:
 
-	QvtkPolyDataActor2D();
-	virtual ~QvtkPolyDataActor2D() override;
+	PolyDataActor2D();
+	virtual ~PolyDataActor2D() override;
 	virtual void printSelf() const override;
 
 	virtual vtkActor* getActor() const;
@@ -48,7 +49,7 @@ public slots:
 	virtual void setColor(const double rgb[3]);
 
 protected:
-	virtual Data* newInstance() const override { return new QvtkPolyDataActor2D; }
+	virtual Data* newInstance() const override { return new PolyDataActor2D; }
 
 	vtkSmartPointer<vtkBox> box;
 
@@ -65,6 +66,7 @@ protected:
 
 
 };
-
+}
+}
 
 #endif

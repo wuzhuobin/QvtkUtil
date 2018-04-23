@@ -5,11 +5,11 @@
 namespace Q {
 namespace vtk{
 
-class QVTKDATA_EXPORT QvtkAnnotationPolyData : public PolyData
+class QVTKDATA_EXPORT AnnotationPolyData : public PolyData
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkAnnotationPolyData, 
+		AnnotationPolyData, 
 		Q_VTK_KEY(AnnotationStatus)
 		Q_VTK_KEY(HoverColor)
 		Q_VTK_KEY(SelectedColor)
@@ -23,8 +23,8 @@ public:
 		SELECTED = 2
 	};
 
-	QvtkAnnotationPolyData();
-	virtual ~QvtkAnnotationPolyData() override;
+	AnnotationPolyData();
+	virtual ~AnnotationPolyData() override;
 	
 	virtual void printSelf() const override;
 
@@ -63,7 +63,7 @@ signals:
 
 protected:
 
-	virtual Data* newInstance() { return new QvtkAnnotationPolyData; }
+	virtual Data* newInstance() { return new AnnotationPolyData; }
 
 	static void setAnnotatoinStatus(Data* self, QStandardItem* item);
 	static void setHoverColor(Data* self, QStandardItem* item);

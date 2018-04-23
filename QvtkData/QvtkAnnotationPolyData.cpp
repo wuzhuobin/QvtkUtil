@@ -4,8 +4,8 @@
 #include <QDebug>
 namespace Q{
 namespace vtk{
-Q_VTK_DATACPP(QvtkAnnotationPolyData);
-QvtkAnnotationPolyData::QvtkAnnotationPolyData()
+Q_VTK_DATACPP(AnnotationPolyData);
+AnnotationPolyData::AnnotationPolyData()
 {
 	QStandardItem* hoverItem = createAttribute(K.HoverColor);
 	QStandardItem* selectedItem = createAttribute(K.SelectedColor);
@@ -29,19 +29,19 @@ QvtkAnnotationPolyData::QvtkAnnotationPolyData()
 
 	for (int i = 0; i< 3; i++)
 	{
-		insertSlotFunction(this->hoverColor[i], &QvtkAnnotationPolyData::setHoverColor);
-		insertSlotFunction(this->selectedColor[i], &QvtkAnnotationPolyData::setSelectedColor);
+		insertSlotFunction(this->hoverColor[i], &AnnotationPolyData::setHoverColor);
+		insertSlotFunction(this->selectedColor[i], &AnnotationPolyData::setSelectedColor);
 	}
 
 	this->annotationStatus = createAttribute(K.AnnotationStatus, static_cast<unsigned int>(0), true);
-	insertSlotFunction(this->annotationStatus, &QvtkAnnotationPolyData::setAnnotatoinStatus);
+	insertSlotFunction(this->annotationStatus, &AnnotationPolyData::setAnnotatoinStatus);
 }
 
-QvtkAnnotationPolyData::~QvtkAnnotationPolyData()
+AnnotationPolyData::~AnnotationPolyData()
 {
 }
 
-void QvtkAnnotationPolyData::printSelf() const
+void AnnotationPolyData::printSelf() const
 {
 	PolyData::printSelf();
 	for (int i = 0; i < this->hoverColor.size(); ++i) {
@@ -53,26 +53,26 @@ void QvtkAnnotationPolyData::printSelf() const
 	}
 }
 
-void QvtkAnnotationPolyData::reset()
+void AnnotationPolyData::reset()
 {
 	PolyData::reset();
 	setHoverColor(0, 0, 0);
 	setSelectedColor(0, 0, 0);
 }
 
-void QvtkAnnotationPolyData::setHoverColor(const double hoverColor[3])
+void AnnotationPolyData::setHoverColor(const double hoverColor[3])
 {
 	setAttributes(this->hoverColor, QVariantList() << hoverColor[0]
 		<< hoverColor[1] << hoverColor[2]);
 	//emit hoverColorChanged(hoverColor);
 }
 
-unsigned int QvtkAnnotationPolyData::getAnnotationStatus() const
+unsigned int AnnotationPolyData::getAnnotationStatus() const
 {
 	return getAttribute(this->annotationStatus).toUInt();
 }
 
-void QvtkAnnotationPolyData::getHoverColor(double hoverColor[3]) const
+void AnnotationPolyData::getHoverColor(double hoverColor[3]) const
 {
 	QVariantList list = getAttributes(this->hoverColor);
 	for (int i = 0; i < 3; ++i)
@@ -81,14 +81,14 @@ void QvtkAnnotationPolyData::getHoverColor(double hoverColor[3]) const
 	}
 }
 
-void QvtkAnnotationPolyData::setSelectedColor(const double selectedColor[3])
+void AnnotationPolyData::setSelectedColor(const double selectedColor[3])
 {
 	setAttributes(this->selectedColor, QVariantList() << selectedColor[0] <<
 		selectedColor[1] << selectedColor[2]);
 	//emit selectedColorChanged(selectedColor);
 }
 
-void QvtkAnnotationPolyData::getSelectedColor(double selectedColor[3]) const
+void AnnotationPolyData::getSelectedColor(double selectedColor[3]) const
 {
 	QVariantList list = getAttributes(this->selectedColor);
 	for (int i = 0; i < 3; ++i)
@@ -97,7 +97,7 @@ void QvtkAnnotationPolyData::getSelectedColor(double selectedColor[3]) const
 	}
 }
 
-void QvtkAnnotationPolyData::setAnnotationStatus(unsigned int i)
+void AnnotationPolyData::setAnnotationStatus(unsigned int i)
 {
 	setAttribute(this->annotationStatus, i);
 	
@@ -105,13 +105,13 @@ void QvtkAnnotationPolyData::setAnnotationStatus(unsigned int i)
 	double color[3];
 	switch (_annotationStatus)
 	{
-	case QvtkAnnotationPolyData::HOVER:
+	case AnnotationPolyData::HOVER:
 		this->getHoverColor(color);
 		break;
-	case QvtkAnnotationPolyData::SELECTED:
+	case AnnotationPolyData::SELECTED:
 		this->getSelectedColor(color);
 		break;
-	case QvtkAnnotationPolyData::NONE:
+	case AnnotationPolyData::NONE:
 		this->getColor(color);
 	default:
 		break;
@@ -120,23 +120,23 @@ void QvtkAnnotationPolyData::setAnnotationStatus(unsigned int i)
 	emit colorChanged(color);
 }
 
-void QvtkAnnotationPolyData::setAnnotatoinStatus(Data * self, QStandardItem * item)
+void AnnotationPolyData::setAnnotatoinStatus(Data * self, QStandardItem * item)
 {
-	QvtkAnnotationPolyData* _self = static_cast<QvtkAnnotationPolyData*>(self);
+	AnnotationPolyData* _self = static_cast<AnnotationPolyData*>(self);
 	_self->setAnnotationStatus(getAttribute(item).toUInt());
 }
 
-void QvtkAnnotationPolyData::setHoverColor(Data * self, QStandardItem * item)
+void AnnotationPolyData::setHoverColor(Data * self, QStandardItem * item)
 {
-	QvtkAnnotationPolyData* _self = static_cast<QvtkAnnotationPolyData*>(self);
+	AnnotationPolyData* _self = static_cast<AnnotationPolyData*>(self);
 	double color[3];
 	_self->getHoverColor(color);
 	_self->setHoverColor(color);
 }
 
-void QvtkAnnotationPolyData::setSelectedColor(Data * self, QStandardItem * item)
+void AnnotationPolyData::setSelectedColor(Data * self, QStandardItem * item)
 {
-	QvtkAnnotationPolyData* _self = static_cast<QvtkAnnotationPolyData*>(self);
+	AnnotationPolyData* _self = static_cast<AnnotationPolyData*>(self);
 	double color[3];
 	_self->getSelectedColor(color);
 	_self->setSelectedColor(color);

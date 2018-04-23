@@ -1,5 +1,5 @@
 /*!
- * \file QvtkViewer.h
+ * \file Viewer2.h
  * \date 2017/07/14 13:26
  *
  * \author 		Wong, Matthew Lun
@@ -8,31 +8,37 @@
  * 				M.Phil Student
  * Contact: 	fromosia@gmail.com
  *
- * \brief QvtkViewer is the basic viewer class used in the framework
+ * \brief Viewer2 is the basic viewer class used in the framework
  *
  *
  * \note
 */
 
-#ifndef __Qvtk_VIEWER_H__
-#define __Qvtk_VIEWER_H__
+#ifndef __QVTK_VIEWER2_H__
+#define __QVTK_VIEWER2_H__
 
 //me
-#include "QvtkAbstractViewer.h"
-namespace Ui { class QvtkViewer; }
+#include "QvtkViewer.h"
+namespace Q {
+namespace vtk {
+	namespace Ui { class Viewer2; }
+}
+}
 
 // vtk
 class vtkGenericOpenGLRenderWindow;
 class QVTKInteractor;
 class QVTKWidget2;
 
+namespace Q {
+namespace vtk{
 
-class ABSTRACTVIEWER_EXPORT QvtkViewer: public QvtkAbstractViewer
+class QVTKVIEWER_EXPORT Viewer2: public Viewer
 {
 	Q_OBJECT;
 public:
-	explicit QvtkViewer(QWidget* parent = nullptr);
-	virtual ~QvtkViewer() override;
+	explicit Viewer2(QWidget* parent = nullptr);
+	virtual ~Viewer2() override;
 
 	/**
 	 * @brief GetRenderWindow
@@ -68,9 +74,11 @@ public:
 	virtual QVTKWidget2* GetQVTKWidget();
 
 protected:
-	Ui::QvtkViewer* ui;
+	Ui::Viewer2* ui;
 };
 
-class QVTKInteractor;
+}
+}
+//class QVTKInteractor;
 
-#endif // !__Qvtk_VIEWER_H__
+#endif // !__QVTK_VIEWER2_H__

@@ -1,5 +1,5 @@
-#include "QvtkViewer.h"
-#include "ui_QvtkViewer.h"
+#include "QvtkViewer2.h"
+#include "ui_QvtkViewer2.h"
 
 #include <QDebug>
 
@@ -10,14 +10,17 @@
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 
-QvtkViewer::QvtkViewer(QWidget * parent)
-	:QvtkAbstractViewer(parent)
+namespace Q {
+namespace vtk{
+
+Viewer2::Viewer2(QWidget * parent)
+	:Viewer(parent)
 {
-	this->ui = new Ui::QvtkViewer;
+	this->ui = new Ui::Viewer2;
 	this->ui->setupUi(this);
 
     /* This macro is called the first thing */
-    Qvtk_INIT_VIEWER_MACRO();
+    QVTK_INIT_VIEWER_MACRO();
 
     //////////////////////////////////////////////////////////////////////////
     /// Optional below, implemented according to requirements 
@@ -26,32 +29,34 @@ QvtkViewer::QvtkViewer(QWidget * parent)
  //   ren->SetLayer(1);
 }
 
-QvtkViewer::~QvtkViewer()
+Viewer2::~Viewer2()
 {
 	delete this->ui;
 }
 
-vtkRenderWindow * QvtkViewer::GetRenderWindow()
+vtkRenderWindow * Viewer2::GetRenderWindow()
 {
 	return GetGenericOpenGLRenderWindow();
 }
 
-vtkGenericOpenGLRenderWindow *QvtkViewer::GetGenericOpenGLRenderWindow()
+vtkGenericOpenGLRenderWindow *Viewer2::GetGenericOpenGLRenderWindow()
 {
 	return this->ui->qvtkWidget->GetRenderWindow();
 }
 
-vtkRenderWindowInteractor* QvtkViewer::GetInteractor()
+vtkRenderWindowInteractor* Viewer2::GetInteractor()
 {
 	return GetQVTKInteractor();
 }
 
-QVTKInteractor *QvtkViewer::GetQVTKInteractor()
+QVTKInteractor *Viewer2::GetQVTKInteractor()
 {
 	return this->ui->qvtkWidget->GetInteractor();
 }
 
-QVTKWidget2* QvtkViewer::GetQVTKWidget()
+QVTKWidget2* Viewer2::GetQVTKWidget()
 {
 	return this->ui->qvtkWidget;
+}
+}
 }

@@ -2,22 +2,27 @@
 #define __Qvtk_ORTHOGONAL_VIEWER_H__
 
 // me
-#include "QvtkAbstractViewer.h"
+#include "QvtkViewer.h"
+namespace Q {
+namespace vtk{
 namespace Ui{
-	class QvtkOrthogonalViewer;
+	class OrthogonalViewer;
+}
+}
 }
 // vtk
 class QVTKInteractor;
 class vtkGenericOpenGLRenderWindow;
-
-class ABSTRACTVIEWER_EXPORT	QvtkOrthogonalViewer : public QvtkAbstractViewer
+namespace Q {
+namespace vtk{
+class QVTKVIEWER_EXPORT	OrthogonalViewer : public Viewer
 {
 	Q_OBJECT
 public:
-	explicit QvtkOrthogonalViewer(QWidget* parent = nullptr);
-	virtual ~QvtkOrthogonalViewer() override;
+	explicit OrthogonalViewer(QWidget* parent = nullptr);
+	virtual ~OrthogonalViewer() override;
 
-    Ui::QvtkOrthogonalViewer* GetUi() { return this->ui; }
+    Ui::OrthogonalViewer* GetUi() { return this->ui; }
 	
 	enum ORIENTATION {
 		Sagital = 0,
@@ -137,7 +142,7 @@ protected:
 	bool righthandness; // default True
 
 	int orientation;
-	Ui::QvtkOrthogonalViewer* ui;
+	Ui::OrthogonalViewer* ui;
 
 	static double s_axialViewPlaneNormal[3];
 	static double s_sagitalViewPlaneNormal[3];
@@ -145,4 +150,7 @@ protected:
 	static bool initializeFlag;
 };
 
+}
+}
 #endif
+

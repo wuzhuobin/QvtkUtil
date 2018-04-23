@@ -2,7 +2,7 @@
 #define __Qvtk_ORTHOGONAL_DOCK_VIEWERS_H__
 
 // me
-class QvtkOrthogonalViewer;
+class OrthogonalViewer;
 #include "abstractviewer_export.h"
 
 // qt 
@@ -22,8 +22,8 @@ public:
 
 	void deleteAllViewer();
 	void setViewer(int i);
-	void setViewer(int i, QvtkOrthogonalViewer* viewer);
-	QvtkOrthogonalViewer* getViewers(int i) const;
+	void setViewer(int i, OrthogonalViewer* viewer);
+	OrthogonalViewer* getViewers(int i) const;
 	QDockWidget* getDocker(int i) const;
 	int getNumberOfViewers() const;
 private slots:
@@ -33,7 +33,7 @@ private:
 
 	void installViewer();
 
-	QList<QvtkOrthogonalViewer*>* viewers;
+	QList<OrthogonalViewer*>* viewers;
 	QList<QDockWidget*>* dockers;
 	QSignalMapper* mapper;
 

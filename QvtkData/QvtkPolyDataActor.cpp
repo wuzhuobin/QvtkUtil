@@ -1,7 +1,7 @@
 #include "QvtkPolyDataActor.h"
 
 // me
-#include "DataSet.h"
+#include "QvtkDataSet.h"
 #include "QvtkPolyData.h"
 
 // vtk
@@ -15,8 +15,10 @@
 
 // qt
 #include <QDebug>
-Q_VTK_DATACPP(QvtkPolyDataActor);
-QvtkPolyDataActor::QvtkPolyDataActor()
+namespace Q {
+namespace vtk{
+Q_VTK_DATACPP(PolyDataActor);
+PolyDataActor::PolyDataActor()
 {
 
 	// install pipeline
@@ -41,18 +43,18 @@ QvtkPolyDataActor::QvtkPolyDataActor()
 
 }
 
-QvtkPolyDataActor::~QvtkPolyDataActor()
+PolyDataActor::~PolyDataActor()
 {
 	//qDebug() << this->getClassName();
 	setRenderDataSet(nullptr);
 }
 
-void QvtkPolyDataActor::printSelf() const
+void PolyDataActor::printSelf() const
 {
 	Prop::printSelf();
 }
 
-//bool QvtkPolyDataActor::isClass(QString className) const
+//bool PolyDataActor::isClass(QString className) const
 //{
 //	if(getClassName() != className){
 //		return Prop::isClass(className);
@@ -60,17 +62,17 @@ void QvtkPolyDataActor::printSelf() const
 //	return true;
 //}
 
-void QvtkPolyDataActor::reset()
+void PolyDataActor::reset()
 {
 	Prop::reset();
 }
 
-vtkActor* QvtkPolyDataActor::getActor() const
+vtkActor* PolyDataActor::getActor() const
 {
 	return vtkActor::SafeDownCast(this->getProp());
 }
 
-void QvtkPolyDataActor::propMatrixUpdate()
+void PolyDataActor::propMatrixUpdate()
 {
 	vtkNew<vtkTransform> transform;
 	transform->SetMatrix(this->getProp()->GetMatrix());
@@ -78,7 +80,7 @@ void QvtkPolyDataActor::propMatrixUpdate()
 	Prop::propMatrixUpdate();
 }
 
-void QvtkPolyDataActor::setDisplayRegion(const double region[6])
+void PolyDataActor::setDisplayRegion(const double region[6])
 {
 	Prop::setDisplayRegion(region);
 	//this->box->SetBounds(region);
@@ -89,7 +91,7 @@ void QvtkPolyDataActor::setDisplayRegion(const double region[6])
 	}
 }
 
-void QvtkPolyDataActor::setRenderDataSet(DataSet* data)
+void PolyDataActor::setRenderDataSet(DataSet* data)
 {
 	if (this->getRenderDataSet() == data) {
 		return;
@@ -102,7 +104,7 @@ void QvtkPolyDataActor::setRenderDataSet(DataSet* data)
 		PolyData* polydata = qobject_cast<PolyData*>(this->getRenderDataSet());
 		if (polydata) {
 			disconnect(polydata, &PolyData::colorChanged,
-				this, &QvtkPolyDataActor::setColor);
+				this, &PolyDataActor::setColor);
 		}
 	}
 	Prop::setRenderDataSet(data);
@@ -120,21 +122,24 @@ void QvtkPolyDataActor::setRenderDataSet(DataSet* data)
 			polydata->getColor(rgb);
 			setColor(rgb);
 			connect(polydata, &PolyData::colorChanged,
-				this, &QvtkPolyDataActor::setColor);
+				this, &PolyDataActor::setColor);
 		}
 	}
 }
 
-void QvtkPolyDataActor::setOpacity(double opacity)
+void PolyDataActor::setOpacity(double opacity)
 {
 	if (getActor()) {
 		getActor()->GetProperty()->SetOpacity(opacity);
 	}
 }
 
-void QvtkPolyDataActor::setColor(const double rgb[3])
+void PolyDataActor::setColor(const double rgb[3])
 {
 	if (getActor()) {
 		getActor()->GetProperty()->SetColor(rgb[0], rgb[1], rgb[2]);
 	}
+}
+
+}
 }

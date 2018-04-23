@@ -1,12 +1,11 @@
 // me
-#include "QvtkAbstractViewer.h"
-#include "Prop.h"
+#include "QvtkViewer.h"
+#include "QvtkProp.h"
 
 // vtk
 #include <vtkSmartPointer.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
-//#include <vtkMath.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderWindow.h>
 #include <vtkCamera.h>
@@ -19,17 +18,18 @@
 
 // qt
 #include <QDebug>
+namespace Q {
+namespace vtk{
 
-
-class QvtkCursorCallbackCommand : public vtkCallbackCommand
+class CursorCallbackCommand : public vtkCallbackCommand
 {
 public:
-	static QvtkCursorCallbackCommand* New() { return new QvtkCursorCallbackCommand; }
-	vtkTypeMacro(QvtkCursorCallbackCommand, vtkCallbackCommand);
+	static CursorCallbackCommand* New() { return new CursorCallbackCommand; }
+	vtkTypeMacro(CursorCallbackCommand, vtkCallbackCommand);
 	void Execute(vtkObject *caller,
 		unsigned long eid,
 		void *callData) VTK_OVERRIDE {
-		QvtkAbstractViewer* self = static_cast<QvtkAbstractViewer*>(this->ClientData);
+		Viewer* self = static_cast<Viewer*>(this->ClientData);
 		vtkCursor3D* cursor = static_cast<vtkCursor3D*>(caller);
 		if (self->GetCursorDesyncFlag() && cursor != self->GetCursorSource()) {
 			return;
@@ -41,14 +41,14 @@ public:
 };
 
 vtkNew<vtkCursor3D> cursorSourceMemory;
-vtkCursor3D* QvtkAbstractViewer::s_cursorSource
+vtkCursor3D* Viewer::s_cursorSource
     = cursorSourceMemory.GetPointer();
-QList<QvtkAbstractViewer*> QvtkAbstractViewer::s_viewersList;
+QList<Viewer*> Viewer::s_viewersList;
 
-QvtkAbstractViewer* QvtkAbstractViewer::GetViewerOfInteractor(vtkInteractorStyle* style)
+Viewer* Viewer::GetViewerOfInteractor(vtkInteractorStyle* style)
 {
-	QList<QvtkAbstractViewer*> viewersVect = QvtkAbstractViewer::GetAllViewers();
-	typedef QList<QvtkAbstractViewer*>::const_iterator Const_Iter;
+	QList<Viewer*> viewersVect = Viewer::GetAllViewers();
+	typedef QList<Viewer*>::const_iterator Const_Iter;
 	for (Const_Iter iter = viewersVect.cbegin(); iter != viewersVect.cend(); iter++)
 	{
 		if ((*iter)->GetInteractor()->GetInteractorStyle() == style)
@@ -61,17 +61,17 @@ QvtkAbstractViewer* QvtkAbstractViewer::GetViewerOfInteractor(vtkInteractorStyle
 	return nullptr;
 }
 
-void QvtkAbstractViewer::RenderAllViewers()
+void Viewer::RenderAllViewers()
 {
-	foreach (QvtkAbstractViewer* viewer, s_viewersList)
+	foreach (Viewer* viewer, s_viewersList)
 	{
 		viewer->Render();
 	}
 }
 
-void QvtkAbstractViewer::RenderViewersByGroup(int group)
+void Viewer::RenderViewersByGroup(int group)
 {
-	foreach(QvtkAbstractViewer* viewer, s_viewersList)
+	foreach(Viewer* viewer, s_viewersList)
 	{
 		if (viewer->GetViewerGroup() != group)
 			continue;
@@ -83,17 +83,17 @@ void QvtkAbstractViewer::RenderViewersByGroup(int group)
 
 }
 
-void QvtkAbstractViewer::SetGroupInteractorStyle(vtkInteractorStyle* style, int group)
+void Viewer::SetGroupInteractorStyle(vtkInteractorStyle* style, int group)
 {
     // #TODO: QvtkABstractViewer::SetGroupInteractorStyle(style, group)
     //throw std::logic_error("Not Implemented!");
 	qCritical() << "Not implemented!";
 	return;
 
-    //typedef std::vector<QvtkAbstractViewer*>::iterator IterType;
+    //typedef std::vector<Viewer*>::iterator IterType;
     //for(IterType iter = s_viewersList.begin(); iter != s_viewersList.end();iter++)
     //{
-    //    QvtkAbstractViewer* viewers = *iter;
+    //    Viewer* viewers = *iter;
     //    if (viewers->viewerGroup != group)
     //        continue;
     //    else
@@ -111,7 +111,7 @@ void QvtkAbstractViewer::SetGroupInteractorStyle(vtkInteractorStyle* style, int 
     //}
 }
 
-vtkRenderer* QvtkAbstractViewer::AddRenderer(int layer)
+vtkRenderer* Viewer::AddRenderer(int layer)
 {
     vtkRenderer* ren = vtkRenderer::New();
     //#TODO: Expand number of layer of renderwindo if layer > GetNumberofLayer()
@@ -122,7 +122,7 @@ vtkRenderer* QvtkAbstractViewer::AddRenderer(int layer)
     return ren;
 }
 
-void QvtkAbstractViewer::AddRenderer(vtkRenderer* ren, int layer)
+void Viewer::AddRenderer(vtkRenderer* ren, int layer)
 {
     if (layer >= 0)
     {
@@ -150,7 +150,7 @@ void QvtkAbstractViewer::AddRenderer(vtkRenderer* ren, int layer)
     }
 }
 
-void QvtkAbstractViewer::RemoveRenderer(int index)
+void Viewer::RemoveRenderer(int index)
 {
 	if (index < 0 || index > this->renderers.size()) {
 		qWarning() << "Renderer requested to delete doesn't exist.";
@@ -164,18 +164,18 @@ void QvtkAbstractViewer::RemoveRenderer(int index)
 	qWarning() << "Renderer requested to delete doesn't exist.";
 }
 
-void QvtkAbstractViewer::RemoveRenderer(vtkRenderer* ren)
+void Viewer::RemoveRenderer(vtkRenderer* ren)
 {
 	int index = this->renderers.indexOf(ren);
 	RemoveRenderer(index);
 }
 
-void QvtkAbstractViewer::AddProp(Prop * prop)
+void Viewer::AddProp(Prop * prop)
 {
 	AddProp(prop, this->renderers[0]);
 }
 
-void QvtkAbstractViewer::AddProp(Prop * prop, vtkRenderer * renderer)
+void Viewer::AddProp(Prop * prop, vtkRenderer * renderer)
 {
 	if (!this->renderers.contains(renderer)) {
 		qWarning() << "The renderer does not belong to this viewer.";
@@ -188,12 +188,12 @@ void QvtkAbstractViewer::AddProp(Prop * prop, vtkRenderer * renderer)
 	propToRenderer->insert(prop, renderer);
 }
 
-QList<Prop*> QvtkAbstractViewer::GetProps()
+QList<Prop*> Viewer::GetProps()
 {
 	return this->propToRenderer->keys();
 }
 
-void QvtkAbstractViewer::RemoveProp(Prop * prop)
+void Viewer::RemoveProp(Prop * prop)
 {
 	if (!this->propToRenderer->contains(prop)) {
 		qWarning() << "Remove prop" << prop->getUniqueName() << "fail.";
@@ -217,7 +217,7 @@ void QvtkAbstractViewer::RemoveProp(Prop * prop)
 }
 
 
-void QvtkAbstractViewer::RemoveAllProp()
+void Viewer::RemoveAllProp()
 {
 	for (QList<vtkRenderer*>::const_iterator cit;
 		cit != this->renderers.cbegin(); ++cit) {
@@ -225,7 +225,7 @@ void QvtkAbstractViewer::RemoveAllProp()
 	}
 }
 
-void QvtkAbstractViewer::RemoveAllProp(vtkRenderer * renderer)
+void Viewer::RemoveAllProp(vtkRenderer * renderer)
 {
 	if (!this->renderers.contains(renderer)) {
 		qWarning() << "The renderer does not belong to this viewer.";
@@ -238,7 +238,7 @@ void QvtkAbstractViewer::RemoveAllProp(vtkRenderer * renderer)
 	}
 }
 
-void QvtkAbstractViewer::SetCursorAlwaysFaceCamera(bool)
+void Viewer::SetCursorAlwaysFaceCamera(bool)
 {
 	//throw std::logic_error("Not Implemented!");
 	qCritical() << "Not Implemented!";
@@ -252,7 +252,7 @@ void QvtkAbstractViewer::SetCursorAlwaysFaceCamera(bool)
 	*/
 }
 
-void QvtkAbstractViewer::SetCursorDesyncFlag(bool desync)
+void Viewer::SetCursorDesyncFlag(bool desync)
 {
 	if (this->desyncCursorFlag == desync) {
 		return;
@@ -266,14 +266,14 @@ void QvtkAbstractViewer::SetCursorDesyncFlag(bool desync)
 	}
 	else {
 		this->cursorActor->GetMapper()->SetInputConnection(
-			QvtkAbstractViewer::s_cursorSource->GetOutputPort());
+			Viewer::s_cursorSource->GetOutputPort());
 
 	}
 
 }
 
 
-void QvtkAbstractViewer::SetCursorPosition(double x, double y, double z)
+void Viewer::SetCursorPosition(double x, double y, double z)
 {
 	if (x == this->GetCursorPosition()[0] &&
 		y == this->GetCursorPosition()[1] &&
@@ -287,13 +287,13 @@ void QvtkAbstractViewer::SetCursorPosition(double x, double y, double z)
 		this->cursorSource->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
 	}
 	else {
-		QvtkAbstractViewer::s_cursorSource->SetFocalPoint(xyz);
+		Viewer::s_cursorSource->SetFocalPoint(xyz);
 		// invoke event for synchronization
-		QvtkAbstractViewer::s_cursorSource->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
+		Viewer::s_cursorSource->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
 	}
 }
 
-double* QvtkAbstractViewer::GetCursorPosition()
+double* Viewer::GetCursorPosition()
 {
 	/* NOTE: the returned pointer will change with calls to TransformPoint() function, advoid using
 	         the pointer directly!
@@ -303,12 +303,12 @@ double* QvtkAbstractViewer::GetCursorPosition()
 		return this->cursorSource->GetFocalPoint();
 	}
 	else {
-		return QvtkAbstractViewer::s_cursorSource->GetFocalPoint();
+		return Viewer::s_cursorSource->GetFocalPoint();
 
 	}
 }
 
-void QvtkAbstractViewer::UpdateDepthPeeling()
+void Viewer::UpdateDepthPeeling()
 {
 	// 1. Use a render window with alpha bits (as initial value is 0 (false)):
 	this->GetRenderWindow()->SetAlphaBitPlanes(this->depthPeelingFlag);
@@ -335,18 +335,18 @@ void QvtkAbstractViewer::UpdateDepthPeeling()
 	}
 }
 
-vtkCamera* QvtkAbstractViewer::GetActiveCamera()
+vtkCamera* Viewer::GetActiveCamera()
 {
     return this->camera;
 }
 
-void QvtkAbstractViewer::ResetCamera()
+void Viewer::ResetCamera()
 {
 	qCritical() << "it not working well, camera is always defined by the last renderer";
 	qCritical() << "layer must be specified.";
 }
 
-void QvtkAbstractViewer::ResetCamera(int layer /*= -1*/)
+void Viewer::ResetCamera(int layer /*= -1*/)
 {
 	foreach(vtkRenderer* ren, this->renderers)
 	{
@@ -362,7 +362,7 @@ void QvtkAbstractViewer::ResetCamera(int layer /*= -1*/)
 
 }
 
-void QvtkAbstractViewer::ResetCameraClippingRange(int layer /*= -1*/)
+void Viewer::ResetCameraClippingRange(int layer /*= -1*/)
 {
 	foreach(vtkRenderer* ren, this->renderers)
 	{
@@ -377,40 +377,40 @@ void QvtkAbstractViewer::ResetCameraClippingRange(int layer /*= -1*/)
 	}
 }
 
-void QvtkAbstractViewer::ResetCameraClippingRange()
+void Viewer::ResetCameraClippingRange()
 {
 	qCritical() << "it not working well, camera is always defined by the last renderer";
 	qCritical() << "layer must be specified.";
 }
 
-void QvtkAbstractViewer::Render()
+void Viewer::Render()
 {
 	this->GetRenderWindow()->Render();
 }
 
-void QvtkAbstractViewer::RenderAllViewersOfThisClass()
+void Viewer::RenderAllViewersOfThisClass()
 {
-    typedef QList<QvtkAbstractViewer *>::iterator IterType;
+    typedef QList<Viewer *>::iterator IterType;
     for (IterType iter = this->s_viewersList.begin(); iter != this->s_viewersList.end(); iter++) {
-        QvtkAbstractViewer *viewer = *iter;
+        Viewer *viewer = *iter;
 		if(this->metaObject()->className() == viewer->metaObject()->className()){
             viewer->GetRenderWindow()->Render();
         }
     }
 }
 
-void QvtkAbstractViewer::SetEnableCornerAnnotation(bool b)
+void Viewer::SetEnableCornerAnnotation(bool b)
 {
 	this->GetCornerAnnotation()->SetVisibility(b);
 }
 
-void QvtkAbstractViewer::AppendCornerAnnotation(int textPosition, QString text)
+void Viewer::AppendCornerAnnotation(int textPosition, QString text)
 {
 	const char* oldText = this->cornerAnnotation->GetText(textPosition);
     this->cornerAnnotation->SetText(textPosition, (oldText + text).toStdString().c_str());
 }
 
-void QvtkAbstractViewer::SetMaxNoOfPeelings(int i)
+void Viewer::SetMaxNoOfPeelings(int i)
 {
 	if (this->maxNoOfPeels == i) {
 		return;
@@ -420,7 +420,7 @@ void QvtkAbstractViewer::SetMaxNoOfPeelings(int i)
 }
 
 
-void QvtkAbstractViewer::SetOcclusionRatio(double ratio)
+void Viewer::SetOcclusionRatio(double ratio)
 {
 	if (this->occlusionRatio == ratio) {
 		return;
@@ -430,7 +430,7 @@ void QvtkAbstractViewer::SetOcclusionRatio(double ratio)
 }
 
 
-void QvtkAbstractViewer::UpdateCursorPosition(double x, double y, double z)
+void Viewer::UpdateCursorPosition(double x, double y, double z)
 {
 	if (this->GetCornerAnnotation()->GetVisibility()) {
 		QString format = "%1, %2, %3";
@@ -440,7 +440,7 @@ void QvtkAbstractViewer::UpdateCursorPosition(double x, double y, double z)
 	this->Render();
 }
 
-void QvtkAbstractViewer::SetEnableDepthPeeling(bool flag)
+void Viewer::SetEnableDepthPeeling(bool flag)
 {
 	if (this->depthPeelingFlag == flag) {
 		return;
@@ -451,11 +451,11 @@ void QvtkAbstractViewer::SetEnableDepthPeeling(bool flag)
 
 }
 
-QvtkAbstractViewer::QvtkAbstractViewer(QWidget* parent)
+Viewer::Viewer(QWidget* parent)
     :QWidget(parent)
 {
 	/* if every thing goes well, add self to viewer list */
-	QvtkAbstractViewer::s_viewersList.push_back(this);
+	Viewer::s_viewersList.push_back(this);
 	/* Initialize variables*/
 	this->desyncCursorFlag = false;
 
@@ -464,19 +464,19 @@ QvtkAbstractViewer::QvtkAbstractViewer(QWidget* parent)
 	/* Create objects for member pointers */
 
 
-	this->cursorCallback = QvtkCursorCallbackCommand::New();
+	this->cursorCallback = CursorCallbackCommand::New();
 	this->cursorCallback->SetClientData(this);
-	connect(this, &QvtkAbstractViewer::CursorPositionChanged,
-		this, static_cast<void(QvtkAbstractViewer::*)(double, double, double)>(&QvtkAbstractViewer::UpdateCursorPosition));
+	connect(this, &Viewer::CursorPositionChanged,
+		this, static_cast<void(Viewer::*)(double, double, double)>(&Viewer::UpdateCursorPosition));
 	
-	if (QvtkAbstractViewer::NumOfViewers() == 1) {
-		QvtkAbstractViewer::s_cursorSource->TranslationModeOn();
-		QvtkAbstractViewer::s_cursorSource->SetModelBounds(-15, 15, -15, 15, -15, 15);
-		QvtkAbstractViewer::s_cursorSource->SetFocalPoint(0, 0, 0);
-		QvtkAbstractViewer::s_cursorSource->AllOff();
-		QvtkAbstractViewer::s_cursorSource->AxesOn();
+	if (Viewer::NumOfViewers() == 1) {
+		Viewer::s_cursorSource->TranslationModeOn();
+		Viewer::s_cursorSource->SetModelBounds(-15, 15, -15, 15, -15, 15);
+		Viewer::s_cursorSource->SetFocalPoint(0, 0, 0);
+		Viewer::s_cursorSource->AllOff();
+		Viewer::s_cursorSource->AxesOn();
 	}
-	QvtkAbstractViewer::s_cursorSource->AddObserver(vtkCommand::CursorChangedEvent, this->cursorCallback);
+	Viewer::s_cursorSource->AddObserver(vtkCommand::CursorChangedEvent, this->cursorCallback);
 
 	this->cursorSource = vtkCursor3D::New();
 	this->cursorSource->TranslationModeOn();
@@ -490,7 +490,7 @@ QvtkAbstractViewer::QvtkAbstractViewer(QWidget* parent)
 	this->cursorActor = vtkActor::New();
     this->cursorActor->SetMapper(vtkSmartPointer<vtkPolyDataMapper>::New());
 	this->cursorActor->GetMapper()->SetInputConnection(
-		QvtkAbstractViewer::s_cursorSource->GetOutputPort());
+		Viewer::s_cursorSource->GetOutputPort());
     this->cursorActor->GetProperty()->SetColor(1, 1, 0);
     this->cursorActor->SetPickable(false);
 
@@ -516,7 +516,7 @@ QvtkAbstractViewer::QvtkAbstractViewer(QWidget* parent)
 
 }
 
-QvtkAbstractViewer::~QvtkAbstractViewer()
+Viewer::~Viewer()
 {
 	// Remove all renderers
 	foreach(vtkRenderer* renderer, renderers)
@@ -538,15 +538,14 @@ QvtkAbstractViewer::~QvtkAbstractViewer()
 
 	this->cursorSource->Delete();
 
-	QvtkAbstractViewer::s_cursorSource->RemoveObserver(this->cursorCallback);
+	Viewer::s_cursorSource->RemoveObserver(this->cursorCallback);
 	
 	this->cursorCallback->Delete();
 
-	QvtkAbstractViewer::s_viewersList.removeOne(this);
+	Viewer::s_viewersList.removeOne(this);
 
 
 }
 
-
-
-
+}
+}

@@ -1,23 +1,30 @@
 #ifndef __Qvtk_SCENE_WIDGET_H__
 #define __Qvtk_SCENE_WIDGET_H__
 
+#include "qvtkdata_export.h"
 // me
-#include "QVTKDATA_EXPORT.h"
-namespace Ui {
-	class QvtkSceneWidget;
+
+namespace Q {
+namespace vtk{
+	class Data;
+	namespace Ui {
+		class SceneWidget;
 };
-class Data;
+}
+}
 
 // qt
 #include <QWidget>
 class QListWidgetItem;
 
-class QVTKDATA_EXPORT QvtkSceneWidget : public QWidget
+namespace Q {
+namespace vtk{
+class QVTKDATA_EXPORT SceneWidget : public QWidget
 {
 	Q_OBJECT;
 public:
-	explicit QvtkSceneWidget(QWidget* parent = nullptr);
-	virtual ~QvtkSceneWidget() override;
+	explicit SceneWidget(QWidget* parent = nullptr);
+	virtual ~SceneWidget() override;
 
 public slots:
 
@@ -28,12 +35,13 @@ public slots:
 	void slotSceneClicked(QString uniqueName);
 
 private:
-	Ui::QvtkSceneWidget* ui;
+	Ui::SceneWidget* ui;
 	static QString uniqueNameToItemName(QString uniqueName);
 	static QString itemNameToUniqueName(QString uniqueName);
 
 	Data* tmpData;
 };
 
-
+}
+}
 #endif // !__Qvtk_SCENE_WIDGET_H__

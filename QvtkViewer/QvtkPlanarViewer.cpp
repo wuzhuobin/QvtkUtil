@@ -66,19 +66,19 @@ void QvtkPlanarViewer::SetOrientation(int orientation)
 	ORIENTATION _orientation = static_cast<ORIENTATION>(orientation);
 	switch (_orientation)
 	{
-	case QvtkOrthogonalViewer::Sagital:
+	case OrthogonalViewer::Sagital:
 		this->orientationActor[0]->SetInput("S");
 		this->orientationActor[1]->SetInput("I");
 		this->orientationActor[2]->SetInput("A");
 		this->orientationActor[3]->SetInput("P");
 		break;
-	case QvtkOrthogonalViewer::Coronal:
+	case OrthogonalViewer::Coronal:
 		this->orientationActor[0]->SetInput("S");
 		this->orientationActor[1]->SetInput("I");
 		this->orientationActor[2]->SetInput("R");
 		this->orientationActor[3]->SetInput("L");
 		break;
-	case QvtkOrthogonalViewer::Axial:
+	case OrthogonalViewer::Axial:
 		this->orientationActor[0]->SetInput("A");
 		this->orientationActor[1]->SetInput("P");
 		this->orientationActor[2]->SetInput("R");
@@ -97,11 +97,11 @@ void QvtkPlanarViewer::SetOrientation(int orientation)
 			slice->setPlanarOrientation(orientation);
 		}
 	}
-	QvtkOrthogonalViewer::SetOrientation(orientation);
+	OrthogonalViewer::SetOrientation(orientation);
 }
 
 QvtkPlanarViewer::QvtkPlanarViewer(QWidget * parent)
-	:QvtkOrthogonalViewer(parent)
+	:OrthogonalViewer(parent)
 {
 	this->camera->ParallelProjectionOn();
 
@@ -221,7 +221,7 @@ void QvtkPlanarViewer::UpdateCursorPosition(double x, double y, double z)
 			planarProp->setPlanarOrigin(x, y, z);
 		}
 	}
-	QvtkOrthogonalViewer::UpdateCursorPosition(x, y, z);
+	OrthogonalViewer::UpdateCursorPosition(x, y, z);
 }
 
 
@@ -235,13 +235,13 @@ void QvtkPlanarViewer::IncrementSlice(bool sign)
 	ORIENTATION orientation = static_cast<ORIENTATION>(GetOrientation());
 	switch (orientation)
 	{
-	case QvtkOrthogonalViewer::Sagital:
+	case OrthogonalViewer::Sagital:
 		pos[0] += (sign ? 1 : -1);
 		break;
-	case QvtkOrthogonalViewer::Coronal:
+	case OrthogonalViewer::Coronal:
 		pos[1] += (sign ? 1 : -1);
 		break;
-	case QvtkOrthogonalViewer::Axial:
+	case OrthogonalViewer::Axial:
 		pos[2] += (sign ? 1 : -1);
 		break;
 	default:

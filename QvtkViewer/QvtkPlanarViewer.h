@@ -9,7 +9,7 @@ class vtkTextActor;
 class vtkAxisActor2D;
 
 
-class ABSTRACTVIEWER_EXPORT QvtkPlanarViewer : public QvtkOrthogonalViewer
+class ABSTRACTVIEWER_EXPORT QvtkPlanarViewer : public OrthogonalViewer
 {
 	Q_OBJECT;
 public:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QvtkOrthogonalViewer</class>
- <widget class="QWidget" name="QvtkOrthogonalViewer">
+ <class>Q::vtk::OrthogonalViewer</class>
+ <widget class="QWidget" name="Q::vtk::OrthogonalViewer">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -84,7 +84,7 @@
        </property>
        <property name="icon">
         <iconset resource="QvtkViewer.qrc">
-         <normaloff>:/Resource/expand_window.png</normaloff>:/Resource/expand_window.png</iconset>
+         <normaloff>:/Resource/Resource/expand_window.png</normaloff>:/Resource/Resource/expand_window.png</iconset>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -104,7 +104,7 @@
        </property>
        <property name="icon">
         <iconset resource="QvtkViewer.qrc">
-         <normaloff>:/Resource/four_viewers.png</normaloff>:/Resource/four_viewers.png</iconset>
+         <normaloff>:/Resource/Resource/four_viewers.png</normaloff>:/Resource/Resource/four_viewers.png</iconset>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -127,7 +127,7 @@
        </property>
        <property name="icon">
         <iconset resource="QvtkViewer.qrc">
-         <normaloff>:/Resource/axial view.png</normaloff>:/Resource/axial view.png</iconset>
+         <normaloff>:/Resource/Resource/axial view.png</normaloff>:/Resource/Resource/axial view.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -153,7 +153,7 @@
        </property>
        <property name="icon">
         <iconset resource="QvtkViewer.qrc">
-         <normaloff>:/Resource/coronal_view.png</normaloff>:/Resource/coronal_view.png</iconset>
+         <normaloff>:/Resource/Resource/coronal_view.png</normaloff>:/Resource/Resource/coronal_view.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -176,7 +176,7 @@
        </property>
        <property name="icon">
         <iconset resource="QvtkViewer.qrc">
-         <normaloff>:/Resource/sagital_view.png</normaloff>:/Resource/sagital_view.png</iconset>
+         <normaloff>:/Resource/Resource/sagital_view.png</normaloff>:/Resource/Resource/sagital_view.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -212,7 +212,7 @@
        </property>
        <property name="icon">
         <iconset resource="QvtkViewer.qrc">
-         <normaloff>:/Resource/dow_narrow.png</normaloff>:/Resource/dow_narrow.png</iconset>
+         <normaloff>:/Resource/Resource/dow_narrow.png</normaloff>:/Resource/Resource/dow_narrow.png</iconset>
        </property>
       </widget>
      </item>

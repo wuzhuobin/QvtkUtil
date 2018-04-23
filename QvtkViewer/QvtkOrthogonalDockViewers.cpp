@@ -11,7 +11,7 @@
 QvtkOrthogonalDockViewers::QvtkOrthogonalDockViewers(QWidget * parent)
 	:QMainWindow(parent)
 {
-	this->viewers = new QList<QvtkOrthogonalViewer*>;
+	this->viewers = new QList<OrthogonalViewer*>;
 	this->dockers = new QList<QDockWidget*>;
 	this->mapper = new QSignalMapper(this);
 
@@ -33,13 +33,13 @@ void QvtkOrthogonalDockViewers::deleteAllViewer()
 
 void QvtkOrthogonalDockViewers::setViewer(int i)
 {
-	setViewer(i, new QvtkOrthogonalViewer(this));
+	setViewer(i, new OrthogonalViewer(this));
 }
 
-void QvtkOrthogonalDockViewers::setViewer(int index, QvtkOrthogonalViewer * viewer)
+void QvtkOrthogonalDockViewers::setViewer(int index, OrthogonalViewer * viewer)
 {
 	if (index >getNumberOfViewers()) {
-		setViewer(index - 1, new QvtkOrthogonalViewer(this));
+		setViewer(index - 1, new OrthogonalViewer(this));
 	}
 
 	if (index < getNumberOfViewers()) {
@@ -72,7 +72,7 @@ void QvtkOrthogonalDockViewers::setViewer(int index, QvtkOrthogonalViewer * view
 		this, SLOT(showMaximizedOrNormal(int)));
 }
 
-QvtkOrthogonalViewer * QvtkOrthogonalDockViewers::getViewers(int i) const
+OrthogonalViewer * QvtkOrthogonalDockViewers::getViewers(int i) const
 {
 	return this->viewers->at(i);
 }

@@ -26,11 +26,11 @@
 //			slice->setDisplayRegion(region);
 //		}
 //	}
-//	QvtkOrthogonalViewer::SetOrientation(orientation);
+//	OrthogonalViewer::SetOrientation(orientation);
 //}
 
 QvtkNonPlanarViewer::QvtkNonPlanarViewer(QWidget * parent)
-	:QvtkOrthogonalViewer(parent)
+	:OrthogonalViewer(parent)
 {
 	//this->camera->ParallelProjectionOn();
 	//vtkRenderer* ren = AddRenderer(2);
@@ -120,13 +120,13 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 
 //void QvtkNonPlanarViewer::SetCursorPosition(double x, double y, double z)
 //{
-//	QvtkOrthogonalViewer::SetCursorPosition(x, y, z);
+//	OrthogonalViewer::SetCursorPosition(x, y, z);
 //	if (this->desyncCursorFlag) 
 //	{
 //		return;
 //	}
 //	else {
-//		foreach(QvtkAbstractViewer* viewer, GetAllViewers()) {
+//		foreach(Viewer* viewer, GetAllViewers()) {
 //			
 //			QvtkNonPlanarViewer* _viewer = qobject_cast<QvtkNonPlanarViewer*>(viewer);
 //			if (_viewer) {
@@ -141,13 +141,13 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 //						ORIENTATION _orientation = static_cast<ORIENTATION>(_viewer->orientation);
 //						switch (_orientation)
 //						{
-//						case QvtkOrthogonalViewer::Sagital:
+//						case OrthogonalViewer::Sagital:
 //							region[0] = x;
 //							break;
-//						case QvtkOrthogonalViewer::Coronal:
+//						case OrthogonalViewer::Coronal:
 //							region[2] = y;
 //							break;
-//						case QvtkOrthogonalViewer::Axial:
+//						case OrthogonalViewer::Axial:
 //							region[4] = z;
 //							break;
 //						default:

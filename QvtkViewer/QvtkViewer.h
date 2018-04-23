@@ -1,5 +1,5 @@
 /*!
- * \file QvtkAbstractViewer.h
+ * \file Viewer.h
  * \date 2017/07/10 17:58
  *
  * \author 		Wong, Matthew Lun
@@ -15,13 +15,17 @@
  * \note
 */
 
-#ifndef __Qvtk_ABSTRACT_VIEWER_H__
-#define __Qvtk_ABSTRACT_VIEWER_H__
+#ifndef __QVTK_VIEWER_H__
+#define __QVTK_VIEWER_H__
 
 // me
-#include "abstractviewer_export.h"
-class Prop;
-
+#include "qvtkviewer_export.h"
+namespace Q {
+namespace vtk{
+	class CursorCallbackCommand;
+	class Prop;
+}
+}
 // qt
 #include <QWidget>
 template <class Key, class T>
@@ -36,16 +40,16 @@ class vtkCamera;
 class vtkRenderWindow;
 class vtkRenderWindowInteractor;
 class vtkActor;
-class QvtkCursorCallbackCommand;
 
 /* This macro should be called after setupUi in the constructor of the subclasses */
-#define Qvtk_INIT_VIEWER_MACRO() \
+#define QVTK_INIT_VIEWER_MACRO() \
 	this->AddRenderer(this->firstRenderer); \
     this->GetRenderWindow()->AddRenderer(this->firstRenderer); \
     this->GetInteractor()->Initialize();
+namespace Q {
+namespace vtk{
 
-
-class ABSTRACTVIEWER_EXPORT QvtkAbstractViewer: public QWidget
+class QVTKVIEWER_EXPORT Viewer: public QWidget
 {
 	Q_OBJECT
 public:
@@ -56,15 +60,15 @@ public:
     /************************************************************************/
 	
     /**
-	 * @brief QvtkAbstractViewer* GetViewerOfInteractor
+	 * @brief Viewer* GetViewerOfInteractor
 	 *
 	 * Find in the list of viewers which uses the input interactorstyle
 	 *
 	 * @param vtkInteractorStyle * 
-	 * @return QvtkAbstractViewer*
+	 * @return Viewer*
 	 */
 
-	static QvtkAbstractViewer* GetViewerOfInteractor(vtkInteractorStyle*);
+	static Viewer* GetViewerOfInteractor(vtkInteractorStyle*);
 	
 	/**
 	 * @brief void RenderAllViewers
@@ -107,18 +111,18 @@ public:
      * @return const QT_NAMESPACE::std::vector<QvtkABstractViewer*>
      */
 
-	static const QList<QvtkAbstractViewer*> GetAllViewers() { return QvtkAbstractViewer::s_viewersList; }
+	static const QList<Viewer*> GetAllViewers() { return Viewer::s_viewersList; }
 
-	static unsigned int NumOfViewers() { return QvtkAbstractViewer::s_viewersList.size(); }
+	static unsigned int NumOfViewers() { return Viewer::s_viewersList.size(); }
 
-	static vtkCursor3D* GetSyncCursorSource() { return QvtkAbstractViewer::s_cursorSource; }
+	static vtkCursor3D* GetSyncCursorSource() { return Viewer::s_cursorSource; }
 
     /************************************************************************/
     /* Membership functions
     /************************************************************************/
 
-	explicit QvtkAbstractViewer(QWidget* parent = nullptr);
-	virtual ~QvtkAbstractViewer() override;
+	explicit Viewer(QWidget* parent = nullptr);
+	virtual ~Viewer() override;
     /**
      * @brief vtkRenderer* AddRenderer
      *
@@ -366,7 +370,7 @@ signals:
 
 protected:
 	
-	static QList<QvtkAbstractViewer*> s_viewersList;
+	static QList<Viewer*> s_viewersList;
 
 	virtual void UpdateDepthPeeling();
 
@@ -379,7 +383,7 @@ protected:
 
 
     /// Membership variables
-	QvtkCursorCallbackCommand* cursorCallback;
+	CursorCallbackCommand* cursorCallback;
     vtkCursor3D*  cursorSource;
 	vtkActor* cursorActor;
     vtkCornerAnnotation* cornerAnnotation;
@@ -398,4 +402,7 @@ protected:
 
 };
 
+}
+}
 #endif
+

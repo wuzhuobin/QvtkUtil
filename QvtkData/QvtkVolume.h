@@ -1,18 +1,20 @@
 #ifndef __Qvtk_VOLUME_H__
 #define __Qvtk_VOLUME_H__
 
-#include "Prop.h"
+#include "QvtkProp.h"
 
 class vtkVolume;
 class vtkSmartVolumeMapper;
 class QStandardItem;
 class vtkImageShiftScale;
 
-class QVTKDATA_EXPORT QvtkVolume: public Prop
+namespace Q {
+namespace vtk{
+class QVTKDATA_EXPORT Volume: public Prop
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkVolume,
+		Volume,
 		Q_VTK_KEY(Preset)
 		Q_VTK_KEY(Shift)
 	)
@@ -54,8 +56,8 @@ public:
 	};
 
 
-	QvtkVolume();
-	virtual ~QvtkVolume() override;
+	Volume();
+	virtual ~Volume() override;
 
 
 	virtual void printSelf() const override;
@@ -135,4 +137,7 @@ private:
 
 };
 
+}
+}
 #endif// !__Qvtk_VOLUME_H__
+

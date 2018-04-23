@@ -8,7 +8,7 @@
 * 				M.Phil Student
 * Contact: 	fromosia@gmail.com
 *
-* \brief This class should be inherited instead of QvtkAbstractViewer if the coordinate space of the viewer
+* \brief This class should be inherited instead of Viewer if the coordinate space of the viewer
 *        is not Cartesian. Dev should make sure the method MapCoord2Cartesian(e1, e2, e3) returns correct
 *        coordinate in Cartesian space.
 *
@@ -43,7 +43,7 @@ double* QvtkABstractNonCartesianViewer::MapCursor2Cartesian()
 //}
 
 QvtkABstractNonCartesianViewer::QvtkABstractNonCartesianViewer(QWidget* parent /*= nullptr*/) 
-	: QvtkAbstractViewer(parent)
+	: Viewer(parent)
 {
 
 }

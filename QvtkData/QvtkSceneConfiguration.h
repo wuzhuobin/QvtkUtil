@@ -77,7 +77,7 @@ struct QvtkSceneConfiguration
 
 		QvtkScene* scene = new QvtkScene();
 
-		scene->registerData(new QvtkAnnotationPolyData);
+		scene->registerData(new AnnotationPolyData);
 		
 		scene->registerData(new Image);
 
@@ -85,13 +85,13 @@ struct QvtkSceneConfiguration
 
 		scene->registerData(new PolyData);
 
-		scene->registerData(new QvtkPolyDataActor);
+		scene->registerData(new PolyDataActor);
 
-		scene->registerData(new QvtkPolyDataActor2D);
+		scene->registerData(new PolyDataActor2D);
 
-		scene->registerData(new QvtkPolyDataSource);
+		scene->registerData(new PolyDataSource);
 
-		scene->registerData(new QvtkVolume);
+		scene->registerData(new Volume);
 
 	}
 };

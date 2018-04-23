@@ -75,8 +75,8 @@ class QVTKDATA_EXPORT Data : public QObject
 	);
 	Q_PROPERTY(
 		bool	Selectable
-		READ	setSelectable
-		WRITE	getSelectable
+		WRITE	setSelectable
+		READ	getSelectable
 	);
 	Q_PROPERTY(
 		bool	Selected

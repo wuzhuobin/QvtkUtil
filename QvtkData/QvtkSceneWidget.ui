@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QvtkSceneWidget</class>
- <widget class="QWidget" name="QvtkSceneWidget">
+ <class>Q::vtk::SceneWidget</class>
+ <widget class="QWidget" name="Q::vtk::SceneWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

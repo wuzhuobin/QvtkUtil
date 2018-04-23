@@ -1,35 +1,34 @@
 #include "QvtkVolume.h"
 
 // me
-#include "DataSet.h"
+#include "QvtkDataSet.h"
 
 // vtk
 #include <vtkVolume.h>
-//#include <vtkImageResample.h>
 #include <vtkImageShiftScale.h>
 #include <vtkSmartVolumeMapper.h>
 #include <vtkNew.h>
-
-
 #include <vtkVolumeProperty.h>
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
 #include <vtkImageResample.h>
 
-// std
-#include <sstream>
-
 // qt
 #include <QDebug>
 
-Q_VTK_DATACPP(QvtkVolume)
-QvtkVolume::QvtkVolume()
+// std
+#include <sstream>
+namespace Q {
+namespace vtk{
+
+Q_VTK_DATACPP(Volume)
+Volume::Volume()
 {
 	this->volumeOpacity = 1;
 	this->shift = createAttribute(K.Shift, static_cast<double>(0), true);
-	insertSlotFunction(this->shift, &QvtkVolume::setShift);
+	insertSlotFunction(this->shift, &Volume::setShift);
 	this->preset = createAttribute(K.Preset, static_cast<int>(0), true);
-	insertSlotFunction(this->preset, &QvtkVolume::setPreset);
+	insertSlotFunction(this->preset, &Volume::setPreset);
 
 
 #if VTK_MAJOR_VERSION > 6
@@ -56,12 +55,12 @@ QvtkVolume::QvtkVolume()
 
 }
 
-QvtkVolume::~QvtkVolume()
+Volume::~Volume()
 {
 	setRenderDataSet(nullptr);
 }
 
-void QvtkVolume::printSelf() const
+void Volume::printSelf() const
 {
 	Prop::printSelf();
 
@@ -77,33 +76,33 @@ void QvtkVolume::printSelf() const
 
 }
 
-void QvtkVolume::readXML(const QDomElement& xml, QString directoryPath)
+void Volume::readXML(const QDomElement& xml, QString directoryPath)
 {
 	Prop::readXML(xml, directoryPath);
 }
 
-void QvtkVolume::writeXML(QDomElement& xml, QString directoryPath) const
+void Volume::writeXML(QDomElement& xml, QString directoryPath) const
 {
 	Prop::writeXML(xml, directoryPath);
 }
 
-void QvtkVolume::setShift(double shift)
+void Volume::setShift(double shift)
 {
 	this->imageShiftScale->SetShift(shift);
 	setAttribute(this->shift, shift);
 }
 
-double QvtkVolume::getShift() const
+double Volume::getShift() const
 {
 	return getAttribute(this->shift).toDouble();
 }
 
-vtkVolume* QvtkVolume::getVolume() const
+vtkVolume* Volume::getVolume() const
 {
 	return vtkVolume::SafeDownCast(this->getProp());
 }
 
-void QvtkVolume::setPreset(unsigned int preset)
+void Volume::setPreset(unsigned int preset)
 {
 	if (preset > 25) {
 		return;
@@ -883,12 +882,12 @@ void QvtkVolume::setPreset(unsigned int preset)
 	}
 }
 
-int QvtkVolume::getPreset()
+int Volume::getPreset()
 {
 	return getAttribute(this->preset).toUInt();
 }
 
-void QvtkVolume::setRenderDataSet(DataSet* data)
+void Volume::setRenderDataSet(DataSet* data)
 {
 	if (data == this->getRenderDataSet()) {
 		return;
@@ -909,7 +908,7 @@ void QvtkVolume::setRenderDataSet(DataSet* data)
 	}
 }
 
-void QvtkVolume::setOpacity(double opacity)
+void Volume::setOpacity(double opacity)
 {
 	if (opacity > 1) {
 		opacity = 1;
@@ -921,7 +920,7 @@ void QvtkVolume::setOpacity(double opacity)
 	this->setPreset(this->getPreset());
 }
 
-void QvtkVolume::setDisplayRegion(const double region[6])
+void Volume::setDisplayRegion(const double region[6])
 {
 	Prop::setDisplayRegion(region);
 	double _region[6];
@@ -932,19 +931,21 @@ void QvtkVolume::setDisplayRegion(const double region[6])
 
 }
 
-Data* QvtkVolume::newInstance() const
+Data* Volume::newInstance() const
 {
-	return new QvtkVolume;
+	return new Volume;
 }
 
-void QvtkVolume::setShift(Data * self, QStandardItem * item)
+void Volume::setShift(Data * self, QStandardItem * item)
 {
-	QvtkVolume* _self = static_cast<QvtkVolume*>(self);
+	Volume* _self = static_cast<Volume*>(self);
 	_self->setShift(getAttribute(item).toDouble());
 }
 
-void QvtkVolume::setPreset(Data* self, QStandardItem* item)
+void Volume::setPreset(Data* self, QStandardItem* item)
 {
-	QvtkVolume* _self = static_cast<QvtkVolume*>(self);
+	Volume* _self = static_cast<Volume*>(self);
 	_self->setPreset(getAttribute(item).toUInt());
+}
+}
 }

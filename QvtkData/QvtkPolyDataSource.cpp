@@ -10,13 +10,15 @@
 #include <vtkLineSource.h>
 #include <vtkRegularPolygonSource.h>
 #include <vtkPassArrays.h>
-//#include <vtkNew.h>
 #include <vtkPointData.h>
 
 // qt
 #include <QDebug>
-Q_VTK_DATACPP(QvtkPolyDataSource);
-QvtkPolyDataSource::QvtkPolyDataSource()
+namespace Q {
+namespace vtk {
+
+Q_VTK_DATACPP(PolyDataSource);
+PolyDataSource::PolyDataSource()
 {
 	this->sphereSource = vtkSphereSource::New();
 	this->arrowSource = vtkArrowSource::New();
@@ -33,10 +35,10 @@ QvtkPolyDataSource::QvtkPolyDataSource()
 	//this->passArrays->AddFieldType(vtkDataObject::FIELD);
 
 	this->sourceType = createAttribute(K.SourceType, static_cast<unsigned int>(0), true);
-	insertSlotFunction(this->sourceType, &QvtkPolyDataSource::setSourceType);
+	insertSlotFunction(this->sourceType, &PolyDataSource::setSourceType);
 }
 
-QvtkPolyDataSource::~QvtkPolyDataSource()
+PolyDataSource::~PolyDataSource()
 {
 	this->sphereSource->Delete();
 	this->arrowSource->Delete();
@@ -49,12 +51,12 @@ QvtkPolyDataSource::~QvtkPolyDataSource()
 	this->passArrays->Delete();
 }
 
-void QvtkPolyDataSource::printSelf() const
+void PolyDataSource::printSelf() const
 {
-	QvtkAnnotationPolyData::printSelf();
+	AnnotationPolyData::printSelf();
 }
 
-bool QvtkPolyDataSource::readData(QString rootDirectory)
+bool PolyDataSource::readData(QString rootDirectory)
 {
 	// if no root directory, read from polydata sources.
 	if (rootDirectory.isEmpty()) {
@@ -62,28 +64,28 @@ bool QvtkPolyDataSource::readData(QString rootDirectory)
 		ENUM_SOURCE_TYPE _sourceType = static_cast<ENUM_SOURCE_TYPE>(getAttribute(this->sourceType).toUInt());
 		switch (_sourceType)
 		{
-		case QvtkPolyDataSource::ARROW_SOURCE:
+		case PolyDataSource::ARROW_SOURCE:
 			source = this->arrowSource;
 			break;
-		case QvtkPolyDataSource::CONE_SOURCE:
+		case PolyDataSource::CONE_SOURCE:
 			source = this->coneSource;
 			break;
-		case QvtkPolyDataSource::CUBE_SOURCE:
+		case PolyDataSource::CUBE_SOURCE:
 			source = this->cubeSource;
 			break;
-		case QvtkPolyDataSource::CYLINDER_SOURCE:
+		case PolyDataSource::CYLINDER_SOURCE:
 			source = this->cylinderSource;
 			break;
-		case QvtkPolyDataSource::DISK_SOURCE:
+		case PolyDataSource::DISK_SOURCE:
 			source = this->diskSource;
 			break;
-		case QvtkPolyDataSource::LINE_SOURCE:
+		case PolyDataSource::LINE_SOURCE:
 			source = this->lineSource;
 			break;
-		case QvtkPolyDataSource::REGULAR_POLYGON_SOURCE:
+		case PolyDataSource::REGULAR_POLYGON_SOURCE:
 			source = this->regularPolygonSource;
 			break;
-		case QvtkPolyDataSource::SPHERE_SOURCE:
+		case PolyDataSource::SPHERE_SOURCE:
 			source = this->sphereSource;
 			break;
 		default:
@@ -95,30 +97,32 @@ bool QvtkPolyDataSource::readData(QString rootDirectory)
 		return true;
 	}
 	else {
-		return QvtkAnnotationPolyData::readData(rootDirectory);
+		return AnnotationPolyData::readData(rootDirectory);
 	}
 }
 
-unsigned int QvtkPolyDataSource::getSourceType() const
+unsigned int PolyDataSource::getSourceType() const
 {
 	return getAttribute(this->sourceType).toUInt();
 }
 
-void QvtkPolyDataSource::reset()
+void PolyDataSource::reset()
 {
-	QvtkAnnotationPolyData::reset();
+	AnnotationPolyData::reset();
 	setSourceType(0);
 }
 
-void QvtkPolyDataSource::setSourceType(unsigned int i)
+void PolyDataSource::setSourceType(unsigned int i)
 {
 	setAttribute(this->sourceType, i);
 	readData();
 }
 
-void QvtkPolyDataSource::setSourceType(Data * self, QStandardItem * item)
+void PolyDataSource::setSourceType(Data * self, QStandardItem * item)
 {
-	QvtkPolyDataSource* _self = static_cast<QvtkPolyDataSource*>(self);
+	PolyDataSource* _self = static_cast<PolyDataSource*>(self);
 	_self->setSourceType(getAttribute(item).toUInt());
 
+}
+}
 }

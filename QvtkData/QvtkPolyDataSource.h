@@ -16,11 +16,15 @@ class vtkRegularPolygonSource;
 class vtkParametricEllipsoid;
 class vtkPassArrays;
 
-class QVTKDATA_EXPORT QvtkPolyDataSource : public QvtkAnnotationPolyData
+namespace Q {
+namespace vtk {
+
+
+class QVTKDATA_EXPORT PolyDataSource : public AnnotationPolyData
 {
 	Q_OBJECT;
 	Q_VTK_DATAH(
-		QvtkPolyDataSource,
+		PolyDataSource,
 		Q_VTK_KEY(SourceType)
 	);
 public: 
@@ -37,8 +41,8 @@ public:
 		SPHERE_SOURCE = 7
 	};
 	
-	QvtkPolyDataSource();
-	virtual ~QvtkPolyDataSource() override;
+	PolyDataSource();
+	virtual ~PolyDataSource() override;
 	virtual void printSelf() const override;
 
 	virtual bool readData(QString rootDirectory = QString()) override;
@@ -58,19 +62,19 @@ public slots:
 
 	virtual void reset() override;
 	virtual void setSourceType(unsigned int i);
-	void setSourceTypeToArrowSource() { this->setSourceType(QvtkPolyDataSource::ARROW_SOURCE); }
-	void setSourceTypeToConeSource() { this->setSourceType(QvtkPolyDataSource::CONE_SOURCE); }
-	void setSourceTypeToCubeSource() { this->setSourceType(QvtkPolyDataSource::CUBE_SOURCE); }
-	void setSourceTypeToCylinderSource() { this->setSourceType(QvtkPolyDataSource::CYLINDER_SOURCE); }
-	void setSourceTypeToDiskSource() { this->setSourceType(QvtkPolyDataSource::DISK_SOURCE); }
-	void setSourceTypeToLineSource() { this->setSourceType(QvtkPolyDataSource::LINE_SOURCE); }
-	void setSourceTypeToRegularPolygonSourceSource() { this->setSourceType(QvtkPolyDataSource::REGULAR_POLYGON_SOURCE); }
-	void setSourceTypeToSphereSource() { this->setSourceType(QvtkPolyDataSource::SPHERE_SOURCE); }
+	void setSourceTypeToArrowSource() { this->setSourceType(PolyDataSource::ARROW_SOURCE); }
+	void setSourceTypeToConeSource() { this->setSourceType(PolyDataSource::CONE_SOURCE); }
+	void setSourceTypeToCubeSource() { this->setSourceType(PolyDataSource::CUBE_SOURCE); }
+	void setSourceTypeToCylinderSource() { this->setSourceType(PolyDataSource::CYLINDER_SOURCE); }
+	void setSourceTypeToDiskSource() { this->setSourceType(PolyDataSource::DISK_SOURCE); }
+	void setSourceTypeToLineSource() { this->setSourceType(PolyDataSource::LINE_SOURCE); }
+	void setSourceTypeToRegularPolygonSourceSource() { this->setSourceType(PolyDataSource::REGULAR_POLYGON_SOURCE); }
+	void setSourceTypeToSphereSource() { this->setSourceType(PolyDataSource::SPHERE_SOURCE); }
 
 protected:
 
 	
-	virtual Data* newInstance() const override { return new QvtkPolyDataSource; }
+	virtual Data* newInstance() const override { return new PolyDataSource; }
 
 	static void setSourceType(Data* self, QStandardItem* item);
 
@@ -88,5 +92,6 @@ private:
 
 	QStandardItem* sourceType;
 };
-
+}
+}
 #endif // !__Qvtk_POLY_DATA_SOURCE_H__

@@ -2,21 +2,22 @@
 #define __Qvtk_POLY_DATA_ACTOR_H__
 
 // me
-#include "Prop.h"
+#include "QvtkProp.h"
 
 class vtkActor;
 class vtkPolyDataMapper;
 class vtkClipPolyData;
 class vtkBox;
-
-class QVTKDATA_EXPORT QvtkPolyDataActor: public Prop
+namespace Q {
+namespace vtk{
+class QVTKDATA_EXPORT PolyDataActor: public Prop
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(QvtkPolyDataActor)
+	Q_VTK_DATAH(PolyDataActor)
 public:
 
-	QvtkPolyDataActor();
-	virtual ~QvtkPolyDataActor() override;
+	PolyDataActor();
+	virtual ~PolyDataActor() override;
 	virtual void printSelf() const override;
 	virtual vtkActor* getActor() const;
 	virtual void propMatrixUpdate() override;
@@ -30,7 +31,7 @@ public slots:
 	virtual void setOpacity(double opacity) override;
 	virtual void setColor(const double rgb[3]);
 protected:
-	virtual Data* newInstance() const override { return new QvtkPolyDataActor; }
+	virtual Data* newInstance() const override { return new PolyDataActor; }
 
 	vtkBox* box;
 	vtkClipPolyData* clipper;
@@ -38,5 +39,7 @@ protected:
 
 };
 
+}
+}
 
 #endif // !__Qvtk_POLY_DATA_ACTOR_H__
