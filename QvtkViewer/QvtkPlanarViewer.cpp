@@ -1,6 +1,6 @@
 // me
 #include "QvtkPlanarViewer.h"
-#include "QvtkAbstractPlanarProp.h"
+#include "QvtkPlanarProp.h"
 
 //vtk
 #include <vtkOpenGLCamera.h>
@@ -16,12 +16,13 @@
 
 // qt
 #include <QDebug>
-
-class QvtkPlanarViewerScrollCallback : public vtkCommand
+namespace Q {
+namespace vtk{
+class PlanarViewerScrollCallback : public vtkCommand
 {
 public:
-	static QvtkPlanarViewerScrollCallback* New() {
-		return new QvtkPlanarViewerScrollCallback;
+	static PlanarViewerScrollCallback* New() {
+		return new PlanarViewerScrollCallback;
 	}
 	
 	virtual void Execute(vtkObject *caller, unsigned long eventId,
@@ -43,7 +44,7 @@ public:
 		this->AbortFlagOn();
 	}
 
-	QvtkPlanarViewer* viewer;
+	PlanarViewer* viewer;
 
 };
 
@@ -58,10 +59,10 @@ public:
 		void *callData) override {
 		this->viewer->UpdateAxes(true);
 	}
-	QvtkPlanarViewer* viewer;
+	PlanarViewer* viewer;
 };
 
-void QvtkPlanarViewer::SetOrientation(int orientation)
+void PlanarViewer::SetOrientation(int orientation)
 {
 	ORIENTATION _orientation = static_cast<ORIENTATION>(orientation);
 	switch (_orientation)
@@ -100,7 +101,7 @@ void QvtkPlanarViewer::SetOrientation(int orientation)
 	OrthogonalViewer::SetOrientation(orientation);
 }
 
-QvtkPlanarViewer::QvtkPlanarViewer(QWidget * parent)
+PlanarViewer::PlanarViewer(QWidget * parent)
 	:OrthogonalViewer(parent)
 {
 	this->camera->ParallelProjectionOn();
@@ -172,14 +173,14 @@ QvtkPlanarViewer::QvtkPlanarViewer(QWidget * parent)
 	this->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent, axisCallback);
 	axisCallback->Delete();
 
-	QvtkPlanarViewerScrollCallback* callback = QvtkPlanarViewerScrollCallback::New();
+	PlanarViewerScrollCallback* callback = PlanarViewerScrollCallback::New();
 	callback->viewer = this;
 	this->GetInteractor()->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback, 0.6);
 	this->GetInteractor()->AddObserver(vtkCommand::MouseWheelForwardEvent, callback, 0.6);
 	callback->Delete();
 
 }
-QvtkPlanarViewer::~QvtkPlanarViewer()
+PlanarViewer::~PlanarViewer()
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -192,7 +193,7 @@ QvtkPlanarViewer::~QvtkPlanarViewer()
 	this->horizontalAxis->Delete();
 }
 
-void QvtkPlanarViewer::UpdateAxes(bool flag)
+void PlanarViewer::UpdateAxes(bool flag)
 {
 	this->verticalAxis->SetVisibility(flag);
 	this->horizontalAxis->SetVisibility(flag);
@@ -211,7 +212,7 @@ void QvtkPlanarViewer::UpdateAxes(bool flag)
 	this->horizontalAxis->SetPoint1(0.5 + v2hratio * (25 * (1 / pdist)), 0.01);
 	this->horizontalAxis->SetPoint2(0.5 - v2hratio * (25 * (1 / pdist)), 0.01);
 }
-void QvtkPlanarViewer::UpdateCursorPosition(double x, double y, double z)
+void PlanarViewer::UpdateCursorPosition(double x, double y, double z)
 {
 	QList<Prop*> props = this->propToRenderer->keys();
 
@@ -225,7 +226,7 @@ void QvtkPlanarViewer::UpdateCursorPosition(double x, double y, double z)
 }
 
 
-void QvtkPlanarViewer::IncrementSlice(bool sign)
+void PlanarViewer::IncrementSlice(bool sign)
 {
 	double pos[3] = {
 		GetCursorPosition()[0],
@@ -252,32 +253,32 @@ void QvtkPlanarViewer::IncrementSlice(bool sign)
 	//emit signalIncrementSlice();
 }
 
-void QvtkPlanarViewer::UpdateCameraViewPlaneNormal()
+void PlanarViewer::UpdateCameraViewPlaneNormal()
 {
 	/* Get current view plane normal */
 	double *ori = this->camera->GetViewPlaneNormal();
 	double targetOri[3], diff[3];
 
 	/* Force xViewPlaneNormal and zViewPlaneNormal to be orthogonal first */
-	if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) > 1e-10) {
+	if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) > 1e-10) {
 		double rotAx[3];
-		vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, rotAx);
-		vtkMath::Cross(s_axialViewPlaneNormal, rotAx, s_sagitalViewPlaneNormal);
-		vtkMath::Normalize(s_sagitalViewPlaneNormal);
-		memcpy(targetOri, s_sagitalViewPlaneNormal, sizeof(double) * 3);
+		vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, rotAx);
+		vtkMath::Cross(axialViewPlaneNormal, rotAx, sagitalViewPlaneNormal);
+		vtkMath::Normalize(sagitalViewPlaneNormal);
+		memcpy(targetOri, sagitalViewPlaneNormal, sizeof(double) * 3);
 	}
 
 	/* Find new orientaiton of camera */
 	switch (this->orientation) {
 	case Axial:
-		targetOri[0] = -s_axialViewPlaneNormal[0];
-		targetOri[1] = -s_axialViewPlaneNormal[1];
-		targetOri[2] = -s_axialViewPlaneNormal[2];
+		targetOri[0] = -axialViewPlaneNormal[0];
+		targetOri[1] = -axialViewPlaneNormal[1];
+		targetOri[2] = -axialViewPlaneNormal[2];
 		break;
 	case Sagital:
 		/* do not change if z is already orthogonal with x */
-		if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-			memcpy(targetOri, s_sagitalViewPlaneNormal, sizeof(double) * 3);
+		if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+			memcpy(targetOri, sagitalViewPlaneNormal, sizeof(double) * 3);
 		}
 		else {
 			std::string errmsg = "Corrupted x view planeNormal";
@@ -288,11 +289,11 @@ void QvtkPlanarViewer::UpdateCameraViewPlaneNormal()
 	case Coronal:
 		if (this->righthandness)
 		{
-			if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-				vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, s_coronalViewPlaneNormal);
-				targetOri[0] = -s_coronalViewPlaneNormal[0];
-				targetOri[1] = -s_coronalViewPlaneNormal[1];
-				targetOri[2] = -s_coronalViewPlaneNormal[2];
+			if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+				vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, coronalViewPlaneNormal);
+				targetOri[0] = -coronalViewPlaneNormal[0];
+				targetOri[1] = -coronalViewPlaneNormal[1];
+				targetOri[2] = -coronalViewPlaneNormal[2];
 			}
 			else {
 				std::string errmsg = "Corrupted x view planeNormal";
@@ -301,9 +302,9 @@ void QvtkPlanarViewer::UpdateCameraViewPlaneNormal()
 			}
 		}
 		else {
-			if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-				vtkMath::Cross(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal, s_coronalViewPlaneNormal);
-				memcpy(targetOri, s_coronalViewPlaneNormal, sizeof(double) * 3);
+			if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+				vtkMath::Cross(sagitalViewPlaneNormal, axialViewPlaneNormal, coronalViewPlaneNormal);
+				memcpy(targetOri, coronalViewPlaneNormal, sizeof(double) * 3);
 			}
 			else {
 				std::string errmsg = "Corrupted x view planeNormal";
@@ -330,4 +331,6 @@ void QvtkPlanarViewer::UpdateCameraViewPlaneNormal()
 
 	/* Specify View up */
 	this->UpdateViewUp();
+}
+}
 }

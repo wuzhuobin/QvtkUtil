@@ -1,5 +1,5 @@
-#ifndef __Qvtk_PLANAR_VIEWER_H__
-#define __Qvtk_PLANAR_VIEWER_H__
+#ifndef __QVTK_PLANAR_VIEWER_H__
+#define __QVTK_PLANAR_VIEWER_H__
 
 // me
 #include "QvtkOrthogonalViewer.h"
@@ -8,13 +8,15 @@
 class vtkTextActor;
 class vtkAxisActor2D;
 
+namespace Q {
+namespace vtk {
 
-class ABSTRACTVIEWER_EXPORT QvtkPlanarViewer : public OrthogonalViewer
+class QVTKVIEWER_EXPORT PlanarViewer : public OrthogonalViewer
 {
 	Q_OBJECT;
 public:
-	explicit QvtkPlanarViewer(QWidget* parent = nullptr);
-	virtual ~QvtkPlanarViewer() override;
+	explicit PlanarViewer(QWidget* parent = nullptr);
+	virtual ~PlanarViewer() override;
 	vtkRenderer* GetAnnotationRenderer() { return this->renderers[1]; }
 public slots:
 	virtual void IncrementSlice(bool sign);
@@ -34,4 +36,6 @@ protected:
 
 };
 
-#endif // !__Qvtk_PLANAR_VIEWER_H__
+}
+}
+#endif // !__QVTK_PLANAR_VIEWER_H__

@@ -1,13 +1,14 @@
-#ifndef __Qvtk_NON_PLANAR_VIEWER_H__
-#define __Qvtk_NON_PLANAR_VIEWER_H__
+#ifndef __QVTK_NON_PLANAR_VIEWER_H__
+#define __QVTK_NON_PLANAR_VIEWER_H__
 
 #include "QvtkOrthogonalViewer.h"
-
-class ABSTRACTVIEWER_EXPORT QvtkNonPlanarViewer : public OrthogonalViewer
+namespace Q {
+namespace vtk{
+class QVTKVIEWER_EXPORT NonPlanarViewer : public OrthogonalViewer
 {
 	Q_OBJECT;
 public:
-	explicit QvtkNonPlanarViewer(QWidget* parent = nullptr);
+	explicit NonPlanarViewer(QWidget* parent = nullptr);
 
 public slots:
 	//virtual void SetOrientation(int orientation) override;
@@ -16,5 +17,7 @@ public slots:
 protected:
 	virtual void UpdateCameraViewPlaneNormal() override;
 };
+}
+}
 
-#endif // !__Qvtk_NON_PLANAR_VIEWER_H__
+#endif // !__QVTK_NON_PLANAR_VIEWER_H__

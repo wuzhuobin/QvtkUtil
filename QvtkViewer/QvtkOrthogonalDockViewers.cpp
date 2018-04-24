@@ -7,8 +7,9 @@
 #include <QDockWidget>
 #include <QSignalMapper>
 #include <QDebug>
-
-QvtkOrthogonalDockViewers::QvtkOrthogonalDockViewers(QWidget * parent)
+namespace Q {
+namespace vtk{
+OrthogonalDockViewers::OrthogonalDockViewers(QWidget * parent)
 	:QMainWindow(parent)
 {
 	this->viewers = new QList<OrthogonalViewer*>;
@@ -17,13 +18,13 @@ QvtkOrthogonalDockViewers::QvtkOrthogonalDockViewers(QWidget * parent)
 
 }
 
-QvtkOrthogonalDockViewers::~QvtkOrthogonalDockViewers()
+OrthogonalDockViewers::~OrthogonalDockViewers()
 {
 	delete this->viewers;
 	delete this->dockers;
 }
 
-void QvtkOrthogonalDockViewers::deleteAllViewer()
+void OrthogonalDockViewers::deleteAllViewer()
 {
 	for (int i = 0; i < getNumberOfViewers(); ++i) {
 		delete this->viewers->at(i);
@@ -31,12 +32,12 @@ void QvtkOrthogonalDockViewers::deleteAllViewer()
 	}
 }
 
-void QvtkOrthogonalDockViewers::setViewer(int i)
+void OrthogonalDockViewers::setViewer(int i)
 {
 	setViewer(i, new OrthogonalViewer(this));
 }
 
-void QvtkOrthogonalDockViewers::setViewer(int index, OrthogonalViewer * viewer)
+void OrthogonalDockViewers::setViewer(int index, OrthogonalViewer * viewer)
 {
 	if (index >getNumberOfViewers()) {
 		setViewer(index - 1, new OrthogonalViewer(this));
@@ -72,22 +73,22 @@ void QvtkOrthogonalDockViewers::setViewer(int index, OrthogonalViewer * viewer)
 		this, SLOT(showMaximizedOrNormal(int)));
 }
 
-OrthogonalViewer * QvtkOrthogonalDockViewers::getViewers(int i) const
+OrthogonalViewer * OrthogonalDockViewers::getViewers(int i) const
 {
 	return this->viewers->at(i);
 }
 
-QDockWidget * QvtkOrthogonalDockViewers::getDocker(int i) const
+QDockWidget * OrthogonalDockViewers::getDocker(int i) const
 {
 	return this->dockers->at(i);
 }
 
-int QvtkOrthogonalDockViewers::getNumberOfViewers() const
+int OrthogonalDockViewers::getNumberOfViewers() const
 {
 	return this->viewers->count();
 }
 
-void QvtkOrthogonalDockViewers::showMaximizedOrNormal(int i) const
+void OrthogonalDockViewers::showMaximizedOrNormal(int i) const
 {
 	int num = i / 2;
 	bool maximize = i % 2;
@@ -111,4 +112,7 @@ void QvtkOrthogonalDockViewers::showMaximizedOrNormal(int i) const
 			this->dockers->at(num)->setHidden(!maximize);
 		}
 	}
+}
+
+}
 }

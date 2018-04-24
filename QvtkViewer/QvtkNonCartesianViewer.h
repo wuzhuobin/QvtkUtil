@@ -16,12 +16,13 @@
  * \note
 */
 
-#ifndef __Qvtk_ABSTRACT_NON_CARTESIAN_VIEWER_H__
-#define __Qvtk_ABSTRACT_NON_CARTESIAN_VIEWER_H__
+#ifndef __QVTK_NON_CARTESIAN_VIEWER_H__
+#define __QVTK_NON_CARTESIAN_VIEWER_H__
 
-#include "QvtkAbstractViewer.h"
-
-class ABSTRACTVIEWER_EXPORT QvtkABstractNonCartesianViewer : public Viewer
+#include "QvtkViewer.h"
+namespace Q {
+namespace vtk{
+class QVTKVIEWER_EXPORT NonCartesianViewer : public Viewer
 {
     Q_OBJECT
 public:
@@ -50,10 +51,12 @@ public:
     //virtual vtkTransform* GetCursorTransform();
 
 protected:
-	QvtkABstractNonCartesianViewer(QWidget* parent = nullptr);
-	~QvtkABstractNonCartesianViewer() {};
+	NonCartesianViewer(QWidget* parent = nullptr);
+	~NonCartesianViewer() {};
 
     //static vtkTransform* s_nonCartesianCusorTransform;
 };
 
+}
+}
 #endif

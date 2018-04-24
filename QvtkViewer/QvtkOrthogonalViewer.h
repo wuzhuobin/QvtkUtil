@@ -37,9 +37,9 @@ public:
 	* @brief
 	*
 	* Specify one of the three orthogonal directions.
-	* The s_axialViewPlaneNormal has a higher priority than s_sagitalViewPlaneNormal.
-	* Meaning specifying s_axialViewPlaneNormal can potentially change
-	* s_sagitalViewPlaneNormal if it is not orthogonal with the specified s_axialViewPlaneNormal.
+	* The axialViewPlaneNormal has a higher priority than sagitalViewPlaneNormal.
+	* Meaning specifying axialViewPlaneNormal can potentially change
+	* sagitalViewPlaneNormal if it is not orthogonal with the specified axialViewPlaneNormal.
 	*
 	*
 	* @param double e1 x-component of desired view plane normal
@@ -144,9 +144,9 @@ protected:
 	int orientation;
 	Ui::OrthogonalViewer* ui;
 
-	static double s_axialViewPlaneNormal[3];
-	static double s_sagitalViewPlaneNormal[3];
-	static double s_coronalViewPlaneNormal[3];
+	static double axialViewPlaneNormal[3];
+	static double sagitalViewPlaneNormal[3];
+	static double coronalViewPlaneNormal[3];
 	static bool initializeFlag;
 };
 

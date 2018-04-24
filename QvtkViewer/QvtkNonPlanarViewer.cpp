@@ -1,6 +1,6 @@
 // me
 #include "QvtkNonPlanarViewer.h"
-#include "ImageSlice.h"
+#include "QvtkImageSlice.h"
 
 //vtk
 #include <vtkOpenGLCamera.h>
@@ -10,7 +10,7 @@
 // qt 
 #include <QDebug>
 
-//void QvtkNonPlanarViewer::SetOrientation(int orientation)
+//void NonPlanarViewer::SetOrientation(int orientation)
 //{
 //	QList<Prop*> props = this->propToRenderer->keys();
 //
@@ -28,8 +28,9 @@
 //	}
 //	OrthogonalViewer::SetOrientation(orientation);
 //}
-
-QvtkNonPlanarViewer::QvtkNonPlanarViewer(QWidget * parent)
+namespace Q {
+namespace vtk{
+NonPlanarViewer::NonPlanarViewer(QWidget * parent)
 	:OrthogonalViewer(parent)
 {
 	//this->camera->ParallelProjectionOn();
@@ -38,32 +39,32 @@ QvtkNonPlanarViewer::QvtkNonPlanarViewer(QWidget * parent)
 	//ren->AddActor(this->cursorActor);
 }
 
-void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
+void NonPlanarViewer::UpdateCameraViewPlaneNormal()
 {
 	/* Get current view plane normal */
 	double *ori = this->camera->GetViewPlaneNormal();
 	double targetOri[3], diff[3];
 
 	/* Force xViewPlaneNormal and zViewPlaneNormal to be orthogonal first */
-	if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) > 1e-10) {
+	if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) > 1e-10) {
 		double rotAx[3];
-		vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, rotAx);
-		vtkMath::Cross(s_axialViewPlaneNormal, rotAx, s_sagitalViewPlaneNormal);
-		vtkMath::Normalize(s_sagitalViewPlaneNormal);
-		memcpy(targetOri, s_sagitalViewPlaneNormal, sizeof(double) * 3);
+		vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, rotAx);
+		vtkMath::Cross(axialViewPlaneNormal, rotAx, sagitalViewPlaneNormal);
+		vtkMath::Normalize(sagitalViewPlaneNormal);
+		memcpy(targetOri, sagitalViewPlaneNormal, sizeof(double) * 3);
 	}
 
 	/* Find new orientaiton of camera */
 	switch (this->orientation) {
 	case Axial:
-		targetOri[0] = -s_axialViewPlaneNormal[0];
-		targetOri[1] = -s_axialViewPlaneNormal[1];
-		targetOri[2] = -s_axialViewPlaneNormal[2];
+		targetOri[0] = -axialViewPlaneNormal[0];
+		targetOri[1] = -axialViewPlaneNormal[1];
+		targetOri[2] = -axialViewPlaneNormal[2];
 		break;
 	case Sagital:
 		/* do not change if z is already orthogonal with x */
-		if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-			memcpy(targetOri, s_sagitalViewPlaneNormal, sizeof(double) * 3);
+		if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+			memcpy(targetOri, sagitalViewPlaneNormal, sizeof(double) * 3);
 		}
 		else {
 			std::string errmsg = "Corrupted x view planeNormal";
@@ -74,11 +75,11 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 	case Coronal:
 		if (this->righthandness)
 		{
-			if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-				vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, s_coronalViewPlaneNormal);
-				targetOri[0] = -s_coronalViewPlaneNormal[0];
-				targetOri[1] = -s_coronalViewPlaneNormal[1];
-				targetOri[2] = -s_coronalViewPlaneNormal[2];
+			if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+				vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, coronalViewPlaneNormal);
+				targetOri[0] = -coronalViewPlaneNormal[0];
+				targetOri[1] = -coronalViewPlaneNormal[1];
+				targetOri[2] = -coronalViewPlaneNormal[2];
 			}
 			else {
 				std::string errmsg = "Corrupted x view planeNormal";
@@ -87,9 +88,9 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 			}
 		}
 		else {
-			if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-				vtkMath::Cross(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal, s_coronalViewPlaneNormal);
-				memcpy(targetOri, s_coronalViewPlaneNormal, sizeof(double) * 3);
+			if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+				vtkMath::Cross(sagitalViewPlaneNormal, axialViewPlaneNormal, coronalViewPlaneNormal);
+				memcpy(targetOri, coronalViewPlaneNormal, sizeof(double) * 3);
 			}
 			else {
 				std::string errmsg = "Corrupted x view planeNormal";
@@ -118,7 +119,7 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 	this->UpdateViewUp();
 }
 
-//void QvtkNonPlanarViewer::SetCursorPosition(double x, double y, double z)
+//void NonPlanarViewer::SetCursorPosition(double x, double y, double z)
 //{
 //	OrthogonalViewer::SetCursorPosition(x, y, z);
 //	if (this->desyncCursorFlag) 
@@ -128,7 +129,7 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 //	else {
 //		foreach(Viewer* viewer, GetAllViewers()) {
 //			
-//			QvtkNonPlanarViewer* _viewer = qobject_cast<QvtkNonPlanarViewer*>(viewer);
+//			NonPlanarViewer* _viewer = qobject_cast<NonPlanarViewer*>(viewer);
 //			if (_viewer) {
 //				QList<Prop*> props = _viewer->propToRenderer->keys();
 //
@@ -162,3 +163,6 @@ void QvtkNonPlanarViewer::UpdateCameraViewPlaneNormal()
 //
 //
 //}
+
+}
+}

@@ -19,9 +19,9 @@ namespace vtk{
 bool OrthogonalViewer::initializeFlag = false;
 
 /* Set default value of x and y view plane normal */
-double OrthogonalViewer::s_axialViewPlaneNormal[3] = { 0, 0, 1 };
-double OrthogonalViewer::s_sagitalViewPlaneNormal[3] = { 1, 0, 0 };
-double OrthogonalViewer::s_coronalViewPlaneNormal[3] = { 0, 1, 0 };
+double OrthogonalViewer::axialViewPlaneNormal[3] = { 0, 0, 1 };
+double OrthogonalViewer::sagitalViewPlaneNormal[3] = { 1, 0, 0 };
+double OrthogonalViewer::coronalViewPlaneNormal[3] = { 0, 1, 0 };
 
 const struct QvtkOrthogonalViewerResourceInit
 {
@@ -119,16 +119,16 @@ void OrthogonalViewer::SetSagitalViewPlaneNormal(double e1, double e2, double e3
 
 	/* Check if this is orthogonal with xViewPlaneNormal, if not snap it to
 	the closest vect that is orthogonal with xViewPlaneNormal */
-	if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) > 1e-10) {
+	if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) > 1e-10) {
 		double rotAx[3];
-		vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, rotAx);
-		vtkMath::Cross(s_axialViewPlaneNormal, rotAx, s_sagitalViewPlaneNormal);
-		vtkMath::Normalize(s_sagitalViewPlaneNormal);
+		vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, rotAx);
+		vtkMath::Cross(axialViewPlaneNormal, rotAx, sagitalViewPlaneNormal);
+		vtkMath::Normalize(sagitalViewPlaneNormal);
 	}
 	else {
-		OrthogonalViewer::s_sagitalViewPlaneNormal[0] = e1;
-		OrthogonalViewer::s_sagitalViewPlaneNormal[1] = e2;
-		OrthogonalViewer::s_sagitalViewPlaneNormal[2] = e3;
+		OrthogonalViewer::sagitalViewPlaneNormal[0] = e1;
+		OrthogonalViewer::sagitalViewPlaneNormal[1] = e2;
+		OrthogonalViewer::sagitalViewPlaneNormal[2] = e3;
 	}
 
 	OrthogonalViewer dummy;
@@ -170,17 +170,17 @@ void OrthogonalViewer::SetSagitalViewPlaneNormal(double *normal)
 
 const double *OrthogonalViewer::GetAxiaViewPlaneNormal()
 {
-	return s_axialViewPlaneNormal;
+	return axialViewPlaneNormal;
 }
 
 const double *OrthogonalViewer::GetSagitalViewPlaneNormal()
 {
-	return s_sagitalViewPlaneNormal;
+	return sagitalViewPlaneNormal;
 }
 
 const double* OrthogonalViewer::GetCoronalViewPlaneNormal()
 {
-	return s_coronalViewPlaneNormal;
+	return coronalViewPlaneNormal;
 }
 
 void OrthogonalViewer::UpdateCameraViewPlaneNormal()
@@ -190,22 +190,22 @@ void OrthogonalViewer::UpdateCameraViewPlaneNormal()
 	double targetOri[3], diff[3];
 
 	/* Force xViewPlaneNormal and zViewPlaneNormal to be orthogonal first */
-	if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) > 1e-10) {
+	if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) > 1e-10) {
 		double rotAx[3];
-		vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, rotAx);
-		vtkMath::Cross(s_axialViewPlaneNormal, rotAx, s_sagitalViewPlaneNormal);
-		vtkMath::Normalize(s_sagitalViewPlaneNormal);
-		memcpy(targetOri, s_sagitalViewPlaneNormal, sizeof(double) * 3);
+		vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, rotAx);
+		vtkMath::Cross(axialViewPlaneNormal, rotAx, sagitalViewPlaneNormal);
+		vtkMath::Normalize(sagitalViewPlaneNormal);
+		memcpy(targetOri, sagitalViewPlaneNormal, sizeof(double) * 3);
 	}
 
 	/* Find new orientaiton of camera */
 	switch (this->orientation) {
-	case Axial: memcpy(targetOri, s_axialViewPlaneNormal, sizeof(double) * 3);
+	case Axial: memcpy(targetOri, axialViewPlaneNormal, sizeof(double) * 3);
 		break;
 	case Sagital:
 		/* do not change if z is already orthogonal with x */
-		if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-			memcpy(targetOri, s_sagitalViewPlaneNormal, sizeof(double) * 3);
+		if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+			memcpy(targetOri, sagitalViewPlaneNormal, sizeof(double) * 3);
 		}
 		else {
 			std::string errmsg = "Corrupted x view planeNormal";
@@ -216,9 +216,9 @@ void OrthogonalViewer::UpdateCameraViewPlaneNormal()
 	case Coronal:
 		if (this->righthandness)
 		{
-			if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-				vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, s_coronalViewPlaneNormal);
-				memcpy(targetOri, s_coronalViewPlaneNormal, sizeof(double) * 3);
+			if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+				vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, coronalViewPlaneNormal);
+				memcpy(targetOri, coronalViewPlaneNormal, sizeof(double) * 3);
 			}
 			else {
 				std::string errmsg = "Corrupted x view planeNormal";
@@ -227,9 +227,9 @@ void OrthogonalViewer::UpdateCameraViewPlaneNormal()
 			}
 		}
 		else {
-			if (abs(vtkMath::Dot(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal)) < 1e-10) {
-				vtkMath::Cross(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal, s_coronalViewPlaneNormal);
-				memcpy(targetOri, s_coronalViewPlaneNormal, sizeof(double) * 3);
+			if (abs(vtkMath::Dot(sagitalViewPlaneNormal, axialViewPlaneNormal)) < 1e-10) {
+				vtkMath::Cross(sagitalViewPlaneNormal, axialViewPlaneNormal, coronalViewPlaneNormal);
+				memcpy(targetOri, coronalViewPlaneNormal, sizeof(double) * 3);
 			}
 			else {
 				std::string errmsg = "Corrupted x view planeNormal";
@@ -265,18 +265,18 @@ void OrthogonalViewer::UpdateViewUp()
 	case Axial:
 		if (this->righthandness)
 		{
-			vtkMath::Cross(s_sagitalViewPlaneNormal, s_axialViewPlaneNormal, viewUp);
+			vtkMath::Cross(sagitalViewPlaneNormal, axialViewPlaneNormal, viewUp);
 			this->camera->SetViewUp(viewUp);
 		}
 		else
 		{
-			vtkMath::Cross(s_axialViewPlaneNormal, s_sagitalViewPlaneNormal, viewUp);
+			vtkMath::Cross(axialViewPlaneNormal, sagitalViewPlaneNormal, viewUp);
 			this->camera->SetViewUp(viewUp);
 		}
 		break;
 	case Coronal:
 	case Sagital:
-		this->camera->SetViewUp(s_axialViewPlaneNormal);
+		this->camera->SetViewUp(axialViewPlaneNormal);
 		break;
 	default: std::string errmsg = "ORIENTATION is not between 0 to 2!";
 		qCritical() << QString::fromStdString(errmsg);
@@ -301,9 +301,9 @@ void OrthogonalViewer::SetAxialViewPlaneNormal(double e1, double e2, double e3)
 		e3 = 0;
 	}
 
-	OrthogonalViewer::s_axialViewPlaneNormal[0] = e1;
-	OrthogonalViewer::s_axialViewPlaneNormal[1] = e2;
-	OrthogonalViewer::s_axialViewPlaneNormal[2] = e3;
+	OrthogonalViewer::axialViewPlaneNormal[0] = e1;
+	OrthogonalViewer::axialViewPlaneNormal[1] = e2;
+	OrthogonalViewer::axialViewPlaneNormal[2] = e3;
 
 	OrthogonalViewer dummy;
 	std::string classname = typeid(dummy).name();

@@ -1,9 +1,13 @@
-#ifndef __Qvtk_ORTHOGONAL_DOCK_VIEWERS_H__
-#define __Qvtk_ORTHOGONAL_DOCK_VIEWERS_H__
+#ifndef __QVTK_ORTHOGONAL_DOCK_VIEWERS_H__
+#define __QVTK_ORTHOGONAL_DOCK_VIEWERS_H__
 
 // me
+#include "qvtkviewer_export.h"
+namespace Q {
+namespace vtk{
 class OrthogonalViewer;
-#include "abstractviewer_export.h"
+}
+}
 
 // qt 
 #include <QMainWindow>
@@ -12,13 +16,14 @@ class QList;
 class QDockWidget;
 class QSignalMapper;
 
-
-class ABSTRACTVIEWER_EXPORT QvtkOrthogonalDockViewers : public QMainWindow
+namespace Q {
+namespace vtk{
+class QVTKVIEWER_EXPORT OrthogonalDockViewers : public QMainWindow
 {
 	Q_OBJECT;
 public: 
-	explicit QvtkOrthogonalDockViewers(QWidget* parent = nullptr);
-	virtual ~QvtkOrthogonalDockViewers() override;
+	explicit OrthogonalDockViewers(QWidget* parent = nullptr);
+	virtual ~OrthogonalDockViewers() override;
 
 	void deleteAllViewer();
 	void setViewer(int i);
@@ -39,4 +44,6 @@ private:
 
 };
 
-#endif // !__Qvtk_ORTHOGONAL_DOCK_VIEWERS_H__
+}
+}
+#endif // !__QVTK_ORTHOGONAL_DOCK_VIEWERS_H__

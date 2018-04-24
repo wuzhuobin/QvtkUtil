@@ -16,21 +16,22 @@
 * \note
 */
 
-#include "QvtkAbstractNonCartesianViewer.h"
+#include "QvtkNonCartesianViewer.h"
 
-//vtkTransform* QvtkABstractNonCartesianViewer::s_nonCartesianCusorTransform = nullptr;
-
-double* QvtkABstractNonCartesianViewer::MapCoord2Cartesian(double* coord)
+//vtkTransform* NonCartesianViewer::s_nonCartesianCusorTransform = nullptr;
+namespace Q {
+namespace vtk{
+double* NonCartesianViewer::MapCoord2Cartesian(double* coord)
 {
     return this->MapCoord2Cartesian(coord[0], coord[1], coord[2]);
 }
 
-double* QvtkABstractNonCartesianViewer::MapCursor2Cartesian()
+double* NonCartesianViewer::MapCursor2Cartesian()
 {
     return this->MapCoord2Cartesian(this->GetCursorPosition());
 }
 
-//vtkTransform* QvtkABstractNonCartesianViewer::GetCursorTransform()
+//vtkTransform* NonCartesianViewer::GetCursorTransform()
 //{
 //    if (this->desyncCursorFlag)
 //    {
@@ -42,9 +43,12 @@ double* QvtkABstractNonCartesianViewer::MapCursor2Cartesian()
 //    }
 //}
 
-QvtkABstractNonCartesianViewer::QvtkABstractNonCartesianViewer(QWidget* parent /*= nullptr*/) 
+NonCartesianViewer::NonCartesianViewer(QWidget* parent /*= nullptr*/) 
 	: Viewer(parent)
 {
 
 }
 
+
+}
+}
