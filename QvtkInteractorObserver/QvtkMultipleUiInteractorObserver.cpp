@@ -5,23 +5,26 @@
 
 //qt
 #include <qwidget.h>
-
-void QvtkMultipleUiInteractorObserver::install()
+namespace Q {
+namespace vtk{
+void MultipleUiInteractorObserver::install()
 {
-	MULTIPLE_UI_INSTALL(QvtkMultipleUiInteractorObserver);
+	MULTIPLE_UI_INSTALL(MultipleUiInteractorObserver);
 }
 
-void QvtkMultipleUiInteractorObserver::uninstall()
+void MultipleUiInteractorObserver::uninstall()
 {
 	MULTIPLE_UI_UNINSTALL();
 }
 
-QvtkMultipleUiInteractorObserver::QvtkMultipleUiInteractorObserver()
+MultipleUiInteractorObserver::MultipleUiInteractorObserver()
 {
 	this->ui = nullptr;
 }
 
-QvtkMultipleUiInteractorObserver::~QvtkMultipleUiInteractorObserver()
+MultipleUiInteractorObserver::~MultipleUiInteractorObserver()
 {
 	this->ui = nullptr;
+}
+}
 }

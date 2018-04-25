@@ -2,12 +2,12 @@
 #define __VTK_INTERACTOR_STYLE_WINDOW_LEVEL_H__
 
 // me 
-#include "abstractinteractorobserver_export.h"
+#include "QVTKINTERACTOROBSERVER_EXPORT.h"
 
 // vtk
 #include <vtkInteractorStyleTrackballCamera.h>
 
-class ABSTRACTINTERACTOROBSERVER_EXPORT vtkInteractorStyleWindowLevel : public vtkInteractorStyleTrackballCamera
+class QVTKINTERACTOROBSERVER_EXPORT vtkInteractorStyleWindowLevel : public vtkInteractorStyleTrackballCamera
 {
 public:
 	static const int VTKIS_WINDOW_LEVEL = 1024;

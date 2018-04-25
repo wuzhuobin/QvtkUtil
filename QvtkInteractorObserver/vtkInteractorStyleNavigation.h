@@ -2,13 +2,13 @@
 #define __VTK_INTERACTOR_STYLE_NAVIGATION_H__
 
 // me
-#include "abstractinteractorobserver_export.h"
+#include "QVTKINTERACTOROBSERVER_EXPORT.h"
 
 // vtk
 #include "vtkInteractorStyleTrackballCamera.h"
 //class vtkTimerEventCallbackCommand;
 
-class ABSTRACTINTERACTOROBSERVER_EXPORT vtkInteractorStyleNavigation : public vtkInteractorStyleTrackballCamera
+class QVTKINTERACTOROBSERVER_EXPORT vtkInteractorStyleNavigation : public vtkInteractorStyleTrackballCamera
 {
 public:
 	static const int VTKIS_NAVIGATION = 1024;

@@ -1,35 +1,35 @@
-#include "QvtkAbstractInteractorObserver.h"
+#include "QvtkInteractorObserver.h"
 
 //qt
 #include <QWidget>
 #include <QDebug>
-
-QMultiHash<QString, QvtkAbstractInteractorObserver*> QvtkAbstractInteractorObserver::stylesDataBase;
-
-void QvtkAbstractInteractorObserver::synchronalCall(QvtkAbstractInteractorObserver * style, void(*functionSet)(QvtkAbstractInteractorObserver *it))
+namespace Q {
+namespace vtk{
+QMultiHash<QString, InteractorObserver*> InteractorObserver::observersDataBase;
+void InteractorObserver::synchronalCall(InteractorObserver * observer, void(*functionSet)(InteractorObserver *it))
 {
-	synchronalCall(style->metaObject()->className(), functionSet);
+	synchronalCall(observer->metaObject()->className(), functionSet);
 }
 
-void QvtkAbstractInteractorObserver::install()
+void InteractorObserver::install()
 {
 	installImp(this->metaObject());
 }
 
-void QvtkAbstractInteractorObserver::uninstall()
+void InteractorObserver::uninstall()
 {
 	uninstallImp(this->metaObject());
 }
 
-void QvtkAbstractInteractorObserver::synchronalCall(QvtkAbstractInteractorObserver * style, std::function<void(QvtkAbstractInteractorObserver*it)> functionSet)
+void InteractorObserver::synchronalCall(InteractorObserver * observer, std::function<void(InteractorObserver*it)> functionSet)
 {
-	synchronalCall(style->metaObject()->className(), functionSet);
+	synchronalCall(observer->metaObject()->className(), functionSet);
 }
 
-void QvtkAbstractInteractorObserver::synchronalCall(QString styleName, FunctionSet1 functionSet)
+void InteractorObserver::synchronalCall(QString observerName, FunctionSet1 functionSet)
 {
-	QList<QvtkAbstractInteractorObserver*> list = stylesDataBase.values(styleName);
-	for (QList<QvtkAbstractInteractorObserver*>::const_iterator cit = list.cbegin();
+	QList<InteractorObserver*> list = observersDataBase.values(observerName);
+	for (QList<InteractorObserver*>::const_iterator cit = list.cbegin();
 		cit != list.cend(); ++cit) {
 		if ((*cit)->getCustomEnable()) {
 			functionSet(*cit);
@@ -37,10 +37,10 @@ void QvtkAbstractInteractorObserver::synchronalCall(QString styleName, FunctionS
 	}
 }
 
-void QvtkAbstractInteractorObserver::synchronalCall(QString styleName, FunctionSet2 functionSet)
+void InteractorObserver::synchronalCall(QString observerName, FunctionSet2 functionSet)
 {
-	QList<QvtkAbstractInteractorObserver*> list = stylesDataBase.values(styleName);
-	for (QList<QvtkAbstractInteractorObserver*>::const_iterator cit = list.cbegin();
+	QList<InteractorObserver*> list = observersDataBase.values(observerName);
+	for (QList<InteractorObserver*>::const_iterator cit = list.cbegin();
 		cit != list.cend(); ++cit) {
 		if ((*cit)->getCustomEnable()) {
 			functionSet(*cit);
@@ -48,35 +48,38 @@ void QvtkAbstractInteractorObserver::synchronalCall(QString styleName, FunctionS
 	}
 }
 
-QWidget * QvtkAbstractInteractorObserver::getWidget()
+QWidget * InteractorObserver::getWidget()
 {
 	return this->widget.data();
 }
 
-QvtkAbstractInteractorObserver::QvtkAbstractInteractorObserver()
+InteractorObserver::InteractorObserver()
 	:QObject(nullptr)
 {
 	this->widget = nullptr;
 	this->customFlag = false;
 }
 
-QvtkAbstractInteractorObserver::~QvtkAbstractInteractorObserver()
+InteractorObserver::~InteractorObserver()
 {
 	this->widget = nullptr;
 }
 
-void QvtkAbstractInteractorObserver::installImp(const QMetaObject * metaObject) 
+void InteractorObserver::installImp(const QMetaObject * metaObject) 
 {
-	stylesDataBase.insert(metaObject->className(), this);
-	if (metaObject != &QvtkAbstractInteractorObserver::staticMetaObject) {
+	observersDataBase.insert(metaObject->className(), this);
+	if (metaObject != &InteractorObserver::staticMetaObject) {
 		this->installImp(metaObject->superClass());
 	}
 }
 
-void QvtkAbstractInteractorObserver::uninstallImp(const QMetaObject * metaObject) 
+void InteractorObserver::uninstallImp(const QMetaObject * metaObject) 
 {
-	if (metaObject != &QvtkAbstractInteractorObserver::staticMetaObject) {
+	if (metaObject != &InteractorObserver::staticMetaObject) {
 		this->uninstallImp(metaObject->superClass());
 	}
-	stylesDataBase.remove(metaObject->className(), this);
+	observersDataBase.remove(metaObject->className(), this);
+}
+
+}
 }

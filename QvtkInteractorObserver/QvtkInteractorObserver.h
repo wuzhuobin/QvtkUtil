@@ -1,24 +1,24 @@
 /**
- * @file	E:\ccode\QvtkUtilProject\Project\code\interactorstyle\QvtkAbstractInteractorObserver.h.
+ * @file	E:\ccode\QvtkUtilProject\Project\code\interactorobserver\InteractorObserver.h.
  *
- * @brief	Declares the Qvtk abstract interactor style class.
+ * @brief	Declares the Qvtk abstract interactor observer class.
  */
 
-#ifndef __Qvtk_ABSTRACT_INTERACTOR_STYLE_H__
-#define __Qvtk_ABSTRACT_INTERACTOR_STYLE_H__
+#ifndef __QVTK_INTERACTOR_STYLE_H__
+#define __QVTK_INTERACTOR_STYLE_H__
 
 #define SYNCHRONAL_CALL(CLASSNAME, FUNCTIONS) {\
-QList<QvtkAbstractInteractorObserver*> list = stylesDataBase.values(#CLASSNAME); \
-foreach(QvtkAbstractInteractorObserver* _style, list) \
+QList<InteractorObserver*> list = observersDataBase.values(#CLASSNAME); \
+foreach(InteractorObserver* _observer, list) \
 { \
-	CLASSNAME* style = qobject_cast<CLASSNAME*>(_style); \
-	if(style && style->getCustomEnable()){ \
+	CLASSNAME* observer = qobject_cast<CLASSNAME*>(_observer); \
+	if(observer && observer->getCustomEnable()){ \
 		FUNCTIONS; \
 	} \
 }}
 
 //me
-#include "abstractinteractorobserver_export.h"
+#include "qvtkinteractorobserver_export.h"
 
 // qt
 #include <QObject>
@@ -28,26 +28,27 @@ foreach(QvtkAbstractInteractorObserver* _style, list) \
 // std
 #include <functional>
 class QWidget;
-
-class ABSTRACTINTERACTOROBSERVER_EXPORT QvtkAbstractInteractorObserver: public QObject
+namespace Q {
+namespace vtk{
+class QVTKINTERACTOROBSERVER_EXPORT InteractorObserver: public QObject
 {
 	Q_OBJECT;
 public:
 
 	/**
-	 * @fn	virtual void QvtkAbstractInteractorObserver::setCustomEnable(bool flag)
+	 * @fn	virtual void InteractorObserver::setCustomEnable(bool flag)
 	 *
 	 * @brief	Enable custom function.
 	 * When developer need enable or disable custom function for this InteractorStyle,
 	 * should wrap under this method. But call the 
-	 * QvtkAbstractInteractorObserver#setCustomEnable() anyway to set the flag correctly.
+	 * InteractorObserver#setCustomEnable() anyway to set the flag correctly.
 	 * @param	flag	True to flag.
 	 */
 
 	virtual void setCustomEnable(bool flag) { this->customFlag = flag; }
 
 	/**
-	 * @fn	virtual bool QvtkAbstractInteractorObserver::getCustomEnable()
+	 * @fn	virtual bool InteractorObserver::getCustomEnable()
 	 *
 	 * @brief	Gets custom enable.
 	 * @return	True if it succeeds, false if it fails.
@@ -58,7 +59,7 @@ public:
 	void customEnableOff() { this->setCustomEnable(false); }
 
 	/**
-	 * @fn	virtual void QvtkAbstractInteractorObserver::install();
+	 * @fn	virtual void InteractorObserver::install();
 	 *
 	 * @brief	Installs QWidget and UI.
 	 */
@@ -66,7 +67,7 @@ public:
 	virtual void install();
 
 	/**
-	 * @fn	virtual void QvtkAbstractInteractorObserver::uninstall();
+	 * @fn	virtual void InteractorObserver::uninstall();
 	 *
 	 * @brief	Uninstalls QWidget and UI.
 	 */
@@ -74,42 +75,42 @@ public:
 	virtual void uninstall();
 
 	/**
-	 * @fn	void QvtkAbstractInteractorObserver::synchronalCall(QvtkAbstractInteractorObserver* style, void(*functionSet)(QvtkAbstractInteractorObserver* it));
+	 * @fn	void InteractorObserver::synchronalCall(InteractorObserver* observer, void(*functionSet)(InteractorObserver* it));
 	 *
 	 * @brief	Synchronously call all member function which belongs to the same class
 	 * This function provides the probability to call all member functions which are public 
 	 * this is for when InteractorStyle controlling multiple viewers, it need to do some 
 	 * asynchronouskly work.
-	 * @param [in,out]	style	   	If non-null, the style.
+	 * @param [in,out]	observer	   	If non-null, the observer.
 	 * @param [in,out]	functionSet	If non-null, set the function belongs to.
 	 */
-	typedef void(*FunctionSet1)(QvtkAbstractInteractorObserver* it);
+	typedef void(*FunctionSet1)(InteractorObserver* it);
 
-	static void synchronalCall(QvtkAbstractInteractorObserver* style, 
+	static void synchronalCall(InteractorObserver* observer, 
 		FunctionSet1 functionSet);
 
-	static void synchronalCall(QString styleName, 
+	static void synchronalCall(QString observerName, 
 		FunctionSet1 functionSet);
 
-	typedef std::function<void(QvtkAbstractInteractorObserver*)> FunctionSet2;
+	typedef std::function<void(InteractorObserver*)> FunctionSet2;
 
-	static void synchronalCall(QvtkAbstractInteractorObserver* style,
+	static void synchronalCall(InteractorObserver* observer,
 		FunctionSet2 functionSet);
 
-	static void synchronalCall(QString styleName,
+	static void synchronalCall(QString observerName,
 		FunctionSet2 functionSet);
 
-	template<typename Style>
-	using FunctionSet3 = std::function<void(Style*)>;
+	template<typename Observer>
+	using FunctionSet3 = std::function<void(Observer*)>;
 	
-	template<typename Style>
-	static void synchronalCall(FunctionSet3<Style> functionSet);
+	template<typename Observer>
+	static void synchronalCall(FunctionSet3<Observer> functionSet);
 
 	virtual QWidget* getWidget();
 
 protected:
-	explicit QvtkAbstractInteractorObserver();
-	virtual ~QvtkAbstractInteractorObserver();
+	explicit InteractorObserver();
+	virtual ~InteractorObserver();
 
 	void installImp(const QMetaObject* metaObject);
 
@@ -121,22 +122,24 @@ protected:
 	/**
 	 * The database makes accessing all InteractorStyles possible. 
 	 */
-	static QMultiHash<QString, QvtkAbstractInteractorObserver*> stylesDataBase;	///< The styles data base
+	static QMultiHash<QString, InteractorObserver*> observersDataBase;	///< The observers data base
 
 };
 
-template<typename Style>
-inline void QvtkAbstractInteractorObserver::synchronalCall(FunctionSet3<Style> functionSet)
+template<typename Observer>
+inline void InteractorObserver::synchronalCall(FunctionSet3<Observer> functionSet)
 {
 	
-	QList<QvtkAbstractInteractorObserver*> list = stylesDataBase.values(Style::staticMetaObject.className());
-	for (QList<QvtkAbstractInteractorObserver*>::const_iterator cit = list.cbegin();
+	QList<InteractorObserver*> list = observersDataBase.values(Observer::staticMetaObject.className());
+	for (QList<InteractorObserver*>::const_iterator cit = list.cbegin();
 		cit != list.cend(); ++cit) {
 		if ((*cit)->getCustomEnable()) {
-			Style* style = static_cast<Style*>(*cit);
-			functionSet(style);
+			Observer* observer = static_cast<Observer*>(*cit);
+			functionSet(observer);
 		}
 	}
 }
-#endif // !__Qvtk_ABSTRACT_INTERACTOR_STYLE_H__
+}
+}
+#endif // !__QVTK_INTERACTOR_STYLE_H__
 

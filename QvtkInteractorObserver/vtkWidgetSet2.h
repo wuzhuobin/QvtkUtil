@@ -2,7 +2,7 @@
 #define __VTK_WIDGET_SET2_H__
 
 // me
-#include "abstractinteractorobserver_export.h"
+#include "QVTKINTERACTOROBSERVER_EXPORT.h"
 
 // vtk 
 #include <vtkWidgetSet.h>
@@ -16,7 +16,7 @@
  * should be removed when vtkWidgetSet.
  */
 
-class ABSTRACTINTERACTOROBSERVER_EXPORT vtkWidgetSet2 : public vtkWidgetSet
+class QVTKINTERACTOROBSERVER_EXPORT vtkWidgetSet2 : public vtkWidgetSet
 {
 public:
 	static vtkWidgetSet2* New();

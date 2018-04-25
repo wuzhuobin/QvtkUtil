@@ -1,11 +1,14 @@
-#ifndef __Qvtk_NO_UI_INTERACTOR_STYLE_H__
-#define __Qvtk_NO_UI_INTERACTOR_STYLE_H__
+#ifndef __QVTK_NO_UI_INTERACTOR_STYLE_H__
+#define __QVTK_NO_UI_INTERACTOR_STYLE_H__
 
-#include "QvtkAbstractInteractorObserver.h"
-
-class ABSTRACTINTERACTOROBSERVER_EXPORT QvtkNoUiInteractorObserver: public QvtkAbstractInteractorObserver
+#include "QvtkInteractorObserver.h"
+namespace Q {
+namespace vtk{
+class QVTKINTERACTOROBSERVER_EXPORT NoUiInteractorObserver: public InteractorObserver
 {
 	Q_OBJECT;
 };
 
-#endif // !__Qvtk_NO_UI_INTERACTOR_STYLE_H__
+}
+}
+#endif // !__QVTK_NO_UI_INTERACTOR_STYLE_H__

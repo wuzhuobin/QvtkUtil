@@ -2,7 +2,7 @@
 #define __VTK_WIDGET_COLLECTION_BASE_H__
 
 // me
-#include "abstractinteractorobserver_export.h"
+#include "QVTKINTERACTOROBSERVER_EXPORT.h"
 
 // vtk
 #include <vtkObject.h>
@@ -82,7 +82,7 @@ GET_WIDGETS(NAME, CLASS)
 
 
 
-class ABSTRACTINTERACTOROBSERVER_EXPORT vtkWidgetCollectionBase :public vtkObject
+class QVTKINTERACTOROBSERVER_EXPORT vtkWidgetCollectionBase :public vtkObject
 {
 public: 
 	vtkTypeMacro(vtkWidgetCollectionBase, vtkObject);

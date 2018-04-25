@@ -19,7 +19,7 @@ Copyright (C) 2016
 #define __INTERACTOR_STYLE_SEEDS_PLACER_H__
 
 // me 
-#include "abstractinteractorobserver_export.h"
+#include "QVTKINTERACTOROBSERVER_EXPORT.h"
 
 // vtk
 #include <vtkInteractorStyleTrackballCamera.h>
@@ -31,7 +31,7 @@ Copyright (C) 2016
 class vtkSeedWidget;
 class vtkBoundedPlanePointPlacer;
 
-class ABSTRACTINTERACTOROBSERVER_EXPORT vtkInteractorStyleSeedsPlacer : public vtkInteractorStyleTrackballCamera
+class QVTKINTERACTOROBSERVER_EXPORT vtkInteractorStyleSeedsPlacer : public vtkInteractorStyleTrackballCamera
 {
 public:                                                                                                                                                                             
 	vtkTypeMacro(vtkInteractorStyleSeedsPlacer, vtkInteractorStyleTrackballCamera);

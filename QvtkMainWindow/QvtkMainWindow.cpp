@@ -177,7 +177,7 @@ void QvtkAbstractMainWindow::ConnectUI()
     connect(this->ui->actionDock_Right_Panel, SIGNAL(triggered()), this, SLOT(slotTogglePanelDock()));
 }
 
-void QvtkAbstractMainWindow::AddInteractorStyle(QvtkAbstractInteractorObserver* obj,
+void QvtkAbstractMainWindow::AddInteractorStyle(InteractorObserver* obj,
                                                QString objName)
 {
     // #TODO: QvtkAbstractMainWindow::AddInteractorStyle(obj, objName)

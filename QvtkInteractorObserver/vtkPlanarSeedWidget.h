@@ -2,7 +2,7 @@
 #define __VTK_PLANAR_SEED_WIDGET_H__
 
 // me
-#include "abstractinteractorobserver_export.h"
+#include "QVTKINTERACTOROBSERVER_EXPORT.h"
 
 // vtk 
 #include "vtkSeedWidget.h"
@@ -11,7 +11,7 @@ class vtkHandleWidget;
 class vtkPolyData;
 class vtkWidgetSet2;
 
-class ABSTRACTINTERACTOROBSERVER_EXPORT vtkPlanarSeedWidget : public vtkSeedWidget
+class QVTKINTERACTOROBSERVER_EXPORT vtkPlanarSeedWidget : public vtkSeedWidget
 {
 public:
 	static vtkPlanarSeedWidget* New();

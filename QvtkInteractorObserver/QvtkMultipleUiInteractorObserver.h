@@ -1,26 +1,30 @@
-#ifndef __Qvtk_MULTIPLE_UI_INTERACTOR_STYLE_H__
-#define __Qvtk_MULTIPLE_UI_INTERACTOR_STYLE_H__
+#ifndef __QVTK_MULTIPLE_UI_INTERACTOR_STYLE_H__
+#define __QVTK_MULTIPLE_UI_INTERACTOR_STYLE_H__
 
-#include "QvtkAbstractInteractorObserver.h"
+#include "QvtkInteractorObserver.h"
 
 #define MULTIPLE_UI_INSTALL(STYLE_NAME) \
-QvtkAbstractInteractorObserver::install(); \
+InteractorObserver::install(); \
 this->widget = new QWidget; \
 this->ui = new Ui:: STYLE_NAME; \
 this->ui->setupUi(this->widget);
 
 #define MULTIPLE_UI_UNINSTALL() \
-QvtkAbstractInteractorObserver::uninstall(); \
+InteractorObserver::uninstall(); \
 delete this->ui; \
 if (this->widget) \
 { \
 	delete this->widget.data(); \
 } \
 this->widget = nullptr;
-
-namespace Ui { class QvtkMultipleUiInteractorObserver; }
-
-class ABSTRACTINTERACTOROBSERVER_EXPORT QvtkMultipleUiInteractorObserver: public QvtkAbstractInteractorObserver
+namespace Q {
+namespace vtk {
+namespace Ui { class MultipleUiInteractorObserver; }
+}
+}
+namespace Q {
+namespace vtk{
+class QVTKINTERACTOROBSERVER_EXPORT MultipleUiInteractorObserver: public InteractorObserver
 {
 	Q_OBJECT;
 public:
@@ -30,12 +34,14 @@ public:
 	virtual void uninstall() override;
 
 protected:
-	explicit QvtkMultipleUiInteractorObserver();
-	~QvtkMultipleUiInteractorObserver();
+	explicit MultipleUiInteractorObserver();
+	~MultipleUiInteractorObserver();
 
-	Ui::QvtkMultipleUiInteractorObserver* ui;
+	Ui::MultipleUiInteractorObserver* ui;
 
 };
 
+}
+}
 
-#endif // !__Qvtk_MULTIPLE_UI_INTERACTOR_STYLE_H__
+#endif // !__QVTK_MULTIPLE_UI_INTERACTOR_STYLE_H__

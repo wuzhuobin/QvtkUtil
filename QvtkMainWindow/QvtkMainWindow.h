@@ -6,7 +6,7 @@
 #include <QMainWindow>
 #include <QMap>
 
-class QvtkAbstractInteractorObserver;
+class InteractorObserver;
 class QvtkAbstractPipeline;
 class Ui_MainWindow;
 namespace Ui { class MainWindow;}
@@ -77,7 +77,7 @@ protected:
 
     virtual int SetUpViewers() = 0;
 
-    virtual void AddInteractorStyle(QvtkAbstractInteractorObserver* obj, QString objName = "");
+    virtual void AddInteractorStyle(InteractorObserver* obj, QString objName = "");
     virtual void AddPipline(QvtkAbstractPipeline* obj, QString objName = "");
 
     explicit QvtkAbstractMainWindow(QObject* parent=nullptr);
@@ -85,7 +85,7 @@ protected:
 	static QvtkAbstractMainWindow* instance;
 
     QMap<QAction*, QvtkAbstractPipeline*>            mapActionToPipeline;
-    QMap<QAction*, QvtkAbstractInteractorObserver* > mapActionToInteractorObserver;
+    QMap<QAction*, InteractorObserver* > mapActionToInteractorObserver;
 	QList<QAction*> menuBarSeperators;
 };
 

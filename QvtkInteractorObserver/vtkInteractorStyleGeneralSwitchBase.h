@@ -15,7 +15,7 @@ Copyright (C) 2016
 #define __VTK_INTERACTOR_STYLE_GENERAL_SWITCH_BASE_H__
 
 // me 
-#include "abstractinteractorobserver_export.h"
+#include "QVTKINTERACTOROBSERVER_EXPORT.h"
 
 // vtk
 #include <vtkSetGet.h>
@@ -55,7 +55,7 @@ CURRENT_STYLE_MACRO(NAME);
 NAME = CLASS::New(); \
 AllStyles.push_back(NAME); 
 
-class ABSTRACTINTERACTOROBSERVER_EXPORT vtkInteractorStyleGeneralSwitchBase : public vtkInteractorStyleSwitchBase
+class QVTKINTERACTOROBSERVER_EXPORT vtkInteractorStyleGeneralSwitchBase : public vtkInteractorStyleSwitchBase
 {
 public:
 	vtkTypeMacro(vtkInteractorStyleGeneralSwitchBase, vtkInteractorStyleSwitchBase);

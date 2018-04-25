@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QvtkUniqueUiInteractorObserver</class>
- <widget class="QWidget" name="QvtkUniqueUiInteractorObserver">
+ <class>Q::vtk::UniqueUiInteractorObserver</class>
+ <widget class="QWidget" name="Q::vtk::UniqueUiInteractorObserver">
   <property name="geometry">
    <rect>
     <x>0</x>
