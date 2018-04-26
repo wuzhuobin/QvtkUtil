@@ -96,11 +96,11 @@ find_package(Qt5Widgets REQUIRED)
 # )
 
 add_subdirectory(QvtkData)
-add_subdirectory(QvtkFilter)
+# add_subdirectory(QvtkFilter)
 add_subdirectory(QvtkInteractorObserver)
 add_subdirectory(QvtkViewer)
-add_subdirectory(QvtkPipeline)
-add_subdirectory(QvtkMainWindow)
+# add_subdirectory(QvtkPipeline)
+# add_subdirectory(QvtkMainWindow)
 
 configure_file(
     QvtkUtilConfig.cmake.in
