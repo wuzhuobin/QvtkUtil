@@ -123,9 +123,6 @@ protected:
 	QStandardItem* shift;
 
 	QStandardItem* preset;
-
-	//vtkImageResample* imageResample;
-	vtkImageShiftScale* imageShiftScale;
 	
 	vtkSmartVolumeMapper* smartVolumeMapper;
 

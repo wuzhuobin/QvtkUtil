@@ -871,7 +871,7 @@ unsigned int Image::suffixTranslate(QString suffix)
 	else if (suffix.contains("nii") || suffix.contains("nii.gz")) {
 		return NIFTI;
 	}
-	else if (suffix.contains("DCM") || suffix.isEmpty()) {
+	else if (suffix.contains("DCM", Qt::CaseInsensitive) || suffix.isEmpty()) {
 		return DICOM;
 	}
 	else {
