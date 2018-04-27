@@ -13,7 +13,7 @@ namespace vtk{
 class QVTKDATA_EXPORT PolyDataActor: public Prop
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(PolyDataActor)
+	Q_VTK_DATA_H(PolyDataActor)
 public:
 
 	PolyDataActor();

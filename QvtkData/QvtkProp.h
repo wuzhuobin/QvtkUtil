@@ -20,7 +20,7 @@ namespace vtk {
 class QVTKDATA_EXPORT Prop: public Data
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		Prop, 
 		Q_VTK_KEY(DisplayRegionX)
 		Q_VTK_KEY(DisplayRegionY)

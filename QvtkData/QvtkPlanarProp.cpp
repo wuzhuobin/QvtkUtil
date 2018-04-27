@@ -17,7 +17,7 @@ namespace vtk {
 
 const QString PlanarProp::ORIGIN_AND_NORMAL_PREFIX[3] = { "X", "Y", "Z" };
 
-Q_VTK_DATACPP(PlanarProp);
+Q_VTK_DATA_CPP(PlanarProp);
 PlanarProp::PlanarProp()
 {
 	//this->slicePlane = nullptr;

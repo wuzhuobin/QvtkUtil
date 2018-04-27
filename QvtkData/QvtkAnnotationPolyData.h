@@ -8,7 +8,7 @@ namespace vtk{
 class QVTKDATA_EXPORT AnnotationPolyData : public PolyData
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		AnnotationPolyData, 
 		Q_VTK_KEY(AnnotationStatus)
 		Q_VTK_KEY(HoverColor)
@@ -63,7 +63,7 @@ signals:
 
 protected:
 
-	virtual Data* newInstance() { return new AnnotationPolyData; }
+	virtual Data* newInstance() const override { return new AnnotationPolyData; } 
 
 	static void setAnnotatoinStatus(Data* self, QStandardItem* item);
 	static void setHoverColor(Data* self, QStandardItem* item);

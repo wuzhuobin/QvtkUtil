@@ -21,7 +21,7 @@
 namespace Q {
 namespace vtk{
 
-Q_VTK_DATACPP(Volume)
+Q_VTK_DATA_CPP(Volume)
 Volume::Volume()
 {
 	this->volumeOpacity = 1;

@@ -24,14 +24,14 @@ const QString KEY = #KEY;
  * Providing convenient method the same as QOBject#staticMetaObject()#className().
  */
 
-#define Q_VTK_DATAH(CLASS, ...) \
+#define Q_VTK_DATA_H(CLASS, ...) \
 public: \
 static QString getClassNameS(){return staticMetaObject.className();} \
 static const struct CLASS##Keys \
 { ##__VA_ARGS__ } K;\
 
 //#define Qvtk_NEW_INSTANCE(CLASS) 
-#define Q_VTK_DATACPP(CLASS) \
+#define Q_VTK_DATA_CPP(CLASS) \
 const CLASS::CLASS##Keys CLASS::K; 
 
 

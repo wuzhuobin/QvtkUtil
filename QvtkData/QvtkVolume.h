@@ -13,7 +13,7 @@ namespace vtk{
 class QVTKDATA_EXPORT Volume: public Prop
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		Volume,
 		Q_VTK_KEY(Preset)
 		Q_VTK_KEY(Shift)

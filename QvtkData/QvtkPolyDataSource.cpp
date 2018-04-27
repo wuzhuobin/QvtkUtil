@@ -17,7 +17,7 @@
 namespace Q {
 namespace vtk {
 
-Q_VTK_DATACPP(PolyDataSource);
+Q_VTK_DATA_CPP(PolyDataSource);
 PolyDataSource::PolyDataSource()
 {
 	this->sphereSource = vtkSphereSource::New();

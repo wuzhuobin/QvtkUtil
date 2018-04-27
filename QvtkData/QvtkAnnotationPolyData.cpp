@@ -4,7 +4,7 @@
 #include <QDebug>
 namespace Q{
 namespace vtk{
-Q_VTK_DATACPP(AnnotationPolyData);
+Q_VTK_DATA_CPP(AnnotationPolyData);
 AnnotationPolyData::AnnotationPolyData()
 {
 	QStandardItem* hoverItem = createAttribute(K.HoverColor);

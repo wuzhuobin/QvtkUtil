@@ -23,7 +23,7 @@ namespace vtk {
 class QVTKDATA_EXPORT PolyDataSource : public AnnotationPolyData
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		PolyDataSource,
 		Q_VTK_KEY(SourceType)
 	);

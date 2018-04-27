@@ -41,7 +41,7 @@ namespace vtk{
 class QVTKDATA_EXPORT Image: public DataSet
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		Image,
 		Q_VTK_KEY(Window)
 		Q_VTK_KEY(Level)

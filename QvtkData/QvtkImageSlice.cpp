@@ -18,7 +18,7 @@
 namespace Q {
 namespace vtk{
 
-Q_VTK_DATACPP(ImageSlice);
+Q_VTK_DATA_CPP(ImageSlice);
 class vtkImageActor2 : public vtkImageActor
 {
 public:

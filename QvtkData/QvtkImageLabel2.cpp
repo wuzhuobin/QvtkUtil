@@ -23,7 +23,7 @@
 
 namespace Q {
 namespace vtk{
-Q_VTK_DATACPP(ImageLabel2)
+Q_VTK_DATA_CPP(ImageLabel2)
 ImageLabel2::ImageLabel2()
 {
 	this->lookupTable = vtkLookupTable::New();

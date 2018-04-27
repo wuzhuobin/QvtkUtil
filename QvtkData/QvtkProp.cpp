@@ -20,7 +20,7 @@
 namespace Q {
 namespace vtk{
 
-Q_VTK_DATACPP(Prop)
+Q_VTK_DATA_CPP(Prop)
 class MatrixCallback final: public vtkCommand
 {
 public:

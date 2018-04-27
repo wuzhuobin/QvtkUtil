@@ -28,7 +28,7 @@ const QString DataSet::MATRIX_PREFIX("Matrix_");
 const QString DataSet::PATH_SEPERATOR(";");
 const QString DataSet::REFERENCE_PROPS_PREFIX("ReferenceProps_");
 
-Q_VTK_DATACPP(DataSet);
+Q_VTK_DATA_CPP(DataSet);
 DataSet::DataSet():
 	origin{0, 0, 0},
 	position{0, 0, 0}, 

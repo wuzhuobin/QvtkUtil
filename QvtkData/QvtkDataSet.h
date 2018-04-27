@@ -32,7 +32,7 @@ class QVTKDATA_EXPORT DataSet: public Data
 	//	WRITE			setOrigin
 	//	NOTIFY			originChanged
 	//);
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		DataSet,
 		Q_VTK_KEY(Origin)
 		Q_VTK_KEY(Position)

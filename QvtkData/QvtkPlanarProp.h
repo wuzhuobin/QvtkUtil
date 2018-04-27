@@ -28,7 +28,7 @@ namespace vtk{
 class QVTKDATA_EXPORT PlanarProp: public Prop
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		PlanarProp,
 		Q_VTK_KEY(PlanarOrientation)
 		Q_VTK_KEY(PlanarNormal)

@@ -21,7 +21,7 @@
 namespace Q {
 namespace vtk{
 
-Q_VTK_DATACPP(ImageLabel)
+Q_VTK_DATA_CPP(ImageLabel)
 ImageLabel::ImageLabel()
 {
 	this->namedColors = vtkNamedColors::New();

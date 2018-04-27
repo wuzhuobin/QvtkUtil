@@ -302,7 +302,7 @@ namespace vtk{
 class QVTKDATA_EXPORT ImageLabel2 : public Image
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		ImageLabel2,
 		Q_VTK_KEY(Label)
 		//Q_VTK_KEY(LabelName)

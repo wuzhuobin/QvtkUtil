@@ -419,7 +419,7 @@ void Scene::registerData(Data * data, QString tag)
 
 	if (tag.isEmpty())
 	{
-		tag = data->getClassName().remove(0, 3);
+		tag = data->getClassName().remove(0, 4);
 	}
 	if (tag.isEmpty())
 	{

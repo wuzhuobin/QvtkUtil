@@ -35,7 +35,7 @@
 #include <QFileInfo>
 namespace Q {
 namespace vtk{
-Q_VTK_DATACPP(Image)
+Q_VTK_DATA_CPP(Image)
 Image::Image()
 {
 	vtkImageData* data = vtkImageData::New();

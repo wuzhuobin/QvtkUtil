@@ -9,7 +9,7 @@
 namespace Q{
 namespace vtk{
 
-Q_VTK_DATACPP(Data);
+Q_VTK_DATA_CPP(Data);
 class SlotMapper: public QHash<QStandardItem*, Data::slotFunction>{};
 QHash<QString, QString> attributeDictionary;
 Data::Data()

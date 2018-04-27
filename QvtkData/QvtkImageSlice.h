@@ -14,7 +14,7 @@ namespace vtk{
 class QVTKDATA_EXPORT ImageSlice : public PlanarProp
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(ImageSlice)
+	Q_VTK_DATA_H(ImageSlice)
 public:
 	ImageSlice();
 

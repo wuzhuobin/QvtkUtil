@@ -96,7 +96,7 @@ class QVTKDATA_EXPORT Data : public QObject
 		NOTIFY	descriptionChanged
 	);
 	
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		Data,
 		Q_VTK_KEY(UniqueName)
 		Q_VTK_KEY(Selectable)

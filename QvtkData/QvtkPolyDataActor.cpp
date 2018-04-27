@@ -17,7 +17,7 @@
 #include <QDebug>
 namespace Q {
 namespace vtk{
-Q_VTK_DATACPP(PolyDataActor);
+Q_VTK_DATA_CPP(PolyDataActor);
 PolyDataActor::PolyDataActor()
 {
 

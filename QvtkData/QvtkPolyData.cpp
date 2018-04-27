@@ -23,7 +23,7 @@
 
 namespace Q {
 namespace vtk{
-Q_VTK_DATACPP(PolyData);
+Q_VTK_DATA_CPP(PolyData);
 const QString PolyData::COLOR_RGB[3]{ "R", "G", "B" };
 
 PolyData::PolyData()

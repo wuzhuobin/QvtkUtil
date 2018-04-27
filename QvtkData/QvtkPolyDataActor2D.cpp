@@ -58,7 +58,7 @@ protected:
 namespace Q {
 namespace vtk{
 
-Q_VTK_DATACPP(PolyDataActor2D);
+Q_VTK_DATA_CPP(PolyDataActor2D);
 PolyDataActor2D::PolyDataActor2D()
 {
 	this->box = vtkSmartPointer<vtkBox>::New();

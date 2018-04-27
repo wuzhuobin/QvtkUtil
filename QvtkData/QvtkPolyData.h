@@ -14,7 +14,7 @@ namespace vtk{
 class QVTKDATA_EXPORT PolyData: public DataSet
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(
+	Q_VTK_DATA_H(
 		PolyData, 
 		Q_VTK_KEY(Color)
 	)

@@ -22,7 +22,7 @@ namespace vtk{
 class QVTKDATA_EXPORT PolyDataActor2D : public PlanarProp
 {
 	Q_OBJECT;
-	Q_VTK_DATAH(PolyDataActor2D)
+	Q_VTK_DATA_H(PolyDataActor2D)
 public:
 
 	PolyDataActor2D();
