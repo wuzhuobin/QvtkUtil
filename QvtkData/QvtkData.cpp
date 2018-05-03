@@ -113,7 +113,7 @@ void Data::readArray(QString key, const QDomElement & xml, ValueType * values, i
 	QDomElement arrayElement = xml.firstChildElement(key);
 	for (int i = 0; i < size; ++i)
 	{
-		values[i] = qvariant_cast<ValueType>(QVariant(arrayElement.attribute(key + '_')));
+		values[i] = qvariant_cast<ValueType>(QVariant(arrayElement.attribute(key + '_' + QString::number(i)));
 	}
 }
 
@@ -167,13 +167,13 @@ void Data::writeArray(QString key, QDomElement & xml, const ValueType * values, 
 //		arrayElement.setAttribute(key + '_', static_cast<ValueType>(values[i]));
 
 		if(std::is_same<int, ValueType>::value){
-			arrayElement.setAttribute(key + '_', static_cast<int>(values[i]));
+			arrayElement.setAttribute(key + '_' + QString::number(i), static_cast<int>(values[i]));
 		}
 		else if(std::is_same<double, ValueType>::value){
-			arrayElement.setAttribute(key + '_' , static_cast<double>(values[i]));
+			arrayElement.setAttribute(key + '_' + QString::number(i) , static_cast<double>(values[i]));
 		}
 		else{
-			arrayElement.setAttribute(key + '_', QString::number(values[i]));
+			arrayElement.setAttribute(key + '_' + QString::number(i), QString::number(values[i]));
 		}
 	}
 
