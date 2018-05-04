@@ -13,9 +13,14 @@
 //qt
 #include <QLayout>
 #include <QDebug>
+const struct QvtkOrthogonalViewerResourceInit
+{
+	QvtkOrthogonalViewerResourceInit(){
+		Q_INIT_RESOURCE(QvtkViewer);
+	}
+} INIT;
 namespace Q {
 namespace vtk{
-
 bool OrthogonalViewer::initializeFlag = false;
 
 /* Set default value of x and y view plane normal */
@@ -23,13 +28,6 @@ double OrthogonalViewer::axialViewPlaneNormal[3] = { 0, 0, 1 };
 double OrthogonalViewer::sagitalViewPlaneNormal[3] = { 1, 0, 0 };
 double OrthogonalViewer::coronalViewPlaneNormal[3] = { 0, 1, 0 };
 
-const struct QvtkOrthogonalViewerResourceInit
-{
-	QvtkOrthogonalViewerResourceInit() {
-		Q_INIT_RESOURCE(QvtkViewer);
-	}
-
-} INIT;
 
 void OrthogonalViewer::SetOrientation(int orientation)
 {
@@ -389,3 +387,4 @@ bool OrthogonalViewer::GetRighthandness()
 }
 }
 }
+

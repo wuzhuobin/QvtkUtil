@@ -18,9 +18,14 @@
 
 // std
 #include <sstream>
+
+const struct QvtkVolumeInit{
+	QvtkVolumeInit(){
+		VTK_MODULE_INIT(vtkRenderingVolumeOpenGL2);
+	}
+} Init;
 namespace Q {
 namespace vtk{
-
 Q_VTK_DATA_CPP(Volume)
 Volume::Volume()
 {
@@ -29,13 +34,6 @@ Volume::Volume()
 	insertSlotFunction(this->shift, &Volume::setShift);
 	this->preset = createAttribute(K.Preset, static_cast<int>(0), true);
 	insertSlotFunction(this->preset, &Volume::setPreset);
-
-
-#if VTK_MAJOR_VERSION > 6
-	VTK_MODULE_INIT(vtkRenderingVolumeOpenGL2);
-#else 
-	VTK_MODULE_INIT(vtkRenderingVolumeOpenGL);
-#endif
 	vtkNew<vtkSmartVolumeMapper> mapper;
 	this->smartVolumeMapper = mapper.GetPointer();
 	this->smartVolumeMapper->SetRequestedRenderModeToGPU();
