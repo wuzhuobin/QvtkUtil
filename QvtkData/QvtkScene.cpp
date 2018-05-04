@@ -220,7 +220,7 @@ QString Scene::generateUniqueName(Data * data)
 		qWarning() <<"Input is null";
 		return generateUniqueName("NULL");
 	}
-	QString baseName = data->getClassName();
+	QString baseName = this->getTagByClassName(data->getClassName());
 	return generateUniqueName(baseName);
 }
 
@@ -419,7 +419,7 @@ void Scene::registerData(Data * data, QString tag)
 
 	if (tag.isEmpty())
 	{
-		tag = data->getClassName().remove(0, 4);
+		tag = data->getClassName().remove(0, 8);
 	}
 	if (tag.isEmpty())
 	{

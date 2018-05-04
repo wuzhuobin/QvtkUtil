@@ -1,6 +1,6 @@
 #ifndef __ITK_QDEBUQ_WINDOW_H__
 #define __ITK_QDEBUQ_WINDOW_H__
-
+#pragma once
 // me 
 #include "QVTKDATA_EXPORT.h"
 

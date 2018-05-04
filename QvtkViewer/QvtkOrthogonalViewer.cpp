@@ -26,7 +26,7 @@ double OrthogonalViewer::coronalViewPlaneNormal[3] = { 0, 1, 0 };
 const struct QvtkOrthogonalViewerResourceInit
 {
 	QvtkOrthogonalViewerResourceInit() {
-		Q_INIT_RESOURCE(AbstractViewer);
+		Q_INIT_RESOURCE(QvtkViewer);
 	}
 
 } INIT;

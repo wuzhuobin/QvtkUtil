@@ -14,6 +14,7 @@
 
 // qt
 #include <QDebug>
+#include <QCoreApplication>
 namespace Q {
 namespace vtk {
 
@@ -58,8 +59,11 @@ void PolyDataSource::printSelf() const
 
 bool PolyDataSource::readData(QString rootDirectory)
 {
-	// if no root directory, read from polydata sources.
+	// if it has root directory, read from polydata sources.
 	if (rootDirectory.isEmpty()) {
+		return AnnotationPolyData::readData(rootDirectory);
+	}
+	else {
 		vtkPolyDataAlgorithm* source = nullptr;
 		ENUM_SOURCE_TYPE _sourceType = static_cast<ENUM_SOURCE_TYPE>(getAttribute(this->sourceType).toUInt());
 		switch (_sourceType)
@@ -96,9 +100,6 @@ bool PolyDataSource::readData(QString rootDirectory)
 		this->getPolyData()->ShallowCopy(this->passArrays->GetOutput());
 		return true;
 	}
-	else {
-		return AnnotationPolyData::readData(rootDirectory);
-	}
 }
 
 unsigned int PolyDataSource::getSourceType() const
@@ -115,7 +116,7 @@ void PolyDataSource::reset()
 void PolyDataSource::setSourceType(unsigned int i)
 {
 	setAttribute(this->sourceType, i);
-	readData();
+	readData("...");
 }
 
 void PolyDataSource::setSourceType(Data * self, QStandardItem * item)

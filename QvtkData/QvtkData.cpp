@@ -113,7 +113,7 @@ void Data::readArray(QString key, const QDomElement & xml, ValueType * values, i
 	QDomElement arrayElement = xml.firstChildElement(key);
 	for (int i = 0; i < size; ++i)
 	{
-		values[i] = qvariant_cast<ValueType>(QVariant(arrayElement.attribute(key + '_' + QString::number(i)));
+		values[i] = qvariant_cast<ValueType>(QVariant(arrayElement.attribute(key + '_' + QString::number(i))));
 	}
 }
 

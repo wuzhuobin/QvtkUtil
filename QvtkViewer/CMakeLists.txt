@@ -1,20 +1,34 @@
 # @file	TemplateCMakeLists.txt
 # @brief	A template CMakeLists.txt which can automatically generate project
 # @author	WUZHUOBIN
-# @version	1.7.0
-# @date		Dec.08.2017
-# @since	Apr.18.2018
+# @version	1.8.0
+# @since	Dec.08.2017
+# @date 	Apr.19.2018
 # 
-# This template is for generating CMake project easily. Only a few steps.
-# 1.	Make a good folder name as the parent, because it is going to be your 
-#		CMake Project name. 
-# 2.	Place all header files and implementation files to your parent folder. 
-#		If there is no header files and implementation files, skip this part. 
-# 3.	Create a folder "main" to place your main function. It has to be named 
-#		as "name.cpp". If there is no or a library is being created, skip this 
-#		part. 
-# 4.	Rename "TemplateCMakeLists.txt" to "CMakeLists.txt". 
-#
+# <h1>How to use</h1>
+# <ul>
+#     <li>Create a folder to place all header files, implementation files and the 'TemplateCMakeLists.txt'.</li>
+#     <li>Place 'Config.cmake.in' and 'CMakeListsConfig.cmake.in' properly. </li>
+#     <li>Rename the folder as the project name. Since the folder name will become the project name.</li>
+#     <li>Rename 'TemplateCMakeLists.txt' to 'CMakeLists.txt'.</li>
+#     <li>Configure with CMake and follow normal cmake pipeline.</li>
+#     <li>If build executable, create 'main/main.cpp' as the program entry point.</li>
+#     <li>If build library, no need to do the previous procedure.</li>
+#     <li>DO NOT modify things not in 'CHANGE BELOW'. </li>
+#     <li>If need other Qt module, add modules in 'DEPENDENCY' module.</li>
+#     <li>If need other package, add packages in 'DEPENDENCY' module.</li>
+#     <li>If need resource, add resources in 'DEPENDENCY' module.</li>
+#     <li>If need other libraries and headers, add them in <code>SYSTEM_LIBRARIES</code> and <code>SYSTEM_INCLUDE</code> in 'LIBRARIES' module. </li>
+#     <li>If need build shared libraries, using export macro in header files and check <code>BUILD_SHARED_LIB</code> option. </li>
+# </ul>
+# <h1>What happen</h1>
+# <ul>
+#     <li>CMake will find all '*.c*' '*.h*' files for building. </li>
+#     <li>CMake will find all '*.qrc' files as Qt qrc. </li>
+#     <li>CMake will find all '*.ui' as Qt UI form. </li>
+#     <li>If 'main/main.cpp' exists, the project will create both static library files and executable files. </li>
+#     <li>CMake will export necessary files for CMake package and install.</li>
+# </ul>
 # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #			Copyright (c) WUZHUOBIN 											    #
@@ -142,7 +156,7 @@ set(
 	SYSTEM_LIBRARIES
 	${SYSTEM_LIBRARIES}
 	#OTHERS
-	#...
+	#...	
 	Qt5::OpenGL
 	QvtkData
 	# opengl32

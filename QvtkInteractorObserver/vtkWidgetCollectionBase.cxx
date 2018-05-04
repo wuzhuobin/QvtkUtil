@@ -1,11 +1,9 @@
+// me 
 #include "vtkWidgetCollectionBase.h"
-
-
 // vtk
 #include <vtkRenderWindowInteractor.h>
 #include <vtkInteractorObserver.h>
 #include <vtkRenderer.h>
-
 vtkCxxSetObjectMacro(vtkWidgetCollectionBase, Interactor, vtkRenderWindowInteractor);
 vtkCxxSetObjectMacro(vtkWidgetCollectionBase, CurrentRenderer, vtkRenderer);
 vtkCxxSetObjectMacro(vtkWidgetCollectionBase, DefaultRenderer, vtkRenderer);
