@@ -2,7 +2,7 @@
 #define __VTK_INTERACTOR_STYLE_WINDOW_LEVEL_H__
 
 // me 
-#include "QVTKINTERACTOROBSERVER_EXPORT.h"
+#include "qvtkinteractorobserver_export.h"
 
 // vtk
 #include <vtkInteractorStyleTrackballCamera.h>

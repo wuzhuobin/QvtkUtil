@@ -2,7 +2,7 @@
 #define __VTK_PLANAR_SEED_WIDGET_H__
 
 // me
-#include "QVTKINTERACTOROBSERVER_EXPORT.h"
+#include "qvtkinteractorobserver_export.h"
 
 // vtk 
 #include "vtkSeedWidget.h"

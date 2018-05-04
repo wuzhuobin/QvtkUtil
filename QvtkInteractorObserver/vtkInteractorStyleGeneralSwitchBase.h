@@ -15,7 +15,7 @@ Copyright (C) 2016
 #define __VTK_INTERACTOR_STYLE_GENERAL_SWITCH_BASE_H__
 
 // me 
-#include "QVTKINTERACTOROBSERVER_EXPORT.h"
+#include "qvtkinteractorobserver_export.h"
 
 // vtk
 #include <vtkSetGet.h>

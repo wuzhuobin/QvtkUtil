@@ -19,7 +19,7 @@ Copyright (C) 2016
 #define __INTERACTOR_STYLE_SEEDS_PLACER_H__
 
 // me 
-#include "QVTKINTERACTOROBSERVER_EXPORT.h"
+#include "qvtkinteractorobserver_export.h"
 
 // vtk
 #include <vtkInteractorStyleTrackballCamera.h>

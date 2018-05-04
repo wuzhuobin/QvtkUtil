@@ -2,7 +2,7 @@
 #define __VTK_WIDGET_SET2_H__
 
 // me
-#include "QVTKINTERACTOROBSERVER_EXPORT.h"
+#include "qvtkinteractorobserver_export.h"
 
 // vtk 
 #include <vtkWidgetSet.h>
