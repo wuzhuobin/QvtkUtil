@@ -28,7 +28,7 @@ const QString KEY = #KEY;
 public: \
 static QString getClassNameS(){return staticMetaObject.className();} \
 static const struct CLASS##Keys \
-{ ##__VA_ARGS__ } K;\
+{ __VA_ARGS__ } K;\
 
 //#define Qvtk_NEW_INSTANCE(CLASS) 
 #define Q_VTK_DATA_CPP(CLASS) \

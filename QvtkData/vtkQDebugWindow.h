@@ -2,7 +2,7 @@
 #define __VTK_QDEBUG_WINDOW_H__
 
 // me
-#include "QVTKDATA_EXPORT.h"
+#include "qvtkdata_export.h"
 
 // vtk
 #include <vtkOutputWindow.h>
