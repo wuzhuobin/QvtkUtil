@@ -85,6 +85,7 @@ void Volume::writeXML(QDomElement& xml, QString directoryPath) const
 void Volume::setShift(double shift)
 {
 	setAttribute(this->shift, shift);
+	this->setPreset(this->getPreset());
 }
 
 double Volume::getShift() const
