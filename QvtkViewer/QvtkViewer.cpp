@@ -40,9 +40,9 @@ public:
 
 };
 
-vtkNew<vtkCursor3D> cursorSourceMemory;
-vtkCursor3D* Viewer::s_cursorSource
-    = cursorSourceMemory.GetPointer();
+//vtkNew<vtkCursor3D> cursorSourceMemory;
+//vtkCursor3D* Viewer::GetSyncCursorSource()
+//    = cursorSourceMemory.GetPointer();
 QList<Viewer*> Viewer::s_viewersList;
 
 Viewer* Viewer::GetViewerOfInteractor(vtkInteractorStyle* style)
@@ -266,7 +266,7 @@ void Viewer::SetCursorDesyncFlag(bool desync)
 	}
 	else {
 		this->cursorActor->GetMapper()->SetInputConnection(
-			Viewer::s_cursorSource->GetOutputPort());
+			Viewer::GetSyncCursorSource()->GetOutputPort());
 
 	}
 
@@ -287,9 +287,9 @@ void Viewer::SetCursorPosition(double x, double y, double z)
 		this->cursorSource->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
 	}
 	else {
-		Viewer::s_cursorSource->SetFocalPoint(xyz);
+		Viewer::GetSyncCursorSource()->SetFocalPoint(xyz);
 		// invoke event for synchronization
-		Viewer::s_cursorSource->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
+		Viewer::GetSyncCursorSource()->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
 	}
 }
 
@@ -303,7 +303,7 @@ double* Viewer::GetCursorPosition()
 		return this->cursorSource->GetFocalPoint();
 	}
 	else {
-		return Viewer::s_cursorSource->GetFocalPoint();
+		return Viewer::GetSyncCursorSource()->GetFocalPoint();
 
 	}
 }
@@ -451,6 +451,14 @@ void Viewer::SetEnableDepthPeeling(bool flag)
 
 }
 
+vtkCursor3D * Q::vtk::Viewer::GetSyncCursorSource()
+{
+	if (Viewer::s_viewersList.empty()) {
+		return nullptr;
+	}
+	return s_viewersList.first()->cursorSource;
+}
+
 Viewer::Viewer(QWidget* parent)
     :QWidget(parent)
 {
@@ -469,14 +477,13 @@ Viewer::Viewer(QWidget* parent)
 	connect(this, &Viewer::CursorPositionChanged,
 		this, static_cast<void(Viewer::*)(double, double, double)>(&Viewer::UpdateCursorPosition));
 	
-	if (Viewer::NumOfViewers() == 1) {
-		Viewer::s_cursorSource->TranslationModeOn();
-		Viewer::s_cursorSource->SetModelBounds(-15, 15, -15, 15, -15, 15);
-		Viewer::s_cursorSource->SetFocalPoint(0, 0, 0);
-		Viewer::s_cursorSource->AllOff();
-		Viewer::s_cursorSource->AxesOn();
-	}
-	Viewer::s_cursorSource->AddObserver(vtkCommand::CursorChangedEvent, this->cursorCallback);
+	//if (Viewer::NumOfViewers() == 1) {
+	//	Viewer::GetSyncCursorSource()->TranslationModeOn();
+	//	Viewer::GetSyncCursorSource()->SetModelBounds(-15, 15, -15, 15, -15, 15);
+	//	Viewer::GetSyncCursorSource()->SetFocalPoint(0, 0, 0);
+	//	Viewer::GetSyncCursorSource()->AllOff();
+	//	Viewer::GetSyncCursorSource()->AxesOn();
+	//}
 
 	this->cursorSource = vtkCursor3D::New();
 	this->cursorSource->TranslationModeOn();
@@ -485,12 +492,13 @@ Viewer::Viewer(QWidget* parent)
 	this->cursorSource->AllOff();
 	this->cursorSource->AxesOn();
 	this->cursorSource->AddObserver(vtkCommand::CursorChangedEvent, this->cursorCallback);
+	Viewer::GetSyncCursorSource()->AddObserver(vtkCommand::CursorChangedEvent, this->cursorCallback);
 	
 
 	this->cursorActor = vtkActor::New();
     this->cursorActor->SetMapper(vtkSmartPointer<vtkPolyDataMapper>::New());
 	this->cursorActor->GetMapper()->SetInputConnection(
-		Viewer::s_cursorSource->GetOutputPort());
+		Viewer::GetSyncCursorSource()->GetOutputPort());
     this->cursorActor->GetProperty()->SetColor(1, 1, 0);
     this->cursorActor->SetPickable(false);
 
@@ -535,10 +543,10 @@ Viewer::~Viewer()
 	this->cursorActor->Delete();
 
 	this->cursorSource->RemoveObserver(this->cursorCallback);
+	Viewer::GetSyncCursorSource()->RemoveObserver(this->cursorCallback);
 
 	this->cursorSource->Delete();
 
-	Viewer::s_cursorSource->RemoveObserver(this->cursorCallback);
 	
 	this->cursorCallback->Delete();
 

@@ -891,8 +891,8 @@ void Volume::setRenderDataSet(DataSet* data)
 	}
 	Prop::setRenderDataSet(data);
 	if (this->getRenderDataSet()) {
-		if (!data->isClass("Image")) {
-			qCritical() << "data is not Image.";
+		if (!data->isClass("Q::vtk::Image")) {
+			qCritical() << "data is not Q::vtk::Image.";
 		}
 		this->getVolume()->GetMapper()->SetInputConnection(data->getOutputPort());
 		// Make shift work;
