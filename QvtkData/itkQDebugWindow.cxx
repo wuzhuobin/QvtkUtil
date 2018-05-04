@@ -30,7 +30,7 @@ void itk::QDebugWindow::DisplayText(const char * text)
 	}
 fatal:
 	this->String = string;
-	qFatal(this->String.toStdString().c_str());
+	qFatal("%s", this->String.toStdString().c_str());
 }
 
 itk::QDebugWindow::QDebugWindow()
