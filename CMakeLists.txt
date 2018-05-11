@@ -95,18 +95,6 @@ find_package(Qt5Widgets REQUIRED)
 #find_package()
 #....
 
-# QT_QRC
-#set(
-#	PROJECT_QRC
-#	#PATH	
-#)
-
-
-# WINDOWS RESOURCES
-# set(
-# 	WINDOWS_RESOURCES
-# 	# PATH
-# )
 add_subdirectory(QvtkData)
 # add_subdirectory(QvtkFilter)
 add_subdirectory(QvtkInteractorObserver)
@@ -128,7 +116,18 @@ option(BUILD_EXAMPLE "Build Example" OFF)
 if(${BUILD_EXAMPLE})
 	add_subdirectory(Example)
 endif()
+# QT_QRC
+#set(
+#	PROJECT_QRC
+#	#PATH	
+#)
 
+
+# WINDOWS RESOURCES
+# set(
+# 	WINDOWS_RESOURCES
+# 	# PATH
+# )
 MESSAGE(STATUS "Building submodule ${PROJECT_NAME} finished!")
 
 
