@@ -84,7 +84,7 @@ DataSet::~DataSet()
 void DataSet::setOpacity(double opacity)
 {
 	setAttribute(this->opacity, opacity);
-	emit opacityChanged(opacity);
+	emit  this->opacityChanged(opacity);
 }
 
 double DataSet::getOpacity() const
@@ -271,8 +271,8 @@ void DataSet::setPosition(double x, double y, double z)
 	//		this->position[2]
 	//	);
 	//}
-	emit positionChanged(this->position);
-	emit positionChanged(this->getPosition());
+	emit  this->positionChanged(this->position);
+	emit  this->positionChanged(this->getPosition());
 }
 
 void DataSet::setOrigin(double x, double y, double z)
@@ -288,8 +288,8 @@ void DataSet::setOrigin(double x, double y, double z)
 	//		this->origin[2]
 	//	);
 	//}
-	emit originChanged(this->origin);
-	emit originChanged(this->getOrigin());
+	emit  this->originChanged(this->origin);
+	emit  this->originChanged(this->getOrigin());
 }
 
 
@@ -306,7 +306,7 @@ void DataSet::setScale(double x, double y, double z)
 	//		this->scale[2]
 	//	);
 	//}
-	emit scaleChanged(this->scale);
+	emit  this->scaleChanged(this->scale);
 }
 
 void DataSet::setOrientation(double x, double y, double z)
@@ -323,7 +323,7 @@ void DataSet::setOrientation(double x, double y, double z)
 	//		this->orientation[2]
 	//	);
 	//}
-	emit orientationChanged(this->orientation);
+	emit  this->orientationChanged(this->orientation);
 }
 
 void DataSet::setDataSet(vtkDataSet * data)
@@ -463,7 +463,7 @@ void DataSet::setUserMatrix(vtkMatrix4x4* userMatrix)
 void DataSet::setPickable(bool flag)
 {
 	this->pickable = flag;
-	emit pickableChanged(flag);
+	emit  this->pickableChanged(flag);
 	foreach(Prop* prop, *referenceProps)
 	{
 		prop->getProp()->SetPickable(this->pickable);
