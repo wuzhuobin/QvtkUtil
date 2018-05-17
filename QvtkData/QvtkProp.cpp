@@ -119,20 +119,18 @@ void Prop::setRenderDataSet(DataSet* data)
 		setUserMatrix(nullptr);
 		// a checking for disable disconnect warning 
 		if (this->renderDataSet) {
+			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::originChanged),
+				this, &Prop::setOrigin);
+			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::positionChanged),
+				this, &Prop::setPosition);
 			disconnect(this->renderDataSet, &DataSet::opacityChanged,
 				this, &Prop::setOpacity);
 			disconnect(this->renderDataSet, &DataSet::orientationChanged,
 				this, &Prop::setOrigin);
-			disconnect(this->renderDataSet, &DataSet::positionChanged,
-				this, &Prop::setPosition);
 			disconnect(this->renderDataSet, &DataSet::orientationChanged,
 				this, &Prop::setOrientation);
 			disconnect(this->renderDataSet, &DataSet::scaleChanged,
 				this, &Prop::setScale);
-			//disconnect(this->renderDataSet, SIGNAL(originChanged(const double*)), this, SLOT(propMatrixUpdate()));
-			//disconnect(this->renderDataSet, SIGNAL(positionChanged(const double*)), this, SLOT(propMatrixUpdate()));
-			//disconnect(this->renderDataSet, SIGNAL(orientationChanged(const double*)), this, SLOT(propMatrixUpdate()));
-			//disconnect(this->renderDataSet, SIGNAL(scaleChanged(const double*)), this, SLOT(propMatrixUpdate()));
 		}
 	}
 
@@ -162,7 +160,7 @@ void Prop::setRenderDataSet(DataSet* data)
 			this->renderDataSet->getOrigin()[1],
 			this->renderDataSet->getOrigin()[2]
 		);
-		connect(this->renderDataSet, &DataSet::originChanged,
+		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::originChanged),
 			this, &Prop::setOrigin);
 		//connect(this->renderDataSet, SIGNAL(originChanged(const double*)), this, SLOT(propMatrixUpdate()));
 		this->prop3D->SetPosition(
@@ -170,7 +168,7 @@ void Prop::setRenderDataSet(DataSet* data)
 			this->renderDataSet->getPosition()[1],
 			this->renderDataSet->getPosition()[2]
 		);
-		connect(this->renderDataSet, &DataSet::positionChanged,
+		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::positionChanged),
 			this, &Prop::setPosition);
 		//connect(this->renderDataSet, SIGNAL(positionChanged(const double*)), this, SLOT(propMatrixUpdate()));
 

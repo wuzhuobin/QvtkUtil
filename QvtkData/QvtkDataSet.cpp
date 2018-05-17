@@ -272,6 +272,7 @@ void DataSet::setPosition(double x, double y, double z)
 	//	);
 	//}
 	emit positionChanged(this->position);
+	emit positionChanged(this->getPosition());
 }
 
 void DataSet::setOrigin(double x, double y, double z)
@@ -288,6 +289,7 @@ void DataSet::setOrigin(double x, double y, double z)
 	//	);
 	//}
 	emit originChanged(this->origin);
+	emit originChanged(this->getOrigin());
 }
 
 

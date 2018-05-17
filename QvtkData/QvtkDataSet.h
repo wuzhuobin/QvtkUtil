@@ -1,6 +1,30 @@
+/**
+ * @file		QvtkData\QvtkDataSet.h.
+ * @brief		Declares the QvtkUtil abstract data set class.
+ * @language	C++
+ * @author		WUZHUOBIN jiejin2022@163.com
+ * @version		?
+ * @date		2017/06/19-
+ * @since		2017/06/19
+ * @copyright	COPYRIGHT
+ * Qvtk for 	QvtkUtil
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *			This program is distributed in the hope that it will be useful, but	 *
+ *			WITHOUT ANY WARRANTY; without even the implied warranty of			 * 
+ *			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.				 * 
+ *			See the LICENSE for more detail.									 * 
+ *			Copyright (c) WUZHUOBIN. All rights reserved.						 * 
+ *			See COPYRIGHT for more detail.										 * 
+ *			This software is distributed WITHOUT ANY WARRANTY; without even		 * 
+ *			the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR	 * 
+ *			PURPOSE.  See the above copyright notice for more information.		 *
+ *			Internal usage only, without the permission of the author, please DO *
+ *			NOT publish and distribute without the author's permission.  	     *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
 #ifndef __QVTK_DATA_SET_H__
 #define __QVTK_DATA_SET_H__
-
+#pragma once
 // me
 #include "QvtkData.h"
 namespace Q {
@@ -8,7 +32,6 @@ namespace vtk{
 	class Prop;
 }
 }
-
 // vtk
 class vtkMatrix4x4;
 class vtkDataSet;
@@ -16,22 +39,31 @@ class vtkTrivialProducer;
 class vtkTransform;
 class vtkAlgorithmOutput;
 class vtkTransform;
-
 // qt
 template <typename T>
 class QList;
 namespace Q{
 namespace vtk{
-
+/**
+ * @class	DataSet
+ * @brief 	Abstract data set class. 
+ * @author	WUZHUOBIN
+ * @date	2017/06/19-
+ * @since	2017/06/19
+ */
 class QVTKDATA_EXPORT DataSet: public Data
 {
 	Q_OBJECT;
-	//Q_PROPERTY(
-	//	QVariantList	Origin
-	//	READ			getOrigin
-	//	WRITE			setOrigin
-	//	NOTIFY			originChanged
-	//);
+	Q_PROPERTY(
+		QList<double>	Origin
+		READ			getOrigin
+		WRITE			setOrigin
+		NOTIFY			originChanged);
+	Q_PROPERTY(
+		QList<double>	Position
+		READ			getPosition
+		WRITE			setPosition
+		NOTIFY			positionChanged	);
 	Q_VTK_DATA_H(
 		DataSet,
 		Q_VTK_KEY(Origin)
@@ -78,25 +110,26 @@ public:
 	virtual double getOpacity() const;
 
 	virtual const double* getOrigin() const { return this->origin; }
+	virtual QList<double> getOrigin() {
+		return QList<double>{this->origin[0], this->origin[1], this->origin[2] }; }
 	virtual void getOrigin(double origin[3]) const {
 		origin[0] = this->origin[0];
 		origin[1] = this->origin[1];
-		origin[2] = this->origin[2];
-	}
+		origin[2] = this->origin[2];}
 
 	virtual const double* getPosition() const { return this->position; }
 	virtual void getPosition(double position[3]) const {
 		position[0] = this->position[0];
 		position[1] = this->position[1];
-		position[2] = this->position[2];
-	}
+		position[2] = this->position[2]; }
+	virtual QList<double> getPosition() {
+		return QList<double>{this->position[0], this->position[1], this->position[2] };}
 
 	virtual const double* getOrientation() const { return this->orientation; }
 	virtual void getOrientation(double orientation[3]) const {
 		orientation[0] = this->orientation[0];
 		orientation[1] = this->orientation[1];
-		orientation[2] = this->orientation[2];
-	}
+		orientation[2] = this->orientation[2];	}
 
 	virtual const double* getScale() const { return this->scale; }
 	virtual void getScale(double scale[3]) const {
@@ -154,14 +187,16 @@ public slots:
 	 * cannot be changed after setReferenceProps
 	 */
 	virtual void setOrigin(double x, double y, double z);
-	virtual void setOrigin(const double origin[3]) { setOrigin(origin[0], origin[1], origin[2]); }
+	virtual void setOrigin(const double origin[3]) { this->setOrigin(origin[0], origin[1], origin[2]); }
+	virtual void setOrigin(QList<double> origin) { this->setOrigin(origin[0], origin[1], origin[2]); }
 
 	/**
 	 * @brief	set/get method of #position
 	 * cannot be changed after setReferenceProps
 	 */
 	virtual void setPosition(double x, double y, double z);
-	virtual void setPosition(const double position[3]) { setPosition(position[0], position[1], position[2]); }
+	virtual void setPosition(const double position[3]) { this->setPosition(position[0], position[1], position[2]); }
+	virtual void setPosition(QList<double> position) { this->setPosition(position[0], position[1], position[2]); }
 
 	/**
 	 * @brief	set/get method of #orientation
@@ -188,12 +223,14 @@ public slots:
 	virtual void setAbsolutePath(const QStringList absolutePath) { this->absolutePath = absolutePath;}
 
 signals:
-	void pickableChanged(bool pickable);
-	void opacityChanged(double opacity);
-	void originChanged(const double* xyz);
-	void positionChanged(const double* xyz);
-	void orientationChanged(const double* xyz);
-	void scaleChanged(const double* xyz);
+	void pickableChanged(bool pickable) const;
+	void opacityChanged(double opacity) const;
+	void originChanged(const double* xyz) const;
+	void originChanged(QList<double> xyz) const;
+	void positionChanged(const double* xyz) const;
+	void positionChanged(QList<double> xyz) const;
+	void orientationChanged(const double* xyz) const;
+	void scaleChanged(const double* xyz) const;
 
 protected:
 
