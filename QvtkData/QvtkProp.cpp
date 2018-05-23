@@ -156,17 +156,17 @@ void Prop::setRenderDataSet(DataSet* data)
 		//userTransForm->Update();
 		//this->prop3D->SetUserTransform(this->renderDataSet->getTransform());
 		this->prop3D->SetOrigin(
-			this->renderDataSet->getOrigin()[0],
-			this->renderDataSet->getOrigin()[1],
-			this->renderDataSet->getOrigin()[2]
+			const_cast<const DataSet*>(this->renderDataSet)->getOrigin()[0],
+			const_cast<const DataSet*>(this->renderDataSet)->getOrigin()[1],
+			const_cast<const DataSet*>(this->renderDataSet)->getOrigin()[2]
 		);
 		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::originChanged),
 			this, &Prop::setOrigin);
 		//connect(this->renderDataSet, SIGNAL(originChanged(const double*)), this, SLOT(propMatrixUpdate()));
 		this->prop3D->SetPosition(
-			this->renderDataSet->getPosition()[0],
-			this->renderDataSet->getPosition()[1],
-			this->renderDataSet->getPosition()[2]
+			const_cast<const DataSet*>(this->renderDataSet)->getPosition()[0],
+			const_cast<const DataSet*>(this->renderDataSet)->getPosition()[1],
+			const_cast<const DataSet*>(this->renderDataSet)->getPosition()[2]
 		);
 		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::positionChanged),
 			this, &Prop::setPosition);

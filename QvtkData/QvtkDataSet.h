@@ -55,12 +55,12 @@ class QVTKDATA_EXPORT DataSet: public Data
 {
 	Q_OBJECT;
 	Q_PROPERTY(
-		QList<double>	Origin
+		QVariantList	Origin
 		READ			getOrigin
 		WRITE			setOrigin
 		NOTIFY			originChanged);
 	Q_PROPERTY(
-		QList<double>	Position
+		QVariantList	Position
 		READ			getPosition
 		WRITE			setPosition
 		NOTIFY			positionChanged	);
@@ -110,8 +110,8 @@ public:
 	virtual double getOpacity() const;
 
 	virtual const double* getOrigin() const { return this->origin; }
-	virtual QList<double> getOrigin() {
-		return QList<double>{this->origin[0], this->origin[1], this->origin[2] }; }
+	virtual QVariantList getOrigin() {
+		return QVariantList{this->origin[0], this->origin[1], this->origin[2] }; }
 	virtual void getOrigin(double origin[3]) const {
 		origin[0] = this->origin[0];
 		origin[1] = this->origin[1];
@@ -122,8 +122,8 @@ public:
 		position[0] = this->position[0];
 		position[1] = this->position[1];
 		position[2] = this->position[2]; }
-	virtual QList<double> getPosition() {
-		return QList<double>{this->position[0], this->position[1], this->position[2] };}
+	virtual QVariantList getPosition() {
+		return QVariantList{this->position[0], this->position[1], this->position[2] };}
 
 	virtual const double* getOrientation() const { return this->orientation; }
 	virtual void getOrientation(double orientation[3]) const {
@@ -188,7 +188,7 @@ public slots:
 	 */
 	virtual void setOrigin(double x, double y, double z);
 	virtual void setOrigin(const double origin[3]) { this->setOrigin(origin[0], origin[1], origin[2]); }
-	virtual void setOrigin(QList<double> origin) { this->setOrigin(origin[0], origin[1], origin[2]); }
+	virtual void setOrigin(QVariantList origin) { this->setOrigin(origin[0].toDouble(), origin[1].toDouble(), origin[2].toDouble()); }
 
 	/**
 	 * @brief	set/get method of #position
@@ -196,7 +196,7 @@ public slots:
 	 */
 	virtual void setPosition(double x, double y, double z);
 	virtual void setPosition(const double position[3]) { this->setPosition(position[0], position[1], position[2]); }
-	virtual void setPosition(QList<double> position) { this->setPosition(position[0], position[1], position[2]); }
+	virtual void setPosition(QVariantList position) { this->setPosition(position[0].toDouble(), position[1].toDouble(), position[2].toDouble()); }
 
 	/**
 	 * @brief	set/get method of #orientation
@@ -226,9 +226,9 @@ signals:
 	void pickableChanged(bool pickable) const;
 	void opacityChanged(double opacity) const;
 	void originChanged(const double* xyz) const;
-	void originChanged(QList<double> xyz) const;
+	void originChanged(QVariantList xyz) const;
 	void positionChanged(const double* xyz) const;
-	void positionChanged(QList<double> xyz) const;
+	void positionChanged(QVariantList xyz) const;
 	void orientationChanged(const double* xyz) const;
 	void scaleChanged(const double* xyz) const;
 

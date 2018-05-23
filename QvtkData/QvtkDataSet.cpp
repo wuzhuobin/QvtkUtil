@@ -343,23 +343,22 @@ void DataSet::getTransform(vtkTransform* transform) const
 		qCritical() << "input transform is a nullptr.";
 	}
 
-		transform->Identity();
-		transform->PostMultiply();
-		transform->Translate(
-			-this->origin[0],
-			-this->origin[1],
-			-this->origin[2]);
-		transform->Scale(this->scale);
-		transform->RotateY(this->orientation[1]);
-		transform->RotateX(this->orientation[0]);
-		transform->RotateZ(this->orientation[2]);
-		
-		transform->Translate(this->position);
-		transform->Translate(this->origin);
+	transform->Identity();
+	transform->PostMultiply();
+	transform->Translate(
+		-this->origin[0],
+		-this->origin[1],
+		-this->origin[2]);
+	transform->Scale(this->scale);
+	transform->RotateY(this->orientation[1]);
+	transform->RotateX(this->orientation[0]);
+	transform->RotateZ(this->orientation[2]);
 
-		transform->Concatenate(this->getUserMatrix());
-		transform->Concatenate(this->getAdditionalMatrix());
-		
+	transform->Translate(this->position);
+	transform->Translate(this->origin);
+
+	transform->Concatenate(this->getUserMatrix());
+	//transform->Concatenate(this->getAdditionalMatrix());
 }
 
 vtkDataSet * DataSet::getDataSet() const
