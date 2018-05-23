@@ -117,11 +117,11 @@ find_package(Qt5Widgets REQUIRED)
 # 	# PATH
 # )
 
-add_subdirectory(AbstractDataExample)
-add_subdirectory(AbstractFilterExample)
-add_subdirectory(AbstractInteractorObserverExample)
-add_subdirectory(AbstractPipelineExample)
-add_subdirectory(AbstractViewerExample)
+# add_subdirectory(AbstractDataExample)
+# add_subdirectory(AbstractFilterExample)
+# add_subdirectory(AbstractInteractorObserverExample)
+# add_subdirectory(AbstractPipelineExample)
+# add_subdirectory(AbstractViewerExample)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
 # # # # # # # # # # # # # # # # # LIBRARIES # # # # # # # # # # # # # # # # # #  

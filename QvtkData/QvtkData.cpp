@@ -179,33 +179,6 @@ void Data::writeArray(QString key, QDomElement & xml, const ValueType * values, 
 
 }
 
-/**
- * Only the following method can be used for the template function #readArray() and #writeArray().
- */
-template void Data::readArray(QString key, const QDomElement& xml, char* values, int size);
-template void Data::readArray(QString key, const QDomElement& xml, int* values, int size);
-template void Data::readArray(QString key, const QDomElement& xml, long* values, int size);
-template void Data::readArray(QString key, const QDomElement& xml, float* values, int size);
-template void Data::readArray(QString key, const QDomElement& xml, double* values, int size);
-
-template void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, char* values, int size);
-template void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, int* values, int size);
-template void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, long* values, int size);
-template void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, float* values, int size);
-template void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, double* values, int size);
-
-template void Data::writeArray(QString key, QDomElement& xml, const char* values, int size);
-template void Data::writeArray(QString key, QDomElement& xml, const int* values, int size);
-template void Data::writeArray(QString key, QDomElement& xml, const long* values, int size);
-template void Data::writeArray(QString key, QDomElement& xml, const float* values, int size);
-template void Data::writeArray(QString key, QDomElement& xml, const double* values, int size);
-
-template void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const char* values, int size);
-template void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const int* values, int size);
-template void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const long* values, int size);
-template void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const float* values, int size);
-template void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const double* values, int size);
-
 QString Data::getDescription() const
 {
 	return getAttribute(this->description).toString();
