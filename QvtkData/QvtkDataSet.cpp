@@ -307,6 +307,7 @@ void DataSet::setScale(double x, double y, double z)
 	//	);
 	//}
 	emit  this->scaleChanged(this->scale);
+	emit this->scaleChanged(this->getScale());
 }
 
 void DataSet::setOrientation(double x, double y, double z)
@@ -324,6 +325,7 @@ void DataSet::setOrientation(double x, double y, double z)
 	//	);
 	//}
 	emit  this->orientationChanged(this->orientation);
+	emit this->orientationChanged(this->getOrientation());
 }
 
 void DataSet::setDataSet(vtkDataSet * data)

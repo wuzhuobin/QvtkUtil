@@ -63,7 +63,27 @@ class QVTKDATA_EXPORT DataSet: public Data
 		QVariantList	Position
 		READ			getPosition
 		WRITE			setPosition
-		NOTIFY			positionChanged	);
+		NOTIFY			positionChanged);
+	Q_PROPERTY(
+		QVariantList	Orientation
+		READ			getOrientation
+		WRITE			setOrientation
+		NOTIFY			orientationChanged);
+	Q_PROPERTY(
+		QVariantList	Scale
+		READ			getScale
+		WRITE			setScale
+		NOTIFY			scaleChanged);
+	Q_PROPERTY(
+		bool			Pickable
+		READ			getPickable
+		WRITE			setPickable
+		NOTIFY			pickableChanged);
+	Q_PROPERTY(
+		double			Opacity
+		READ			getOpacity
+		WRITE			setOpacity
+		NOTIFY			opacityChanged);
 	Q_VTK_DATA_H(
 		DataSet,
 		Q_VTK_KEY(Origin)
@@ -130,6 +150,8 @@ public:
 		orientation[0] = this->orientation[0];
 		orientation[1] = this->orientation[1];
 		orientation[2] = this->orientation[2];	}
+	virtual QVariantList getOrientation() {
+		return QVariantList{this->orientation[0], this->orientation[1], this->orientation[2]};	}
 
 	virtual const double* getScale() const { return this->scale; }
 	virtual void getScale(double scale[3]) const {
@@ -137,6 +159,7 @@ public:
 		scale[1] = this->scale[1];
 		scale[2] = this->scale[2];
 	}
+	virtual QVariantList getScale() { return QVariantList{ this->scale[0], this->scale[1], this->scale[2] }; }
 	/**
 	 * @fn	virtual vtkMatrix4x4* getAdditionalMatrix() const;
 	 * @brief	get #additionalMatrix.
@@ -173,7 +196,7 @@ public:
 	virtual const QList<Prop*>* getReferenceProps() const { return this->referenceProps; }
 
 
-public slots:
+public Q_SLOTS:
 
 
 	/**
@@ -203,14 +226,16 @@ public slots:
 	 * cannot be changed after setReferenceProps
 	 */
 	virtual void setOrientation(double x, double y, double z);
-	virtual void setOrientation(const double orientation[3]) { setOrientation(orientation[0], orientation[1], orientation[2]); }
+	virtual void setOrientation(const double orientation[3]) { this->setOrientation(orientation[0], orientation[1], orientation[2]); }
+	virtual void setOrientation(QVariantList orientation) { this->setOrientation(orientation[0].toDouble(), orientation[1].toDouble(), orientation[2].toDouble()); }
 
 	/**
 	 * @brief	set/get method of #scale
 	 * cannot be changed after setReferenceProps
 	 */
 	virtual void setScale(double x, double y, double z);
-	virtual void setScale(const double scale[3]) { setScale(scale[0], scale[1], scale[2]); }
+	virtual void setScale(const double scale[3]) { this->setScale(scale[0], scale[1], scale[2]); }
+	virtual void setScale(QVariantList scale) { this->setScale(scale[0].toDouble(), scale[1].toDouble(), scale[2].toDouble()); }
 
 
 	virtual void setPickable(bool flag);
@@ -230,7 +255,9 @@ signals:
 	void positionChanged(const double* xyz) const;
 	void positionChanged(QVariantList xyz) const;
 	void orientationChanged(const double* xyz) const;
+	void orientationChanged(QVariantList xyz) const;
 	void scaleChanged(const double* xyz) const;
+	void scaleChanged(QVariantList xyz) const;
 
 protected:
 

@@ -123,13 +123,13 @@ void Prop::setRenderDataSet(DataSet* data)
 				this, &Prop::setOrigin);
 			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::positionChanged),
 				this, &Prop::setPosition);
-			disconnect(this->renderDataSet, &DataSet::opacityChanged,
+			disconnect(this->renderDataSet, &DataSet::DataSet::opacityChanged,
 				this, &Prop::setOpacity);
-			disconnect(this->renderDataSet, &DataSet::orientationChanged,
+			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::originChanged),
 				this, &Prop::setOrigin);
-			disconnect(this->renderDataSet, &DataSet::orientationChanged,
+			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::orientationChanged),
 				this, &Prop::setOrientation);
-			disconnect(this->renderDataSet, &DataSet::scaleChanged,
+			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::scaleChanged),
 				this, &Prop::setScale);
 		}
 	}
@@ -173,20 +173,20 @@ void Prop::setRenderDataSet(DataSet* data)
 		//connect(this->renderDataSet, SIGNAL(positionChanged(const double*)), this, SLOT(propMatrixUpdate()));
 
 		this->prop3D->SetOrientation(
-			this->renderDataSet->getOrientation()[0],
-			this->renderDataSet->getOrientation()[1],
-			this->renderDataSet->getOrientation()[2]
+			const_cast<const DataSet*>(this->renderDataSet)->getOrientation()[0],
+			const_cast<const DataSet*>(this->renderDataSet)->getOrientation()[1],
+			const_cast<const DataSet*>(this->renderDataSet)->getOrientation()[2]
 		);
-		connect(this->renderDataSet, &DataSet::orientationChanged,
+		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::orientationChanged),
 			this, &Prop::setOrientation);
 		//connect(this->renderDataSet, SIGNAL(orientationChanged(const double*)), this, SLOT(propMatrixUpdate()));
 
 		this->prop3D->SetScale(
-			this->renderDataSet->getScale()[0],
-			this->renderDataSet->getScale()[1],
-			this->renderDataSet->getScale()[2]
+			const_cast<const DataSet*>(this->renderDataSet)->getScale()[0],
+			const_cast<const DataSet*>(this->renderDataSet)->getScale()[1],
+			const_cast<const DataSet*>(this->renderDataSet)->getScale()[2]
 		);
-		connect(this->renderDataSet, &DataSet::scaleChanged,
+		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::scaleChanged),
 			this, &Prop::setScale);
 		//connect(this->renderDataSet, SIGNAL(scaleChanged(const double*)), this, SLOT(propMatrixUpdate()));
 
