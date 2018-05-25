@@ -117,6 +117,8 @@ void PolyDataSource::setSourceType(unsigned int i)
 {
 	setAttribute(this->sourceType, i);
 	readData("...");
+	emit this->sourceTypeChanged(i);
+	emit this->sourceTypeChanged(static_cast<ENUM_SOURCE_TYPE>(i));
 }
 
 void PolyDataSource::setSourceType(Data * self, QStandardItem * item)
