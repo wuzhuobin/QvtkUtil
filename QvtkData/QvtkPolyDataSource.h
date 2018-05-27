@@ -60,7 +60,7 @@ public:
 public Q_SLOTS:
 	virtual void reset() override;
 	virtual void setSourceType(unsigned int i);
-	virtual void setSourceType(ENUM_SOURCE_TYPE i) { this->setSourceType(i); }
+	virtual void setSourceType(ENUM_SOURCE_TYPE i) { this->setSourceType(static_cast<unsigned int >(i)); }
 	void setSourceTypeToArrowSource() { this->setSourceType(PolyDataSource::ARROW_SOURCE); }
 	void setSourceTypeToConeSource() { this->setSourceType(PolyDataSource::CONE_SOURCE); }
 	void setSourceTypeToCubeSource() { this->setSourceType(PolyDataSource::CUBE_SOURCE); }

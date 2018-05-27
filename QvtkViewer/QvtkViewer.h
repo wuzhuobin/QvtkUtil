@@ -60,7 +60,7 @@ namespace Q {
 			/************************************************************************/
 
 			/**
-			 * @brief Viewer* GetViewerOfInteractor
+			 * @brief Viewer* getViewerOfInteractor
 			 *
 			 * Find in the list of viewers which uses the input interactorstyle
 			 *
@@ -68,20 +68,20 @@ namespace Q {
 			 * @return Viewer*
 			 */
 
-			static Viewer* GetViewerOfInteractor(vtkInteractorStyle*);
+			static Viewer* getViewerOfInteractor(vtkInteractorStyle*);
 
 			/**
-			 * @brief void RenderAllViewers
+			 * @brief void renderAllViewers
 			 *
 			 * Call Render() to all the viewers in the list
 			 *
 			 * @return void
 			 */
 
-			static void RenderAllViewers();
+			static void renderAllViewers();
 
 			/**
-			 * @brief RenderViewersByGroup
+			 * @brief renderViewersByGroup
 			 *
 			 * Call RendererWindow->Render() for all viewers with group input
 			 *
@@ -89,18 +89,18 @@ namespace Q {
 			 * @return void
 			 */
 
-			static void RenderViewersByGroup(int group);
+			static void renderViewersByGroup(int group);
 
 
 			/**
-			 * @brief SetGroupInteractorStyle
+			 * @brief setGroupInteractorStyle
 			 *
 			 * Not Implemented. DO NOT USE
 			 *
 			 * @return void
 			 */
 
-			static void SetGroupInteractorStyle(vtkInteractorStyle* style, int group);
+			static void setGroupInteractorStyle(vtkInteractorStyle* style, int group);
 
 
 			/**
