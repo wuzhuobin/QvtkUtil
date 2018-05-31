@@ -153,7 +153,6 @@ void ImageSlice::setRenderDataSet(DataSet * data)
 			setWindow(image->getWindow());
 			setLevel(image->getLevel());
 		}
-
 	}
 }
 

@@ -145,16 +145,6 @@ void Prop::setRenderDataSet(DataSet* data)
 
 		// renderData add reference
 		this->renderDataSet->addReference(this);
-
-
-		// the real transform of the prop3D is userTransform * additionalTransform
-		//vtkTransform* userTransForm = vtkTransform::New();
-		//userTransForm->Identity();
-		//userTransForm->PostMultiply();
-		//userTransForm->Concatenate(data->getUserMatrix());
-		//userTransForm->Concatenate(data->getAdditionalMatrix());
-		//userTransForm->Update();
-		//this->prop3D->SetUserTransform(this->renderDataSet->getTransform());
 		this->prop3D->SetOrigin(
 			const_cast<const DataSet*>(this->renderDataSet)->getOrigin()[0],
 			const_cast<const DataSet*>(this->renderDataSet)->getOrigin()[1],
@@ -162,7 +152,6 @@ void Prop::setRenderDataSet(DataSet* data)
 		);
 		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::originChanged),
 			this, &Prop::setOrigin);
-		//connect(this->renderDataSet, SIGNAL(originChanged(const double*)), this, SLOT(propMatrixUpdate()));
 		this->prop3D->SetPosition(
 			const_cast<const DataSet*>(this->renderDataSet)->getPosition()[0],
 			const_cast<const DataSet*>(this->renderDataSet)->getPosition()[1],
@@ -170,8 +159,6 @@ void Prop::setRenderDataSet(DataSet* data)
 		);
 		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::positionChanged),
 			this, &Prop::setPosition);
-		//connect(this->renderDataSet, SIGNAL(positionChanged(const double*)), this, SLOT(propMatrixUpdate()));
-
 		this->prop3D->SetOrientation(
 			const_cast<const DataSet*>(this->renderDataSet)->getOrientation()[0],
 			const_cast<const DataSet*>(this->renderDataSet)->getOrientation()[1],
@@ -179,8 +166,6 @@ void Prop::setRenderDataSet(DataSet* data)
 		);
 		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::orientationChanged),
 			this, &Prop::setOrientation);
-		//connect(this->renderDataSet, SIGNAL(orientationChanged(const double*)), this, SLOT(propMatrixUpdate()));
-
 		this->prop3D->SetScale(
 			const_cast<const DataSet*>(this->renderDataSet)->getScale()[0],
 			const_cast<const DataSet*>(this->renderDataSet)->getScale()[1],
@@ -188,8 +173,6 @@ void Prop::setRenderDataSet(DataSet* data)
 		);
 		connect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::scaleChanged),
 			this, &Prop::setScale);
-		//connect(this->renderDataSet, SIGNAL(scaleChanged(const double*)), this, SLOT(propMatrixUpdate()));
-
 		setUserMatrix(this->renderDataSet->getUserMatrix());
 		//this->prop3D->SetUserMatrix(this->renderDataSet->getUserMatrix());
 		this->prop3D->SetPickable(this->renderDataSet->getPickable());

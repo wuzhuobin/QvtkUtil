@@ -45,7 +45,7 @@ public:
 //    = cursorSourceMemory.GetPointer();
 QList<Viewer*> Viewer::s_viewersList;
 
-Viewer* Viewer::GetViewerOfInteractor(vtkInteractorStyle* style)
+Viewer* Viewer::getViewerOfInteractor(vtkInteractorStyle* style)
 {
 	QList<Viewer*> viewersVect = Viewer::GetAllViewers();
 	typedef QList<Viewer*>::const_iterator Const_Iter;
@@ -61,7 +61,7 @@ Viewer* Viewer::GetViewerOfInteractor(vtkInteractorStyle* style)
 	return nullptr;
 }
 
-void Viewer::RenderAllViewers()
+void Viewer::renderAllViewers()
 {
 	foreach (Viewer* viewer, s_viewersList)
 	{
@@ -69,7 +69,7 @@ void Viewer::RenderAllViewers()
 	}
 }
 
-void Viewer::RenderViewersByGroup(int group)
+void Viewer::renderViewersByGroup(int group)
 {
 	foreach(Viewer* viewer, s_viewersList)
 	{
@@ -83,9 +83,9 @@ void Viewer::RenderViewersByGroup(int group)
 
 }
 
-void Viewer::SetGroupInteractorStyle(vtkInteractorStyle* style, int group)
+void Viewer::setGroupInteractorStyle(vtkInteractorStyle* style, int group)
 {
-    // #TODO: QvtkABstractViewer::SetGroupInteractorStyle(style, group)
+    // #TODO: QvtkABstractViewer::setGroupInteractorStyle(style, group)
     //throw std::logic_error("Not Implemented!");
 	qCritical() << "Not implemented!";
 	return;

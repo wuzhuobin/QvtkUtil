@@ -1,9 +1,8 @@
-#ifndef __Qvtk_IMAGE_LABEL_H__
-#define __Qvtk_IMAGE_LABEL_H__
-
+#ifndef __QVTK_IMAGE_LABEL_H__
+#define __QVTK_IMAGE_LABEL_H__
+#pragma once
 // me
 #include "QvtkImage.h"
-
 // vtk 
 class vtkLookupTable;
 class vtkImageMapToColors;
@@ -297,30 +296,22 @@ class vtkNamedColors;
 */
 namespace Q {
 namespace vtk{
-
 class QVTKDATA_EXPORT ImageLabel : public Image
 {
 	Q_OBJECT;
 	Q_VTK_DATA_H(
 		ImageLabel,
 		Q_VTK_KEY(Label)
-		//Q_VTK_KEY(LabelName)
 		Q_VTK_KEY(LabelId)
 		Q_VTK_KEY(LabelRGBA)
 	);
-
-
 public:
-
 	ImageLabel();
 	virtual ~ImageLabel() override;
 	virtual void printSelf() const override;
-
 	virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 	virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
-
 	virtual void addReference(Prop* prop) override;
-
 	virtual vtkAlgorithmOutput* getOutputPort() const;
 	virtual vtkImageData* getLabelImageData() const;
 	virtual vtkLookupTable* getLookupTable() const { return this->lookupTable; }
@@ -366,5 +357,5 @@ private:
 }
 }
 
-#endif // !__Qvtk_IMAGE_LABEL_H__
+#endif // !__QVTK_IMAGE_LABEL_H__
 

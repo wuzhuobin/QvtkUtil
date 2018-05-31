@@ -74,6 +74,12 @@ class QVTKDATA_EXPORT DataSet: public Data
 		READ			getScale
 		WRITE			setScale
 		NOTIFY			scaleChanged);
+	//Q_PROPERTY(
+	//	QMatrix4x4		userMatrix
+	//	READ			getUserMatrix
+	//	WRITE			setUserMatrix
+	//	no
+	//)
 	Q_PROPERTY(
 		bool			Pickable
 		READ			getPickable
@@ -84,6 +90,14 @@ class QVTKDATA_EXPORT DataSet: public Data
 		READ			getOpacity
 		WRITE			setOpacity
 		NOTIFY			opacityChanged);
+	Q_PROPERTY(
+		QStringList		RelativePath
+		READ			getRelativePath
+		WRITE			setRelativePath);
+	Q_PROPERTY(
+		QStringList		AbsolutePath
+		READ			getAbsolutePath
+		WRITE			setAbsolutePath);
 	Q_VTK_DATA_H(
 		DataSet,
 		Q_VTK_KEY(Origin)

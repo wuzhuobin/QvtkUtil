@@ -143,6 +143,7 @@ void ImageLabel::rebuildLookupTable() const
 	this->getNamedColors()->GetColorNames(stringArray);
 	this->getLookupTable()->SetNumberOfColors(stringArray->GetNumberOfValues() + 1);
 	this->getLookupTable()->SetTableRange(0, stringArray->GetNumberOfValues());
+	this->getLookupTable()->Build();
 	for (vtkIdType id = 0; id < stringArray->GetNumberOfValues(); ++id)
 	{
 		double* rgba = this->namedColors->GetColor4d(stringArray->GetValue(id)).GetData();
@@ -151,7 +152,6 @@ void ImageLabel::rebuildLookupTable() const
 		//cout << "Name: " << stringArray->GetValue(id) << '\t';
 		//cout << "RGBA: (" << rgba[0] << ", " << rgba[1] << ", " << rgba[2] << ", " << rgba[3] << ")\n";
 	}
-	this->getLookupTable()->Build();
 }
 
 void ImageLabel::readLabel(const QDomElement & xml)

@@ -1,6 +1,7 @@
 #ifndef __QVTK_VOLUME_H__
 #define __QVTK_VOLUME_H__ 
 #pragma once
+// me 
 #include "QvtkProp.h"
 // vtk
 class vtkVolume;
@@ -10,6 +11,14 @@ namespace Q {
 		class QVTKDATA_EXPORT Volume : public Prop
 		{
 			Q_OBJECT;
+			Q_PROPERTY(
+				double		Shift
+				READ		getShift
+				WRITE		setShift);
+			Q_PROPERTY(
+				ENUM_PRESET	Preset
+				READ		getPreset
+				WRITE		setPreset);
 			Q_VTK_DATA_H(
 				Volume,
 				Q_VTK_KEY(Preset)
@@ -48,20 +57,23 @@ namespace Q {
 				CBCT_DENTAL,
 				CBCT_DENTAL_PHANTOM
 			};
+			Q_ENUMS(ENUM_PRESET);
 			Volume();
 			virtual ~Volume() override;
 			virtual void printSelf() const override;
 			virtual double getShift() const;
-			virtual int getPreset();
+			virtual int getPreset() const;
+			virtual ENUM_PRESET getPreset() { return static_cast<ENUM_PRESET>(const_cast<const Volume*>(this)->getPreset()); }
 			virtual vtkVolume* getVolume() const;
 			virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 			virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
-			public slots:
+			public Q_SLOTS:
 			virtual void setDisplayRegion(const double region[6]) override;
 			/**
 			 * @brief	Change the preseting of vtkVolumeProperty
 			 */
-			virtual void setPreset(unsigned int preset);
+			virtual void setPreset(int preset);
+			virtual void setPreset(ENUM_PRESET preset) { this->setPreset(static_cast<int>(preset)); }
 			void setPresetToNone() { setPreset(NONE); }
 			void setPresetToCTAAA() { setPreset(CT_AAA); }
 			void setPresetToCTAAA2() { setPreset(CT_AAA2); }
@@ -96,10 +108,11 @@ namespace Q {
 			virtual Data* newInstance() const override;
 			static void setShift(Data* self, QStandardItem* item);
 			static void setPreset(Data* self, QStandardItem* item);
+			vtkSmartVolumeMapper* smartVolumeMapper;
+		private:
 			double volumeOpacity;
 			QStandardItem* shift;
 			QStandardItem* preset;
-			vtkSmartVolumeMapper* smartVolumeMapper;
 		};
 	}
 }

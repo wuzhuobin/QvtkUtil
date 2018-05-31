@@ -96,7 +96,7 @@ vtkVolume* Volume::getVolume() const
 	return vtkVolume::SafeDownCast(this->getProp());
 }
 
-void Volume::setPreset(unsigned int preset)
+void Volume::setPreset(int preset)
 {
 	if (preset > 25) {
 		return;
@@ -876,9 +876,9 @@ void Volume::setPreset(unsigned int preset)
 	}
 }
 
-int Volume::getPreset()
+int Volume::getPreset() const
 {
-	return getAttribute(this->preset).toUInt();
+	return getAttribute(this->preset).toInt();
 }
 
 void Volume::setRenderDataSet(DataSet* data)
