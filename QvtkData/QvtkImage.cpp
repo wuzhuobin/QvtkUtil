@@ -832,7 +832,7 @@ vtkAlgorithmOutput * Image::getTransformOutputPort() const
 	//	-this->getPosition()[2]);
 	transform->Translate(this->getOrigin());
 	transform->Concatenate(this->getUserMatrix());
-	transform->Concatenate(this->getAdditionalMatrix());
+	//transform->Concatenate(this->getAdditionalMatrix());
 	// do not know why it is inverse
 	transform->Inverse();
 	this->imageReslice->SetResliceTransform(transform);
