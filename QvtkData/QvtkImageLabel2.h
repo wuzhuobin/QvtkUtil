@@ -15,13 +15,21 @@ namespace Q {
 			public LabelHelper
 		{
 			Q_OBJECT;
+			Q_PROPERTY(
+				int			DefaultColorFile
+				READ		getDefaultColorFile
+				WRITE		setDefaultColorFile	);
+			Q_PROPERTY(
+				QString		ColorFile
+				READ		getColorFile
+				WRITE		setColorFile);
 			Q_VTK_DATA_H(
 				ImageLabel2,
 				Q_VTK_KEY(Label)
 				Q_VTK_KEY(LabelId)
 				Q_VTK_KEY(LabelRGBA)
-				Q_VTK_KEY(ColorFile)
 				Q_VTK_KEY(DefaultColorFile)
+				Q_VTK_KEY(ColorFile)
 			);
 			static const QString NAME_PREFIX;
 		public:

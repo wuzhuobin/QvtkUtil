@@ -534,34 +534,6 @@ private Q_SLOTS :
 	 */
 	void slotMapping(QStandardItem* item);
 };
-
-/**
- * Only the following method can be used for the template function #readArray() and #writeArray().
- */
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QDomElement& xml, char* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QDomElement& xml, int* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QDomElement& xml, long* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QDomElement& xml, float* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QDomElement& xml, double* values, int size);
-
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, char* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, int* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, long* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, float* values, int size);
-template QVTKDATA_EXPORT void Data::readArray(QString key, const QString* prefix, const QDomElement& xml, double* values, int size);
-
-template QVTKDATA_EXPORT void Data::writeArray(QString key, QDomElement& xml, const char* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, QDomElement& xml, const int* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, QDomElement& xml, const long* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, QDomElement& xml, const float* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, QDomElement& xml, const double* values, int size);
-
-template QVTKDATA_EXPORT void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const char* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const int* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const long* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const float* values, int size);
-template QVTKDATA_EXPORT void Data::writeArray(QString key, const QString* prefix, QDomElement& xml, const double* values, int size);
-
 }
 }
 
