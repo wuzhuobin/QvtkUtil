@@ -178,7 +178,7 @@ void LabelHelper::namedColorsToLookupTable()
 	std::pair<QList<int>::const_iterator, QList<int>::const_iterator> min_max = std::minmax_element(keys.cbegin(), keys.cend());
 	this->lookupTable->SetTableRange(*min_max.first, *min_max.second);
 	this->lookupTable->SetNumberOfTableValues(*min_max.second + 1);
-	//this->lookupTable->SetNumberOfColors(1);
+	this->lookupTable->Build();
 	for (QList<int>::const_iterator cit = keys.cbegin(); cit != keys.cend(); ++cit) {
 		double rgba[4];
 		this->namedColors->GetColor(this->labelIdToLabelName[*cit].toStdString(), rgba);

@@ -37,6 +37,7 @@ namespace Q {
 			virtual vtkImageData* getLabelImageData() const;
 			virtual vtkImageMapToColors* getImageMapToColors() const { return this->imageMapToColors; }
 			public Q_SLOTS:
+			virtual void resetWindowLevel() override;
 			virtual void setColor(int id, const double *rgba) override { this->setColor(id, rgba); }
 			virtual void setColor(int id, double r, double g, double b, double a) override { this->setColor(id, r, g, b, a); }
 			virtual void setDefaultColorFile(int i);

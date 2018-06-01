@@ -85,6 +85,13 @@ namespace Q {
 			return this->imageMapToColors->GetOutput();
 		}
 
+		void ImageLabel2::resetWindowLevel()
+		{
+			// hard code window 255, level 255 *0.5;
+			this->setWindow(255.0);
+			this->setLevel(255.0 * 0.5);
+		}
+
 		void ImageLabel2::readLabel(const QDomElement & xml)
 		{
 			QDomElement labelElem = xml.firstChildElement(K.Label);
