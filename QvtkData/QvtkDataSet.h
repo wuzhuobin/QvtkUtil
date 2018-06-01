@@ -116,21 +116,17 @@ public:
 	/**
 	 * Declaring static const attributes' keys
 	 */
-	static const QString ARRAY_PREFIX[3];
-	static const QString MATRIX_PREFIX;
-	static const QString PATH_SEPERATOR;
-	static const QString REFERENCE_PROPS_PREFIX;
-
+	static const QString ARRAY_PREFIX[3]; ///< Array prefix for saving values in xml. 
+	static const QString MATRIX_PREFIX; ///< Matrix prefix for savign element in xml. 
+	static const QString PATH_SEPERATOR; ///< Path seperator for seperating multiple path values. 
+	static const QString REFERENCE_PROPS_PREFIX; /// Prop's prefix
 	DataSet();
 	virtual ~DataSet() override;
 	virtual void printSelf() const override;
-
 	virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 	virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
-
 	virtual bool readData(QString rootDirectory) = 0;
 	virtual bool writeData(QString rootDirectory) const = 0;
-
 	virtual void readProp(const QDomElement& xml);
 	virtual void writeProp(QDomElement& xml) const;
 
@@ -255,12 +251,22 @@ public Q_SLOTS:
 	virtual void setPickable(bool flag);
 
 	virtual void setOpacity(double opacity);
-
-
+	/**
+	 * @fn			virtual void setRelativePath(const QStringList relativePath) 
+	 * @brief		Set the relative paths. 
+	 * @param[in]	relativePath	multiple relative paths to save the actually data. 
+	 * 
+	 * Setting relative paths, they are only used in saving scene to xml. 
+	 */
 	virtual void setRelativePath(const QStringList relativePath) {this->relativePath = relativePath;}
-
+	/**
+	 * @overload	virtual void setRelativePath(const QString relativePath);
+	 * @param[in]	relativePath	the relative path to save the actually data. 
+	 * 
+	 */
+	virtual void setRelativePath(const QString relativePath) { this->setRelativePath(QStringList() << relativePath); }
+	virtual void getAbsolutePath(const QString absolutePath) { this->setAbsolutePath(QStringList() << absolutePath); }
 	virtual void setAbsolutePath(const QStringList absolutePath) { this->absolutePath = absolutePath;}
-
 signals:
 	void pickableChanged(bool pickable) const;
 	void opacityChanged(double opacity) const;
