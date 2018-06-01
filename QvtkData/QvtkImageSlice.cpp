@@ -139,6 +139,9 @@ namespace Q {
 						image->isClass("Q::vtk::ImageLabel")) {
 						this->getImageActor()->GetProperty()->SetInterpolationTypeToNearest();
 					}
+					else {
+						this->getImageActor()->GetProperty()->SetInterpolationTypeToLinear();
+					}
 					connect(image, &Image::windowChanged,
 						this, &ImageSlice::setWindow);
 					connect(image, &Image::levelChanged,
