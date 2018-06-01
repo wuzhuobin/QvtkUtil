@@ -39,13 +39,15 @@ namespace Q {
 			virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 			virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
 			//virtual void addReference(Prop* prop) override;
+			virtual double getResetWindow() const { return 255.0; }
+			virtual double getResetLevel() const { return 127.5; }
 			virtual int getDefaultColorFile() const;
 			virtual QString getColorFile() const;
 			virtual vtkAlgorithmOutput* getOutputPort() const;
 			virtual vtkImageData* getLabelImageData() const;
 			virtual vtkImageMapToColors* getImageMapToColors() const { return this->imageMapToColors; }
 			public Q_SLOTS:
-			virtual void resetWindowLevel() override;
+			//virtual void resetWindowLevel() override;
 			virtual void setColor(int id, const double *rgba) override { this->setColor(id, rgba); }
 			virtual void setColor(int id, double r, double g, double b, double a) override { this->setColor(id, r, g, b, a); }
 			virtual void setDefaultColorFile(int i);

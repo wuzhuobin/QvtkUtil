@@ -787,6 +787,12 @@ double Image::getWindow() const
 	return getAttribute(this->window).toDouble();
 }
 
+double Image::getResetWindow() const
+{
+	const double* range = getImageData()->GetScalarRange();
+	return (range[1] - range[0]);
+}
+
 void Image::setLevel(double level)
 {
 	setAttribute(this->level, level);
@@ -796,6 +802,12 @@ void Image::setLevel(double level)
 double Image::getLevel() const
 {
 	return getAttribute(this->level).toDouble();
+}
+
+double Image::getResetLevel() const
+{
+	const double* range = getImageData()->GetScalarRange();
+	return ((range[1] + range[0]) * 0.5);
 }
 
 vtkAlgorithmOutput * Image::getTransformOutputPort() const
@@ -834,9 +846,11 @@ vtkAlgorithmOutput * Image::getTransformOutputPort() const
 
 void Image::resetWindowLevel()
 {
-	const double* range = getImageData()->GetScalarRange();
-	setWindow(range[1] - range[0]);
-	setLevel((range[1] + range[0]) * 0.5);
+	//const double* range = getImageData()->GetScalarRange();
+	//setWindow(range[1] - range[0]);be
+	//setLevel((range[1] + range[0]) * 0.5);
+	setWindow(this->getResetWindow());
+	setLevel(this->getResetLevel());
 }
 
 void Image::setWindow(Data * self, QStandardItem * item)

@@ -79,9 +79,9 @@ public:
 	//virtual void addReference(Prop* prop) override;
 
 	virtual double getWindow() const;
-
+	virtual double getResetWindow() const;
 	virtual double getLevel() const;
-
+	virtual double getResetLevel() const;
 	virtual vtkAlgorithmOutput* getTransformOutputPort() const;
 
 	virtual vtkImageData* getImageData() const;
