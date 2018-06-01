@@ -61,15 +61,15 @@ void ImageLabel::writeXML(QDomElement & xml, QString directoryPath) const
 	this->writeLabel(xml);
 }
 
-void ImageLabel::addReference(Prop * prop)
-{
-	DataSet::addReference(prop);
-	ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
-	if (slice) {
-		slice->getImageActor()->GetProperty()->SetInterpolationTypeToNearest();
-	}
-}
-
+//void ImageLabel::addReference(Prop * prop)
+//{
+//	DataSet::addReference(prop);
+//	ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
+//	if (slice) {
+//		slice->getImageActor()->GetProperty()->SetInterpolationTypeToNearest();
+//	}
+//}
+//
 vtkAlgorithmOutput * ImageLabel::getOutputPort() const
 {
 	return this->imageMapToColors->GetOutputPort();

@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ColorFiles/64Color-Nonsemantic.txt</file>
+        <file>ColorFiles/AbdomenColors.txt</file>
+        <file>ColorFiles/ColdToHotRainbow.txt</file>
+        <file>ColorFiles/DarkBrightChartColors.txt</file>
+        <file>ColorFiles/GenericAnatomyColors.txt</file>
+        <file>ColorFiles/GenericColors.txt</file>
+        <file>ColorFiles/HotToColdRainbow.txt</file>
+        <file>ColorFiles/Inferno.txt</file>
+        <file>ColorFiles/ITK-SNAP-label.txt</file>
+        <file>ColorFiles/LightPaleChartColors.txt</file>
+        <file>ColorFiles/Magma.txt</file>
+        <file>ColorFiles/MediumChartColors.txt</file>
+        <file>ColorFiles/PelvisColor.txt</file>
+        <file>ColorFiles/Plasma.txt</file>
+        <file>ColorFiles/Slicer3_2010_Brain_Labels.txt</file>
+        <file>ColorFiles/Slicer3_2010_Label_Colors.txt</file>
+        <file>ColorFiles/SPL-BrainAtlas-2009-ColorFile.txt</file>
+        <file>ColorFiles/SPL-BrainAtlas-2012-ColorFile.txt</file>
+        <file>ColorFiles/SPL-BrainAtlas-ColorFile.txt</file>
+        <file>ColorFiles/Viridis.txt</file>
+    </qresource>
+</RCC>

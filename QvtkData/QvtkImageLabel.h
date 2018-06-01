@@ -311,7 +311,7 @@ public:
 	virtual void printSelf() const override;
 	virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 	virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
-	virtual void addReference(Prop* prop) override;
+	//virtual void addReference(Prop* prop) override;
 	virtual vtkAlgorithmOutput* getOutputPort() const;
 	virtual vtkImageData* getLabelImageData() const;
 	virtual vtkLookupTable* getLookupTable() const { return this->lookupTable; }

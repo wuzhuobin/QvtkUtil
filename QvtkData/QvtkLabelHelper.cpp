@@ -33,6 +33,11 @@ const QStringList LabelHelper::DEFAULT_COLOR_FILES{
 	":/ColorFiles/Viridis.txt",
 	":/ColorFiles/ITK-SNAP-label.txt"
 };
+const struct LabelHelperInit {
+	LabelHelperInit() {
+		Q_INIT_RESOURCE(QvtkLabelHelper);
+	}
+}LABEL_HELPER_INIT;
 LabelHelper::LabelHelper()
 {
 	this->lookupTable = vtkLookupTable::New();
@@ -40,7 +45,6 @@ LabelHelper::LabelHelper()
 	vtkSmartPointer<vtkPiecewiseFunction> function = vtkSmartPointer<vtkPiecewiseFunction>::New();
 	this->transferFunction = vtkDiscretizableColorTransferFunction::New();
 	this->transferFunction->RemoveAllPoints();
-	this->transferFunction->SetDiscretize(true);
 	this->transferFunction->SetEnableOpacityMapping(true);
 	this->transferFunction->SetScalarOpacityFunction(function);
 	this->namedColorsToLookupTable();
@@ -142,10 +146,12 @@ void LabelHelper::setColor(int id, double r, double g, double b, double a)
 	//this->namedColorsToLookupTable();
 	//this->namedColosrToTransferFunction();
 	this->lookupTable->SetTableValue(id, r, g, b, a);
+	this->lookupTable->Build();
 	this->transferFunction->RemovePoint(id);
 	this->transferFunction->GetScalarOpacityFunction()->RemovePoint(id);
 	this->transferFunction->AddRGBPoint(id, r, g, b);
 	this->transferFunction->GetScalarOpacityFunction()->AddPoint(id, a);
+	this->transferFunction->Build();
 }
 
 void LabelHelper::getColor(QString labelName, double rgba[4]) const

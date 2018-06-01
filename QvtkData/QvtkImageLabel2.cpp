@@ -20,8 +20,9 @@
 #include <QStandardItem>
 namespace Q {
 	namespace vtk {
-		Q_VTK_DATA_CPP(ImageLabel2)
-			ImageLabel2::ImageLabel2()
+		Q_VTK_DATA_CPP(ImageLabel2);
+		const QString ImageLabel2::NAME_PREFIX("Label_");
+		ImageLabel2::ImageLabel2()
 		{
 			this->imageMapToColors = vtkImageMapToColors::New();
 			this->imageMapToColors->SetInputData(this->getImageData());
@@ -30,6 +31,7 @@ namespace Q {
 			this->insertSlotFunction(this->defaultColorFile, &ImageLabel2::setDefaultColorFile);
 			this->colorFile = createAttribute(K.ColorFile, "", true);
 			this->insertSlotFunction(this->colorFile, &ImageLabel2::setColorFile);
+			this->setDefaultColorFile(0);
 		}
 
 		ImageLabel2::~ImageLabel2()
@@ -54,14 +56,14 @@ namespace Q {
 			this->writeLabel(xml);
 		}
 
-		void ImageLabel2::addReference(Prop * prop)
-		{
-			DataSet::addReference(prop);
-			ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
-			if (slice) {
-				slice->getImageActor()->GetProperty()->SetInterpolationTypeToNearest();
-			}
-		}
+		//void ImageLabel2::addReference(Prop * prop)
+		//{
+		//	DataSet::addReference(prop);
+		//	ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
+		//	if (slice) {
+		//		slice->getImageActor()->GetProperty()->SetInterpolationTypeToNearest();
+		//	}
+		//}
 
 		int ImageLabel2::getDefaultColorFile() const
 		{
@@ -87,15 +89,17 @@ namespace Q {
 		{
 			QDomElement labelElem = xml.firstChildElement(K.Label);
 			QDomElement labelNameElem = labelElem.firstChildElement(/*K.LabelName*/);
+			this->labelIdToLabelName.clear();
 			while (!labelNameElem.isNull())
 			{
-				QString labelName = labelNameElem.tagName();
+				QString labelName = labelNameElem.tagName().remove(NAME_PREFIX);
 				int id = labelNameElem.attribute(K.LabelId).toInt();
-				QString htmlColor = labelElem.attribute(K.LabelRGBA);
+				QString htmlColor = labelNameElem.attribute(K.LabelRGBA);
 				this->labelIdToLabelName.insert(id, labelName);
 				this->namedColors->SetColor(labelName.toStdString(),
 					this->namedColors->HTMLColorToRGBA(htmlColor.toStdString()));
 				QString labelRGBA = labelNameElem.attribute(K.LabelRGBA);
+				labelNameElem = labelNameElem.nextSiblingElement();
 			}
 			this->namedColorsToLookupTable();
 			this->namedColosrToTransferFunction();
@@ -109,7 +113,7 @@ namespace Q {
 			for (LabelIdToLabelName::const_iterator cit = this->labelIdToLabelName.cbegin();
 				cit != this->labelIdToLabelName.cend(); ++cit) {
 				vtkColor4ub rgba = this->namedColors->GetColor4ub(cit.value().toStdString());
-				QDomElement labelNameElem = dom.createElement(cit.value());
+				QDomElement labelNameElem = dom.createElement(NAME_PREFIX + cit.value());
 				labelNameElem.setAttribute(K.LabelId, cit.key());
 				labelNameElem.setAttribute(K.LabelRGBA, QString::fromStdString(this->namedColors->RGBAToHTMLColor(rgba)));
 				labelElem.appendChild(labelNameElem);

@@ -219,15 +219,15 @@ bool Image::writeData(QString rootDirectory) const
 	}
 	return returnValue;
 }
-
-void Image::addReference(Prop * prop)
-{
-	DataSet::addReference(prop);
-	ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
-	if (slice) {
-		slice->getImageActor()->GetProperty()->SetInterpolationTypeToLinear();
-	}
-}
+//
+//void Image::addReference(Prop * prop)
+//{
+//	DataSet::addReference(prop);
+//	ImageSlice* slice = qobject_cast<ImageSlice*>(prop);
+//	if (slice) {
+//		slice->getImageActor()->GetProperty()->SetInterpolationTypeToLinear();
+//	}
+//}
 
 bool Image::readITKImage(QStringList paths, vtkImageData * image, double orientation[3], double position[3], double scale[3])
 {

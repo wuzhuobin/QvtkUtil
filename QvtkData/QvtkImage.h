@@ -76,7 +76,7 @@ public:
 
 	virtual bool writeData(QString rootDirectory = QString()) const override;
 
-	virtual void addReference(Prop* prop) override;
+	//virtual void addReference(Prop* prop) override;
 
 	virtual double getWindow() const;
 
