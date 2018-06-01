@@ -582,7 +582,7 @@ inline Type* Scene::getDataByUniqueName(QString name)
 template<typename Type>
 inline Type* Scene::getDataByAlias(QString alias)
 {
-	return static_cast<Type*>(Scene::getDataByAlias(alias));
+	return qobject_cast<Type*>(Scene::getDataByAlias(alias));
 }
 
 }
