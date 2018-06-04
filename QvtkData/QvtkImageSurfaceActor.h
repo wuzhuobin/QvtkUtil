@@ -3,6 +3,11 @@
 #pragma once
 // me 
 #include "QvtkPolyDataActor.h"
+namespace Q {
+	namespace vtk { 
+		class PolyData; 
+	}
+}
 // vtk
 class vtkDiscreteMarchingCubes;
 class vtkWindowedSincPolyDataFilter;
@@ -15,6 +20,7 @@ namespace Q {
 		public:
 			ImageSurfaceActor();
 			virtual ~ImageSurfaceActor() override;
+			virtual void getPolyData(PolyData *data) const;
 			public Q_SLOTS:
 			virtual void setRenderDataSet(DataSet *data) override;
 		protected:

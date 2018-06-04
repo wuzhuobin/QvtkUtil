@@ -1,6 +1,7 @@
 // me 
 #include "QvtkImageSurfaceActor.h"
 #include "QvtkImageLabel2.h"
+#include "QvtkPolyData.h"
 // vtk
 #include <vtkDiscreteMarchingCubes.h>
 #include <vtkWindowedSincPolyDataFilter.h>
@@ -8,6 +9,7 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkLookupTable.h>
+#include <vtkMatrix4x4.h>
 // qt
 #include <QDebug>
 namespace Q {
@@ -29,6 +31,16 @@ namespace Q {
 
 		ImageSurfaceActor::~ImageSurfaceActor()
 		{
+		}
+
+		void ImageSurfaceActor::getPolyData(PolyData * data) const
+		{
+			data->getPolyData()->ShallowCopy(this->windowedSincPolyDataFilter->GetOutput());
+			data->setPosition(0.0, 0.0, 0.0);
+			data->setOrigin(0.0, 0.0, 0.0);
+			data->setScale(1.0, 1.0, 1.0);
+			data->setOrientation(0.0, 0.0, 0.0);
+			data->getUserMatrix()->Identity();
 		}
 
 		void ImageSurfaceActor::setRenderDataSet(DataSet * data)
