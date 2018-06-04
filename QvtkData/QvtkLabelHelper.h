@@ -23,6 +23,7 @@ namespace Q {
 			virtual void setColor(int id, double r, double g, double b, double a);
 			virtual void getColor(int id, double rgba[4]) const;
 			virtual void getColor(QString labelName, double rgba[4]) const;
+			virtual vtkLookupTable *getLookupTable() const { return this->lookupTable; }
 		protected: 
 			virtual void namedColorsToLookupTable();
 			virtual void namedColosrToTransferFunction();

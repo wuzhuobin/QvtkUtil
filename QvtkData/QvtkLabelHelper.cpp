@@ -171,9 +171,10 @@ void LabelHelper::getColor(int id, double rgba[4]) const
 
 void LabelHelper::namedColorsToLookupTable()
 {
-	this->lookupTable->SetNumberOfTableValues(0);
+	this->lookupTable->SetNumberOfTableValues(1);
 	this->lookupTable->SetTableRange(0, 0);
-	this->lookupTable->ForceBuild();
+	this->lookupTable->SetTableValue(0, 0, 0, 0, 0);
+	this->lookupTable->Build();
 	QList<int> keys = this->labelIdToLabelName.keys();
 	std::pair<QList<int>::const_iterator, QList<int>::const_iterator> min_max = std::minmax_element(keys.cbegin(), keys.cend());
 	this->lookupTable->SetTableRange(*min_max.first, *min_max.second);

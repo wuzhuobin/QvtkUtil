@@ -1,7 +1,8 @@
 // me
 #include "QvtkImageSlice.h"
 #include "QvtkImage.h"
-
+#include "QvtkImageLabel2.h"
+#include "QvtkImageLabel.h"
 // vtk 
 #include <vtkImageActor.h>
 #include <vtkImageProperty.h>
@@ -128,19 +129,24 @@ namespace Q {
 			PlanarProp::setRenderDataSet(data);
 			if (this->getRenderDataSet())
 			{
-				this->extractVOI->SetInputConnection(data->getOutputPort());
 				Image* image = qobject_cast<Image*>(data);
+				ImageLabel *imageLabel = qobject_cast<ImageLabel*>(data);
+				ImageLabel2 *imageLabel2 = qobject_cast<ImageLabel2*>(data);
 				if (!image) {
 					qCritical() << "data is not Image.";
 				}
 				else {
 					// when using Label class, using nearest interpolation.
-					if (image->isClass("Q::vtk::ImageLabel2") ||
-						image->isClass("Q::vtk::ImageLabel")) {
+					if (imageLabel) {
 						this->getImageActor()->GetProperty()->SetInterpolationTypeToNearest();
+						this->extractVOI->SetInputConnection(imageLabel->getOutputPort());
+					}
+					else if (imageLabel2) {
+						this->extractVOI->SetInputConnection(imageLabel2->getLabelOutputPort());
 					}
 					else {
 						this->getImageActor()->GetProperty()->SetInterpolationTypeToLinear();
+						this->extractVOI->SetInputConnection(data->getOutputPort());
 					}
 					connect(image, &Image::windowChanged,
 						this, &ImageSlice::setWindow);

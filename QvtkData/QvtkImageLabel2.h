@@ -43,7 +43,7 @@ namespace Q {
 			virtual double getResetLevel() const { return 127.5; }
 			virtual int getDefaultColorFile() const;
 			virtual QString getColorFile() const;
-			virtual vtkAlgorithmOutput* getOutputPort() const;
+			virtual vtkAlgorithmOutput* getLabelOutputPort() const;
 			virtual vtkImageData* getLabelImageData() const;
 			virtual vtkImageMapToColors* getImageMapToColors() const { return this->imageMapToColors; }
 			public Q_SLOTS:

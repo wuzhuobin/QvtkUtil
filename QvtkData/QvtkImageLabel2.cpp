@@ -75,7 +75,7 @@ namespace Q {
 			return  Data::getAttribute(this->colorFile).toString();
 		}
 
-		vtkAlgorithmOutput * ImageLabel2::getOutputPort() const
+		vtkAlgorithmOutput * ImageLabel2::getLabelOutputPort() const
 		{
 			return this->imageMapToColors->GetOutputPort();
 		}
