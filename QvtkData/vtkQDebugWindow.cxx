@@ -1,10 +1,9 @@
 #include "vtkQDebugWindow.h"
-
 //vtk 
 #include <vtkObjectFactory.h>
-
 // qt
 #include <QDebug>
+#include <QMutex>
 vtkStandardNewMacro(vtkQDebugWindow);
 void vtkQDebugWindow::PrintSelf(ostream & os, vtkIndent indent)
 {
@@ -20,16 +19,22 @@ void vtkQDebugWindow::DisplayText(const char * text)
 	int colon = string.indexOf(": ");
 	if (colon != -1) {
 		QString type = string.left(colon);
-		this->String = string;
-		this->String.remove(0, colon + 2);
+		QString _string = string;
+		_string.remove(0, colon + 2);
 		if (type == "ERROR") {
-			qCritical() << this->String.toStdString().c_str();
+			QMutexLocker(this->mutex);
+			this->String = _string;
+			qCritical() << _string.toStdString().c_str();
 		}
 		else if (type == "Warning" || type == "Generic Warning") {
-			qWarning() << this->String.toStdString().c_str();
+			QMutexLocker(this->mutex);
+			this->String = _string;
+			qWarning() << _string.toStdString().c_str();
 		}
 		else if (type == "Debug") {
-			qDebug() << this->String.toStdString().c_str();
+			QMutexLocker(this->mutex);
+			this->String = _string;
+			qDebug() << _string.toStdString().c_str();
 		}
 		else {
 			goto fatal;
@@ -37,6 +42,7 @@ void vtkQDebugWindow::DisplayText(const char * text)
 		return;
 	}
 fatal:
+	QMutexLocker(this->mutex);
 	this->String = string;
 	qFatal("%s", this->String.toStdString().c_str());
 
@@ -44,10 +50,12 @@ fatal:
 
 vtkQDebugWindow::vtkQDebugWindow()
 {
+	this->mutex = new QMutex;
 }
 
 vtkQDebugWindow::~vtkQDebugWindow()
 {
+	delete this->mutex;
 }
 
 void vtkQDebugWindow::initialize()

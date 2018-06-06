@@ -3,14 +3,12 @@
 #pragma once
 // me 
 #include "qvtkdata_export.h"
-
 // itk
 #include <itkOutputWindow.h>
 #include <itkObjectFactory.h>
-
 // qt
 #include <QString>
-
+class QMutex;
 namespace itk
 {
 // this class is used to send output to stdout and not the itk window
@@ -34,6 +32,7 @@ protected:
   virtual ~QDebugWindow();
 
   QString String;
+  QMutex *mutex;
 
 private:
   ITK_DISALLOW_COPY_AND_ASSIGN(QDebugWindow);

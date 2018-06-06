@@ -1,8 +1,8 @@
 // me 
 #include "itkQDebugWindow.h"
-
 // qt
 #include <QDebug>
+#include <QMutex>
 void itk::QDebugWindow::DisplayText(const char * text)
 {
 	if (!text) {
@@ -12,15 +12,21 @@ void itk::QDebugWindow::DisplayText(const char * text)
 	int colon = string.indexOf(": ");
 	if (colon != -1) {
 		QString type = string.left(colon);
-		this->String = string;
-		this->String.remove(0, colon + 2);
+		QString _string = string;
+		_string.remove(0, colon + 2);
 		if (type == "itk::ERROR") {
-			qCritical() << this->String.toStdString().c_str();
+			QMutexLocker(this->mutex);
+			this->String = _string;
+			qCritical() << _string.toStdString().c_str();
 		}
 		else if (type == "WARNING") {
+			QMutexLocker(this->mutex);
+			this->String = _string;
 			qWarning() << this->String.toStdString().c_str();
 		}
 		else if (type == "Debug") {
+			QMutexLocker(this->mutex);
+			this->String = _string;
 			qDebug() << this->String.toStdString().c_str();
 		}
 		else {
@@ -29,14 +35,17 @@ void itk::QDebugWindow::DisplayText(const char * text)
 		return;
 	}
 fatal:
+	QMutexLocker(this->mutex);
 	this->String = string;
 	qFatal("%s", this->String.toStdString().c_str());
 }
 
 itk::QDebugWindow::QDebugWindow()
 {
+	this->mutex = new QMutex;
 }
 
 itk::QDebugWindow::~QDebugWindow()
 {
+	delete this->mutex;
 }

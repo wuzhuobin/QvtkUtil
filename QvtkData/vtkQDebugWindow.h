@@ -1,15 +1,13 @@
 #ifndef __VTK_QDEBUG_WINDOW_H__
 #define __VTK_QDEBUG_WINDOW_H__
-
+#pragma once;
 // me
 #include "qvtkdata_export.h"
-
 // vtk
 #include <vtkOutputWindow.h>
-
 // qt
 #include <QString>
-
+class QMutex;
 class QVTKDATA_EXPORT vtkQDebugWindow : public vtkOutputWindow
 {
 public:
@@ -25,9 +23,8 @@ protected:
 	vtkQDebugWindow();
 	virtual ~vtkQDebugWindow() VTK_OVERRIDE;
 	void initialize();
-
 	QString String;
-
+	QMutex *mutex;
 };
 
 #endif // !__VTK_QDEBUG_WINDOW_H__
