@@ -37,13 +37,15 @@ void vtkInteractorStyleNavigation::OnLeftButtonDown()
 
 	int xdist = pickPosition[0] - this->PreviousLeftPosition[0];
 	int ydist = pickPosition[1] - this->PreviousLeftPosition[1];
+	std::clock_t interval = 1000 * (std::clock() - this->PreviousClickTime) / CLOCKS_PER_SEC;
 
 	this->PreviousLeftPosition[0] = pickPosition[0];
 	this->PreviousLeftPosition[1] = pickPosition[1];
-
+	this->PreviousClickTime = std::clock();
+	
 	int moveDistance = (int)sqrt((double)(xdist*xdist + ydist*ydist));
-
-	if (moveDistance > this->RESET_PIXEL_DISTANCE )
+	if (moveDistance > this->RESET_PIXEL_DISTANCE ||
+		interval > 1000)
 	{
 		this->NumberOfLeftClicks = 1;
 	}
@@ -149,6 +151,7 @@ vtkInteractorStyleNavigation::vtkInteractorStyleNavigation()
 {
 	this->PreviousLeftPosition[0] = 0;
 	this->PreviousLeftPosition[1] = 0;
+	this->PreviousClickTime = std::clock();
 }
 
 vtkInteractorStyleNavigation::~vtkInteractorStyleNavigation()

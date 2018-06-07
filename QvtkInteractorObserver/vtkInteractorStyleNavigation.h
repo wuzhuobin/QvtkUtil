@@ -1,13 +1,10 @@
 #ifndef __VTK_INTERACTOR_STYLE_NAVIGATION_H__
 #define __VTK_INTERACTOR_STYLE_NAVIGATION_H__
-
+#pragma once
 // me
 #include "qvtkinteractorobserver_export.h"
-
 // vtk
 #include "vtkInteractorStyleTrackballCamera.h"
-//class vtkTimerEventCallbackCommand;
-
 class QVTKINTERACTOROBSERVER_EXPORT vtkInteractorStyleNavigation : public vtkInteractorStyleTrackballCamera
 {
 public:
@@ -31,18 +28,13 @@ public:
 	virtual void CentralizeCursorPosition() = 0;
 	virtual void SetCameraScale(double scale);
 protected:
-
 	vtkInteractorStyleNavigation();
 	virtual ~vtkInteractorStyleNavigation() VTK_OVERRIDE;
-
-
 	virtual bool CalculateIndex(double index[3]);
 	unsigned int NumberOfLeftClicks;
+	std::clock_t PreviousClickTime;
 	int PreviousLeftPosition[2];
 	static const unsigned int RESET_PIXEL_DISTANCE = 5;
-
-
-
 };
 
 
