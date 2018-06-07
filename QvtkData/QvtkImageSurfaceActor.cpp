@@ -2,6 +2,7 @@
 #include "QvtkImageSurfaceActor.h"
 #include "QvtkImageLabel2.h"
 #include "QvtkPolyData.h"
+#include "vtkDiscreteMarchingCubesWithSmooth.h"
 // vtk
 #include <vtkDiscreteMarchingCubes.h>
 #include <vtkWindowedSincPolyDataFilter.h>
@@ -17,25 +18,33 @@ namespace Q {
 		Q_VTK_DATA_CPP(ImageSurfaceActor);
 		ImageSurfaceActor::ImageSurfaceActor()
 		{
-			this->marchingCubes = vtkDiscreteMarchingCubes::New();
-			this->windowedSincPolyDataFilter = vtkWindowedSincPolyDataFilter::New();
-			this->windowedSincPolyDataFilter->SetInputConnection(this->marchingCubes->GetOutputPort());
-			this->windowedSincPolyDataFilter->SetBoundarySmoothing(false);
-			this->windowedSincPolyDataFilter->SetFeatureEdgeSmoothing(false);
-			this->windowedSincPolyDataFilter->SetFeatureAngle(120.0);
-			this->windowedSincPolyDataFilter->SetNonManifoldSmoothing(true);
-			this->windowedSincPolyDataFilter->SetNormalizeCoordinates(true);
-			this->clipper->SetInputConnection(this->windowedSincPolyDataFilter->GetOutputPort());
+			this->marchingCubes = vtkDiscreteMarchingCubesWithSmooth::New();
+			this->marchingCubes->SetPassBand(0.001);
+			this->marchingCubes->SetFeatureAngle(120);
+			this->marchingCubes->SetBoundarySmoothing(false);
+			this->marchingCubes->SetFeatureEdgeSmoothing(false);
+			this->marchingCubes->SetNonManifoldSmoothing(true);
+			this->marchingCubes->SetNormalizeCoordinates(true);
+			this->marchingCubes->SetNumberOfIterations(15);
+			//this->windowedSincPolyDataFilter = vtkWindowedSincPolyDataFilter::New();
+			//this->windowedSincPolyDataFilter->SetInputConnection(this->marchingCubes->GetOutputPort());
+			//this->windowedSincPolyDataFilter->SetBoundarySmoothing(false);
+			//this->windowedSincPolyDataFilter->SetFeatureEdgeSmoothing(false);
+			//this->windowedSincPolyDataFilter->SetFeatureAngle(120.0);
+			//this->windowedSincPolyDataFilter->SetNonManifoldSmoothing(true);
+			//this->windowedSincPolyDataFilter->SetNormalizeCoordinates(true);
+			this->clipper->SetInputConnection(this->marchingCubes->GetOutputPort());
 			this->polyDataMapper->SetScalarVisibility(true);
 		}
 
 		ImageSurfaceActor::~ImageSurfaceActor()
 		{
+			this->marchingCubes->Delete();
 		}
 
 		void ImageSurfaceActor::getPolyData(PolyData * data) const
 		{
-			data->getPolyData()->ShallowCopy(this->windowedSincPolyDataFilter->GetOutput());
+			data->getPolyData()->ShallowCopy(this->marchingCubes->GetOutput());
 			data->setPosition(0.0, 0.0, 0.0);
 			data->setOrigin(0.0, 0.0, 0.0);
 			data->setScale(1.0, 1.0, 1.0);

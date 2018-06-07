@@ -5,8 +5,8 @@
  *
  * Qvtk for QvtkUtil
  */
-#ifndef __Qvtk_IMAGE_H__
-#define __Qvtk_IMAGE_H__
+#ifndef __QVTK_IMAGE_H__
+#define __QVTK_IMAGE_H__
 
 #define Qvtk_TEMPLATE_MACRO_CASE(typeN, type, call)     \
   case typeN: { typedef type ITK_IMAGE_IO_BASE_IO_COMPONENT_TYPE; call; }; break
@@ -156,4 +156,4 @@ private:
 
 }
 }
-#endif // !__Qvtk_IMAGE_H__
+#endif // !__QVTK_IMAGE_H__
