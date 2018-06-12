@@ -259,14 +259,14 @@ public Q_SLOTS:
 	 * Setting relative paths, they are only used in saving scene to xml. 
 	 */
 	virtual void setRelativePath(const QStringList relativePath) {this->relativePath = relativePath;}
+	virtual void setRelativePath(const QString relativePath) { this->setRelativePath(QStringList() << relativePath); }
 	/**
 	 * @overload	virtual void setRelativePath(const QString relativePath);
 	 * @param[in]	relativePath	the relative path to save the actually data. 
 	 * 
 	 */
-	virtual void setRelativePath(const QString relativePath) { this->setRelativePath(QStringList() << relativePath); }
-	virtual void getAbsolutePath(const QString absolutePath) { this->setAbsolutePath(QStringList() << absolutePath); }
 	virtual void setAbsolutePath(const QStringList absolutePath) { this->absolutePath = absolutePath;}
+	virtual void setAbsolutePath(const QString absolutePath) { this->setAbsolutePath(QStringList() << absolutePath); }
 signals:
 	void pickableChanged(bool pickable) const;
 	void opacityChanged(double opacity) const;

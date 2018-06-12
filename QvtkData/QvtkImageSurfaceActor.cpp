@@ -19,13 +19,13 @@ namespace Q {
 		ImageSurfaceActor::ImageSurfaceActor()
 		{
 			this->marchingCubes = vtkDiscreteMarchingCubesWithSmooth::New();
-			this->marchingCubes->SetPassBand(0.001);
+			this->marchingCubes->SetPassBand(0.1);
 			this->marchingCubes->SetFeatureAngle(120);
 			this->marchingCubes->SetBoundarySmoothing(false);
 			this->marchingCubes->SetFeatureEdgeSmoothing(false);
 			this->marchingCubes->SetNonManifoldSmoothing(true);
 			this->marchingCubes->SetNormalizeCoordinates(true);
-			this->marchingCubes->SetNumberOfIterations(15);
+			this->marchingCubes->SetNumberOfIterations(20);
 			//this->windowedSincPolyDataFilter = vtkWindowedSincPolyDataFilter::New();
 			//this->windowedSincPolyDataFilter->SetInputConnection(this->marchingCubes->GetOutputPort());
 			//this->windowedSincPolyDataFilter->SetBoundarySmoothing(false);
