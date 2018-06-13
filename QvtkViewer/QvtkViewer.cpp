@@ -219,8 +219,8 @@ void Viewer::RemoveProp(Prop * prop)
 
 void Viewer::RemoveAllProp()
 {
-	for (QList<vtkRenderer*>::const_iterator cit;
-		cit != this->renderers.cbegin(); ++cit) {
+	for (QList<vtkRenderer*>::const_iterator cit = this->renderers.cbegin();
+		cit != this->renderers.cend(); ++cit) {
 		RemoveAllProp(*cit);
 	}
 }
