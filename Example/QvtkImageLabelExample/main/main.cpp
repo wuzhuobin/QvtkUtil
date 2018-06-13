@@ -1,16 +1,9 @@
+// me 
+#include "QvtkSceneExample.h"
+// qt
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
-
-#include "SCBSceneExample.h"
-#include "SCBScene.h"
-
-const struct SCBSceneConfiguration 
-{
-	SCBSceneConfiguration() { new SCBScene; }
-}CONFIGURATION;
-
-
 int main(int argc, char *argv[])
 {
     //Q_INIT_RESOURCE(application);
@@ -27,7 +20,7 @@ int main(int argc, char *argv[])
     parser.process(app);
 
 	//SCBSceneConfiguration();
-	SCBSceneExample example;
+	QvtkSceneExample example;
     //if (!parser.positionalArguments().isEmpty())
     //    example.loadFile(parser.positionalArguments().first());
     example.show();

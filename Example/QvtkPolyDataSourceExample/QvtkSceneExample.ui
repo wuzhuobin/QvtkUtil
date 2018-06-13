@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SCBSceneExample</class>
- <widget class="QMainWindow" name="SCBSceneExample">
+ <class>QvtkSceneExample</class>
+ <widget class="QMainWindow" name="QvtkSceneExample">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>449</width>
-    <height>845</height>
+    <width>396</width>
+    <height>304</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>449</width>
+     <width>396</width>
      <height>21</height>
     </rect>
    </property>
@@ -30,28 +30,10 @@
      <string>File</string>
     </property>
     <addaction name="action_New"/>
-    <addaction name="action_Import"/>
-    <addaction name="action_Commit"/>
-    <addaction name="action_Print"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_Import">
-   <property name="text">
-    <string>&amp;Import</string>
-   </property>
-  </action>
-  <action name="action_Commit">
-   <property name="text">
-    <string>&amp;Commit</string>
-   </property>
-  </action>
-  <action name="action_Print">
-   <property name="text">
-    <string>&amp;Print</string>
-   </property>
-  </action>
   <action name="action_New">
    <property name="text">
     <string>&amp;New</string>

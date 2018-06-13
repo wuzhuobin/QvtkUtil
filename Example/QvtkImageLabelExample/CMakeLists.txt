@@ -1,40 +1,33 @@
-# @file	TemplateCMakeLists.txt
+# @file		TemplateCMakeLists.txt
 # @brief	A template CMakeLists.txt which can automatically generate project
 # @author	WUZHUOBIN
-# @version	1.4.0
+# @version	1.7.0
 # @since	Sep.19.2017
+# @date 	May.10.2018
 # 
-# This template is for generating CMake project easily. Only a few steps.
-# 1.	Make a good folder name as the parent, because it is going to be your 
-#		CMake Project name. 
-# 2.	Place all header files and implementation files to your parent folder. 
-#		If there is no header files and implementation files, skip this part. 
-# 3.	Create a folder "main" to place your main function. It has to be named 
-#		as "name.cpp". If there is no or a library is being created, skip this 
-#		part. 
-# 4.	Rename "TemplateCMakeLists.txt" to "CMakeLists.txt". 
-# 
-# Update Log: 
-# @date	Sep.19.2017
-# version 1.0.0
-# The first version. 
-#
-# @date	Sep.20.2017
-# version 1.1.0
-# Adding some comments
-#
-# @date Sep.27.2017
-# version 1.2.0
-# This is a simple version. Cannot generate shared library, only generate static
-# library. No export and install.
-#
-# @data	Oct.09.2017
-# version 1.3.0 
-# Adding qrc in library as well, which provide greater compatibility. 
-#
-# @data Dec.07.2017
-# version 1.4.0
-# Deleting Qt5LinguistTools dependency.
+# <h1>How to use</h1>
+# <ul>
+# 	<li>Create a folder to place all header files, implementation files and the 'TemplateCMakeLists.txt'.</li>
+# 	<li>Rename the folder as the project name. Since the folder name will become the project name.</li>
+# 	<li>Rename 'TemplateCMakeLists.txt' to 'CMakeLists.txt'.</li>
+# 	<li>Configure with CMake and follow normal cmake pipeline.</li>
+# 	<li>If build executable, create 'main/main.cpp' as the program entry point.</li>
+# 	<li>If build library, no need to do the previous procedure.</li>
+# 	<li>DO NOT modify things not in 'CHANGE BELOW'. </li>
+# 	<li>If need other Qt module, add modules in 'DEPENDENCY' module.</li>
+# 	<li>If need other package, add packages in 'DEPENDENCY' module.</li>
+# 	<li>If need Qt qrc, add the path in <code>PROJECT_QRC</code> in 'DEPENDENCY' module. </li>
+# 	<li>If need resource, add resources in 'DEPENDENCY' module.</li>
+# 	<li>If need other libraries and headers, add them in <code>SYSTEM_LIBRARIES</code> and <code>SYSTEM_INCLUDE</code> in 'LIBRARIES' module. </li>
+# </ul>
+# <h1>What happen</h1>
+# <ul>
+# 	<li>CMake will find all '*.c*' '*.h*' files for building. </li>
+# 	<li>CMake will find all '*.ui' as Qt UI form. </li>
+# 	<li>This template can only build static library. </li>
+# 	<li>If 'main/main.cpp' exists, the project will create both static library files and executable files. </li>
+# 	<li>This CMakeLists is for project with VTK ITK QT dependency only.</li>
+# </ul>
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #			Copyright (c) WUZHUOBIN 											    #
@@ -73,8 +66,7 @@ endif()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # POLICY  # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-cmake_policy(SET CMP0043 NEW)
-cmake_policy(SET CMP0028 NEW)
+
 # # # # # # # # # # # # # # # # # CHANGE BELOW  # # # # # # # # # # # # # # # # 
 
 
@@ -162,8 +154,8 @@ set(
 	${SYSTEM_LIBRARIES}
 	#OTHERS
 	#...
-	AbstractData
-	AbstractViewer
+	QvtkViewer
+	QvtkData
 )
 
 set(
@@ -216,6 +208,7 @@ if( NOT "${PROJECT_SRC}" STREQUAL "")
 		${PROJECT_UI_H}
 		${PROJECT_QRC}
 		${PROJECT_QRC_SRC}
+ 	    ${WINDOWS_RESOURCES}
 	)
 
 	target_link_libraries(
@@ -252,6 +245,7 @@ if(EXISTS ${MAIN_CPP})
 		${MAIN_CPP}
 		${PROJECT_QRC}
 		${PROJECT_QRC_SRC}
+		${WINDOWS_RESOURCES}		
 	)
 
 	if(NOT "${PROJECT_SRC}" STREQUAL "")

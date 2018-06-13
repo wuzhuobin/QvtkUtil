@@ -1,46 +1,35 @@
-#include "SCBSceneExample.h"
-
 //me
-#include "ui_SCBSceneExample.h"
-#include "SCBPolyDataActor.h"
-#include "SCBPolyDataSource.h"
-#include "SCBOrthogonalViewer.h"
-
+#include "QvtkSceneExample.h"
+#include "ui_QvtkSceneExample.h"
+#include "QvtkPolyDataActor.h"
+#include "QvtkPolyDataSource.h"
+#include "QvtkViewer2.h"
 //vtk
 #include <vtkPolyDataMapper.h>
-
 //qt
 #include <QStandardItemModel>
 #include <QDebug>
 
-SCBSceneExample::SCBSceneExample(QWidget * parent)
+QvtkSceneExample::QvtkSceneExample(QWidget * parent)
 	:QMainWindow(parent)
 {
-	this->m_ui = new Ui::SCBSceneExample;
+	this->m_ui = new Ui::QvtkSceneExample;
 	this->m_ui->setupUi(this);
-
-	this->m_viewer = new SCBOrthogonalViewer(this);
+	this->m_viewer = new Q::vtk::Viewer2(this);
 	this->m_ui->verticalLayout->addWidget(this->m_viewer);
-
-	//this->m_sceneWidget = new SCBSceneWidget(this);
-	//this->m_ui->verticalLayout->addWidget(this->m_sceneWidget);
-
-	//this->m_scene = SCBScene::getCurrentScene();
-
 	for (int i = 0; i < 5; ++i) {
-		this->m_sources[i] = new SCBPolyDataSource;
+		this->m_sources[i] = new Q::vtk::PolyDataSource;
 		this->m_sources[i]->setSourceType(i);
-		this->m_sources[i]->readData();
 		this->m_sources[i]->setColor(0.2*i, 1-0.2*i, i *0.1);
 		this->m_sources[i]->setPosition(i, i, i);
 
-		this->m_actors[i] = new SCBPolyDataActor;
+		this->m_actors[i] = new Q::vtk::PolyDataActor;
 		this->m_actors[i]->setRenderDataSet(this->m_sources[i]);
 	}
-	//connect(this->m_ui->action_New, &QAction::triggered, this, &SCBSceneExample::on_action_New_triggered);
+	//connect(this->m_ui->action_New, &QAction::triggered, this, &QvtkSceneExample::on_action_New_triggered);
 }
 
-SCBSceneExample::~SCBSceneExample()
+QvtkSceneExample::~QvtkSceneExample()
 {
 	//this->m_viewer->RemoveAllProp();
 	for (int i = 0; i < 5; ++i) {
@@ -53,7 +42,7 @@ SCBSceneExample::~SCBSceneExample()
 	delete this->m_ui;
 }
 
-void SCBSceneExample::on_action_New_triggered(bool checked)
+void QvtkSceneExample::on_action_New_triggered(bool checked)
 {
 	for (int i = 0; i < 5; ++i) {
 		this->m_viewer->AddProp(this->m_actors[i]);
