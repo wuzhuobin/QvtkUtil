@@ -25,7 +25,7 @@ namespace Q {
 				WRITE		setColorFile);
 			Q_VTK_DATA_H(
 				ImageLabel2,
-				Q_VTK_KEY(Label)
+				//Q_VTK_KEY(Label)
 				Q_VTK_KEY(LabelId)
 				Q_VTK_KEY(LabelRGBA)
 				Q_VTK_KEY(DefaultColorFile)
@@ -38,7 +38,6 @@ namespace Q {
 			virtual void printSelf() const override;
 			virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 			virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
-			//virtual void addReference(Prop* prop) override;
 			virtual double getResetWindow() const { return 255.0; }
 			virtual double getResetLevel() const { return 127.5; }
 			virtual int getDefaultColorFile() const;
@@ -57,11 +56,11 @@ namespace Q {
 			template<typename ScalarType>
 			static void zeroImage(vtkImageData* image);
 			virtual Data* newInstance() const override { return new ImageLabel2; }
-			vtkImageMapToColors* imageMapToColors;
 			virtual void readLabel(const QDomElement& xml);
 			virtual void writeLabel(QDomElement& xml) const;
 			static void setDefaultColorFile(Data *self, QStandardItem *item);
 			static void setColorFile(Data *self, QStandardItem *item);
+			vtkImageMapToColors* imageMapToColors;
 		private:
 			QStandardItem *colorFile;
 			QStandardItem *defaultColorFile;

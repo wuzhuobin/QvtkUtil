@@ -11,14 +11,12 @@
 #include <vtkPlane.h>
 #include <vtkExtractVOI.h>
 #include <vtkImageData.h>
-
 // qt
 #include <QDomElement>
 #include <QDebug>
 
 namespace Q {
 	namespace vtk {
-
 		Q_VTK_DATA_CPP(ImageSlice);
 		class vtkImageActor2 : public vtkImageActor
 		{
@@ -26,12 +24,10 @@ namespace Q {
 			static vtkImageActor2 *New() { return new vtkImageActor2; }
 			virtual double *GetBounds() VTK_OVERRIDE { return vtkImageSlice::GetBounds(); }
 		};
-
 		ImageSlice::ImageSlice()
 		{
 			vtkNew<vtkExtractVOI> extractVOI;
 			this->extractVOI = extractVOI.GetPointer();
-
 			// vtkImageResliceMapper use world coordinate plane to cut the 
 			// vtkImageActor, so the region do not need to change to Image Coordinate
 			// for orthongonal plane, region region should have a pair region which 
@@ -157,23 +153,19 @@ namespace Q {
 				}
 			}
 		}
-
 		void ImageSlice::setOpacity(double opacity)
 		{
 			if (getImageActor()) {
 				getImageActor()->GetProperty()->SetOpacity(opacity);
 			}
 		}
-
 		void ImageSlice::setWindow(double window)
 		{
 			getImageActor()->GetProperty()->SetColorWindow(window);
 		}
-
 		void ImageSlice::setLevel(double level)
 		{
 			getImageActor()->GetProperty()->SetColorLevel(level);
 		}
-
 	}
 }

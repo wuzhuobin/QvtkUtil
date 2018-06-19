@@ -67,7 +67,7 @@ namespace Q {
 
 		int ImageLabel2::getDefaultColorFile() const
 		{
-			return this->getAttribute(this->defaultColorFile).toInt();
+			return Data::getAttribute(this->defaultColorFile).toInt();
 		}
 
 		QString ImageLabel2::getColorFile() const
@@ -94,7 +94,7 @@ namespace Q {
 
 		void ImageLabel2::readLabel(const QDomElement & xml)
 		{
-			QDomElement labelElem = xml.firstChildElement(K.Label);
+			QDomElement labelElem = xml.firstChildElement(LABEL);
 			QDomElement labelNameElem = labelElem.firstChildElement(/*K.LabelName*/);
 			this->labelIdToLabelName.clear();
 			while (!labelNameElem.isNull())
@@ -115,7 +115,7 @@ namespace Q {
 		void ImageLabel2::writeLabel(QDomElement & xml) const
 		{
 			QDomDocument dom = xml.ownerDocument();
-			QDomElement labelElem = dom.createElement(K.Label);
+			QDomElement labelElem = dom.createElement(LABEL);
 			xml.appendChild(labelElem);
 			for (LabelIdToLabelName::const_iterator cit = this->labelIdToLabelName.cbegin();
 				cit != this->labelIdToLabelName.cend(); ++cit) {

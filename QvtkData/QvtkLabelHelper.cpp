@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QTextStream>
 #include <QFile>
+#include <QDomElement>
 using namespace Q::vtk;
 const QStringList LabelHelper::DEFAULT_COLOR_FILES{
 	":/ColorFiles/64Color-Nonsemantic.txt",
@@ -33,6 +34,7 @@ const QStringList LabelHelper::DEFAULT_COLOR_FILES{
 	":/ColorFiles/Viridis.txt",
 	":/ColorFiles/ITK-SNAP-label.txt"
 };
+const QString LabelHelper::LABEL = "Label_";
 const struct LabelHelperInit {
 	LabelHelperInit() {
 		Q_INIT_RESOURCE(QvtkLabelHelper);
@@ -167,6 +169,41 @@ void LabelHelper::getColor(int id, double rgba[4]) const
 		return;
 	}
 	this->getColor(this->labelIdToLabelName[id], rgba);
+}
+
+void Q::vtk::LabelHelper::readLabel(LabelHelper * self, const QDomElement & xml, QString idKey, QString nameKey)
+{
+	QDomElement labelElem = xml.firstChildElement(LABEL);
+	QDomElement labelNameElem = labelElem.firstChildElement(/*K.LabelName*/);
+	self->labelIdToLabelName.clear();
+	while (!labelNameElem.isNull())
+	{
+		QString labelName = labelNameElem.tagName().remove(LABEL);
+		int id = labelNameElem.attribute(idKey).toInt();
+		QString htmlColor = labelNameElem.attribute(nameKey);
+		self->labelIdToLabelName.insert(id, labelName);
+		self->namedColors->SetColor(labelName.toStdString(),
+			self->namedColors->HTMLColorToRGBA(htmlColor.toStdString()));
+		QString labelRGBA = labelNameElem.attribute(nameKey);
+		labelNameElem = labelNameElem.nextSiblingElement();
+	}
+	self->namedColorsToLookupTable();
+	self->namedColosrToTransferFunction();
+}
+
+void Q::vtk::LabelHelper::writeLabel(const LabelHelper * self, QDomElement & xml, QString idKey, QString nameKey)
+{
+	QDomDocument dom = xml.ownerDocument();
+	QDomElement labelElem = dom.createElement(LABEL);
+	xml.appendChild(labelElem);
+	for (LabelIdToLabelName::const_iterator cit = self->labelIdToLabelName.cbegin();
+		cit != self->labelIdToLabelName.cend(); ++cit) {
+		vtkColor4ub rgba = self->namedColors->GetColor4ub(cit.value().toStdString());
+		QDomElement labelNameElem = dom.createElement(LABEL + cit.value());
+		labelNameElem.setAttribute(idKey, cit.key());
+		labelNameElem.setAttribute(nameKey, QString::fromStdString(self->namedColors->RGBAToHTMLColor(rgba)));
+		labelElem.appendChild(labelNameElem);
+	}
 }
 
 void LabelHelper::namedColorsToLookupTable()

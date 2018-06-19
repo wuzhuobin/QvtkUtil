@@ -9,12 +9,14 @@ class vtkNamedColors;
 class vtkDiscretizableColorTransferFunction;
 // qt
 #include <QHash>
+class QDomElement;
 namespace Q {
 	namespace vtk {
 		class QVTKDATA_EXPORT LabelHelper {
 		public:
 			typedef QHash<int, QString> LabelIdToLabelName;
 			static const QStringList DEFAULT_COLOR_FILES;
+			static const QString LABEL;
 			LabelHelper();
 			virtual ~LabelHelper();
 			virtual bool readLabelFile(QString path);
@@ -25,6 +27,8 @@ namespace Q {
 			virtual void getColor(QString labelName, double rgba[4]) const;
 			virtual vtkLookupTable *getLookupTable() const { return this->lookupTable; }
 		protected: 
+			static void readLabel(LabelHelper *self, const QDomElement &xml, QString idKey, QString nameKey);
+			static void writeLabel(const LabelHelper *self, QDomElement &xml, QString idKey, QString nameKey);
 			virtual void namedColorsToLookupTable();
 			virtual void namedColosrToTransferFunction();
 			LabelIdToLabelName labelIdToLabelName;

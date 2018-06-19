@@ -37,11 +37,11 @@ namespace Q {
 			this->orientationMarkerWidgetFlag = flag;
 			if (flag) {
 				this->orientationMarkerWidget->SetInteractor(this->GetInteractor());
+				this->orientationMarkerWidget->SetEnabled(flag);
 			}
 			else {
 				this->orientationMarkerWidget->SetInteractor(nullptr);
 			}
-			this->orientationMarkerWidget->SetEnabled(flag);
 		}
 
 		void NonPlanarViewer::UpdateCameraViewPlaneNormal()
