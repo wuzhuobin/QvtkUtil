@@ -90,7 +90,8 @@ public:
 
 	template<typename PixelType>
 	void getITKImageData(itk::Image<PixelType, 3>* itkImage) const;
-
+	template<typename PixelType>
+	void setITKImageData(itk::Image<PixelType, 3>* itkImage);
 	static bool readDataSuffix(
 		QStringList fileNames,
 		vtkImageData* data,
