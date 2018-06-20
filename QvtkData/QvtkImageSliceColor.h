@@ -16,8 +16,8 @@ namespace Q {
 			Q_OBJECT;
 			Q_VTK_DATA_H(
 				ImageSliceColor,
-				Q_VTK_KEY(ColorId)
 				Q_VTK_KEY(ColorName)
+				Q_VTK_KEY(ColorRGBA)
 				Q_VTK_KEY(DefaultColorFile)
 				Q_VTK_KEY(ColorFile)
 			);

@@ -27,8 +27,8 @@ namespace Q {
 			virtual void getColor(QString labelName, double rgba[4]) const;
 			virtual vtkLookupTable *getLookupTable() const { return this->lookupTable; }
 		protected: 
-			static void readLabel(LabelHelper *self, const QDomElement &xml, QString idKey, QString nameKey);
-			static void writeLabel(const LabelHelper *self, QDomElement &xml, QString idKey, QString nameKey);
+			static void readLabel(LabelHelper *self, const QDomElement &xml, QString nameKey, QString rgbaKey);
+			static void writeLabel(const LabelHelper *self, QDomElement &xml, QString nameKey, QString rgbaKey);
 			virtual void namedColorsToLookupTable();
 			virtual void namedColosrToTransferFunction();
 			LabelIdToLabelName labelIdToLabelName;

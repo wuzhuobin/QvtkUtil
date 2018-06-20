@@ -25,13 +25,11 @@ namespace Q {
 				WRITE		setColorFile);
 			Q_VTK_DATA_H(
 				ImageLabel2,
-				//Q_VTK_KEY(Label)
-				Q_VTK_KEY(LabelId)
+				Q_VTK_KEY(LabelName)
 				Q_VTK_KEY(LabelRGBA)
 				Q_VTK_KEY(DefaultColorFile)
 				Q_VTK_KEY(ColorFile)
 			);
-			static const QString NAME_PREFIX;
 		public:
 			ImageLabel2();
 			virtual ~ImageLabel2() override;

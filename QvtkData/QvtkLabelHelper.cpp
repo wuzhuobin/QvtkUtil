@@ -171,27 +171,26 @@ void LabelHelper::getColor(int id, double rgba[4]) const
 	this->getColor(this->labelIdToLabelName[id], rgba);
 }
 
-void Q::vtk::LabelHelper::readLabel(LabelHelper * self, const QDomElement & xml, QString idKey, QString nameKey)
+void Q::vtk::LabelHelper::readLabel(LabelHelper * self, const QDomElement & xml, QString nameKey, QString rgbaKey)
 {
 	QDomElement labelElem = xml.firstChildElement(LABEL);
 	QDomElement labelNameElem = labelElem.firstChildElement(/*K.LabelName*/);
 	self->labelIdToLabelName.clear();
 	while (!labelNameElem.isNull())
 	{
-		QString labelName = labelNameElem.tagName().remove(LABEL);
-		int id = labelNameElem.attribute(idKey).toInt();
-		QString htmlColor = labelNameElem.attribute(nameKey);
+		int id = labelNameElem.tagName().remove(LABEL).toInt();
+		QString labelName = labelNameElem.attribute(nameKey);
+		QString htmlColor = labelNameElem.attribute(rgbaKey);
 		self->labelIdToLabelName.insert(id, labelName);
 		self->namedColors->SetColor(labelName.toStdString(),
 			self->namedColors->HTMLColorToRGBA(htmlColor.toStdString()));
-		QString labelRGBA = labelNameElem.attribute(nameKey);
 		labelNameElem = labelNameElem.nextSiblingElement();
 	}
 	self->namedColorsToLookupTable();
 	self->namedColosrToTransferFunction();
 }
 
-void Q::vtk::LabelHelper::writeLabel(const LabelHelper * self, QDomElement & xml, QString idKey, QString nameKey)
+void Q::vtk::LabelHelper::writeLabel(const LabelHelper * self, QDomElement & xml, QString nameKey, QString rgbaKey)
 {
 	QDomDocument dom = xml.ownerDocument();
 	QDomElement labelElem = dom.createElement(LABEL);
@@ -199,9 +198,9 @@ void Q::vtk::LabelHelper::writeLabel(const LabelHelper * self, QDomElement & xml
 	for (LabelIdToLabelName::const_iterator cit = self->labelIdToLabelName.cbegin();
 		cit != self->labelIdToLabelName.cend(); ++cit) {
 		vtkColor4ub rgba = self->namedColors->GetColor4ub(cit.value().toStdString());
-		QDomElement labelNameElem = dom.createElement(LABEL + cit.value());
-		labelNameElem.setAttribute(idKey, cit.key());
-		labelNameElem.setAttribute(nameKey, QString::fromStdString(self->namedColors->RGBAToHTMLColor(rgba)));
+		QDomElement labelNameElem = dom.createElement(LABEL + QString::number(cit.key()));
+		labelNameElem.setAttribute(rgbaKey, QString::fromStdString(self->namedColors->RGBAToHTMLColor(rgba)));
+		labelNameElem.setAttribute(nameKey, cit.value());
 		labelElem.appendChild(labelNameElem);
 	}
 }
