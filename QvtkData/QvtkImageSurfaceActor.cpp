@@ -4,8 +4,6 @@
 #include "QvtkPolyData.h"
 #include "vtkDiscreteMarchingCubesWithSmooth.h"
 // vtk
-#include <vtkDiscreteMarchingCubes.h>
-#include <vtkWindowedSincPolyDataFilter.h>
 #include <vtkClipPolyData.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>

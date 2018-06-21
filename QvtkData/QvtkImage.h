@@ -57,7 +57,7 @@ public:
 	};
 
 	template<typename PixelType>
-	static bool _VTKImageToITKImage(itk::Image<PixelType, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3]);
+	static bool _VTKImageToITKImage(itk::Image<PixelType, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4* userMatrix = nullptr);
 
 	template<typename PixelType>
 	static bool _ITKImageToVTKImage(vtkImageData* output, itk::Image<PixelType, 3>* input, double orientation[3], double position[3], double scale[3]);
