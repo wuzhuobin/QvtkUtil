@@ -419,7 +419,6 @@ void Viewer::SetMaxNoOfPeelings(int i)
 	this->UpdateDepthPeeling();
 }
 
-
 void Viewer::SetOcclusionRatio(double ratio)
 {
 	if (this->occlusionRatio == ratio) {
@@ -506,6 +505,7 @@ Viewer::Viewer(QWidget* parent)
 	this->cornerAnnotation->SetPickable(false);
 	this->cornerAnnotation->SetMaximumFontSize(10);
 	this->cornerAnnotation->SetMaximumLineHeight(0.3);
+	this->cornerAnnotation->SetVisibility(false);
 
 
 

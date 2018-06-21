@@ -607,11 +607,13 @@ template<typename PixelType>
 void Image::getITKImageData(itk::Image<PixelType, 3>* itkImage) const
 {
 	_VTKImageToITKImage(itkImage, this->getImageData(), this->getOrientation(), this->getPosition(), this->getScale());
+
 }
 
 template<typename PixelType>
-void Image::setITKImageData(itk::Image<PixelType, 3>* itkImage)
+void Image::copyITKImageData(itk::Image<PixelType, 3>* itkImage)
 {
+	typedef itk::Image<PixelType, 3> TImageType;
 	typedef itk::OrientImageFilter< TImageType, TImageType > OrientImageFilter;
 	typename OrientImageFilter::Pointer orientImageFilter =
 		OrientImageFilter::New();
@@ -619,7 +621,13 @@ void Image::setITKImageData(itk::Image<PixelType, 3>* itkImage)
 	orientImageFilter->UseImageDirectionOn();
 	orientImageFilter->SetDesiredCoordinateOrientation(itk::SpatialOrientation::ITK_COORDINATE_ORIENTATION_RAI);
 	orientImageFilter->Update();
-	ITKImageToVTKImage<PixelType>(this->getImageData(), orientImageFilter->GetOutput(), this->orientation, this->position, this->scale);
+	double orientation[3];
+	double position[3];
+	double scale[3];
+	_ITKImageToVTKImage(this->getImageData(), orientImageFilter->GetOutput(), orientation, position, scale);
+	this->setOrientation(orientation);
+	this->setPosition(position);
+	this->setScale(scale);
 }
 
 vtkImageData* Image::getImageData() const
@@ -905,16 +913,16 @@ template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<unsigned long, 3
 template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<long, 3>* itkImage) const;
 template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<float, 3>* itkImage) const;
 template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<double, 3>* itkImage) const;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned char, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<char, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned short, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<short, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned int, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<int, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned long, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<long, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<float, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<double, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned char, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<char, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned short, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<short, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned int, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<int, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned long, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<long, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<float, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<double, 3>* itkImage) ;
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<unsigned char, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3]);
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<char, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3]);
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<unsigned short, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3]);
@@ -925,7 +933,6 @@ template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<unsigned lon
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<long, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3]);
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<float, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3]);
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<double, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3]);
-
 template QVTKDATA_EXPORT bool Image::_ITKImageToVTKImage(vtkImageData *image, itk::Image<unsigned char, 3>* output,  double orientation[3],  double position[3],  double scale[3]);
 template QVTKDATA_EXPORT bool Image::_ITKImageToVTKImage(vtkImageData *image, itk::Image<char, 3>* output,  double orientation[3],  double position[3],  double scale[3]);
 template QVTKDATA_EXPORT bool Image::_ITKImageToVTKImage(vtkImageData *image, itk::Image<unsigned short, 3>* output,  double orientation[3],  double position[3],  double scale[3]);
