@@ -30,7 +30,7 @@ class QVTKDATA_EXPORT PolyDataSource : public AnnotationPolyData
 		Q_VTK_KEY(SourceType)
 	);
 public: 
-	enum ENUM_SOURCE_TYPE
+	typedef enum ENUM_SOURCE_TYPE
 	{
 		ARROW_SOURCE = 0,
 		CONE_SOURCE = 1,
@@ -40,7 +40,7 @@ public:
 		LINE_SOURCE = 5, 
 		REGULAR_POLYGON_SOURCE = 6,
 		SPHERE_SOURCE = 7
-	};
+	}ENUM_SOURCE_TYPE;
 	Q_ENUM(ENUM_SOURCE_TYPE);
 	PolyDataSource();
 	virtual ~PolyDataSource() override;

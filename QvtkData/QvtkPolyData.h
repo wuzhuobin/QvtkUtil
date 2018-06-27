@@ -20,14 +20,14 @@ class QVTKDATA_EXPORT PolyData: public DataSet
 	)
 public:
 	static const QString COLOR_RGB[3];
-	enum POLY_DATA_SUFFIX
+	typedef enum POLY_DATA_SUFFIX
 	{
 		UNKNOWN = 0,
 		VTK = 1,
 		VTP = 2,
 		STL = 3,
 		OBJ = 4
-	};
+	}POLY_DATA_SUFFIX;
 
 	PolyData();
 	virtual ~PolyData() override;

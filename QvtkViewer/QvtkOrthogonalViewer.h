@@ -24,11 +24,11 @@ namespace Q {
 
 			Ui::OrthogonalViewer* GetUi() { return this->ui; }
 
-			enum ORIENTATION {
+			typedef enum ORIENTATION {
 				Sagital = 0,
 				Coronal = 1,
 				Axial = 2
-			};
+			}ORIENTATION;
 			/**
 			* void SetAxialViewPlaneNormal
 			*

@@ -40,12 +40,14 @@ class vtkCamera;
 class vtkRenderWindow;
 class vtkRenderWindowInteractor;
 class vtkActor;
-
 /* This macro should be called after setupUi in the constructor of the subclasses */
-#define QVTK_INIT_VIEWER_MACRO() \
-	this->AddRenderer(this->firstRenderer); \
-    this->GetRenderWindow()->AddRenderer(this->firstRenderer); \
-    this->GetInteractor()->Initialize();
+//#define QVTK_INIT_VIEWER_MACRO() \
+//    this->GetRenderWindow()->AddRenderer(this->firstRenderer); \
+//    this->GetInteractor()->Initialize();
+//#define QVTK_INIT_VIEWER_MACRO() \
+//	this->AddRenderer(this->firstRenderer); \
+//    this->GetRenderWindow()->AddRenderer(this->firstRenderer); \
+//    this->GetInteractor()->Initialize();
 namespace Q {
 	namespace vtk {
 
@@ -54,6 +56,7 @@ namespace Q {
 			Q_OBJECT
 		public:
 			typedef QHash<Prop*, vtkRenderer*> PropToRenderer;
+			typedef QList<Viewer*> ViewerList;
 
 			/************************************************************************/
 			/* Static Functions
@@ -71,17 +74,17 @@ namespace Q {
 			static Viewer* getViewerOfInteractor(vtkInteractorStyle*);
 
 			/**
-			 * @brief void renderAllViewers
+			 * @brief void updateAllViewers
 			 *
 			 * Call Render() to all the viewers in the list
 			 *
 			 * @return void
 			 */
 
-			static void renderAllViewers();
+			static void updateAllViewers();
 
 			/**
-			 * @brief renderViewersByGroup
+			 * @brief updateViewersByGroup
 			 *
 			 * Call RendererWindow->Render() for all viewers with group input
 			 *
@@ -89,7 +92,7 @@ namespace Q {
 			 * @return void
 			 */
 
-			static void renderViewersByGroup(int group);
+			static void updateViewersByGroup(int group);
 
 
 			/**
@@ -111,11 +114,11 @@ namespace Q {
 			 * @return const QT_NAMESPACE::std::vector<QvtkABstractViewer*>
 			 */
 
-			static const QList<Viewer*> GetAllViewers() { return Viewer::s_viewersList; }
+			static const ViewerList getAllViewers() { return Viewer::viewerList; }
 
-			static unsigned int NumOfViewers() { return Viewer::s_viewersList.size(); }
+			static unsigned int numOfViewers() { return Viewer::viewerList.size(); }
 
-			static vtkCursor3D* GetSyncCursorSource();
+			static vtkCursor3D* getSyncCursorSource();
 			//{ return Viewer::s_cursorSource; }
 
 			/************************************************************************/
@@ -124,6 +127,7 @@ namespace Q {
 
 			explicit Viewer(QWidget* parent = nullptr);
 			virtual ~Viewer() override;
+			virtual void setupFirstRenderer(vtkRenderer *firstRenderer = nullptr);
 			/**
 			 * @brief vtkRenderer* AddRenderer
 			 *
@@ -138,7 +142,7 @@ namespace Q {
 			void RemoveRenderer(int);
 			void RemoveRenderer(vtkRenderer*);
 			const QList<vtkRenderer*> GetRenderers() { return this->renderers; }
-
+			//virtual vtkRenderer *getFirstRenderer() { return GetRenderers().first(); }
 
 			/**
 			 * @brief vtkCamera* GetActiveCamera
@@ -184,7 +188,7 @@ namespace Q {
 			 * @return void
 			 */
 
-			virtual void Render();
+			 //virtual void update();
 			virtual void RenderAllViewersOfThisClass();
 			/**
 			 * @brief AddProp
@@ -268,11 +272,11 @@ namespace Q {
 			 *
 			 * @return double*
 			 */
-			virtual double* GetCursorPosition();
-			virtual void GetCursorPosition(double pos[3]) {
-				pos[0] = this->GetCursorPosition()[0];
-				pos[1] = this->GetCursorPosition()[1];
-				pos[2] = this->GetCursorPosition()[2];
+			virtual const double* getCursorPosition() const;
+			virtual void getCursorPosition(double pos[3]) const {
+				pos[0] = this->getCursorPosition()[0];
+				pos[1] = this->getCursorPosition()[1];
+				pos[2] = this->getCursorPosition()[2];
 			}
 			/**
 			 * @brief GetCursorTransform
@@ -289,14 +293,14 @@ namespace Q {
 
 
 			/**
-			 * @brief void SetEnableCornerAnnotation
+			 * @brief void setEnableCornerAnnotation
 			 *
 			 * Show or hide the corner annotation text
 			 *
 			 * @param bool b True to show. False to hide
 			 * @return void
 			 */
-			virtual void SetEnableCornerAnnotation(bool b);
+			virtual void setEnableCornerAnnotation(bool b);
 
 			/**
 			 * @brief void SetCornerAnnotation
@@ -336,9 +340,7 @@ namespace Q {
 			 * @param group Put argument desc here
 			 * @return void
 			 */
-
-			virtual void SetViewerGroup(int group) { this->viewerGroup = group; }
-
+			virtual void setViewerGroup(int group) { this->viewerGroup = group; }
 			/**
 			 * @brief GetCursorPosition
 			 *
@@ -347,8 +349,7 @@ namespace Q {
 			 *
 			 * @return double*
 			 */
-
-			int GetViewerGroup() { return this->viewerGroup; }
+			int getViewerGroup() { return this->viewerGroup; }
 
 
 			public slots:
@@ -361,47 +362,34 @@ namespace Q {
 			 * @param bool
 			 * @return void
 			 */
-
 			virtual void SetCursorPosition(double x, double y, double z);
 			void SetCursorPosition(const double pos[3]) { this->SetCursorPosition(pos[0], pos[1], pos[2]); }
-
+		protected Q_SLOTS:
 			virtual void UpdateCursorPosition(double x, double y, double z);
 			void UpdateCursorPosition(const double xyz[3]) { this->UpdateCursorPosition(xyz[0], xyz[1], xyz[2]); }
 		signals:
 			void CursorPositionChanged(double x, double y, double z);
-
 		protected:
-
-			static QList<Viewer*> s_viewersList;
-
 			virtual void UpdateDepthPeeling();
-
-			//static vtkCursor3D*     s_cursorSource;
-
+			static ViewerList viewerList;
 			/* This vector holds all the renderers layers */
 			vtkCamera* camera;
-			vtkRenderer* firstRenderer;
+			//vtkRenderer* firstRenderer;
 			QList<vtkRenderer*> renderers;
-
-
 			/// Membership variables
 			CursorCallbackCommand* cursorCallback;
 			vtkCursor3D*  cursorSource;
 			vtkActor* cursorActor;
 			vtkCornerAnnotation* cornerAnnotation;
-
-
+			bool desyncCursorFlag;
 			int viewerGroup;
-
 			// prop's things. 
 			PropToRenderer* propToRenderer;
-
 			bool depthPeelingFlag;
 			int maxNoOfPeels;
 			double occlusionRatio;
-
-			bool desyncCursorFlag;
-
+		private:
+			Q_DISABLE_COPY(Viewer);
 		};
 
 	}

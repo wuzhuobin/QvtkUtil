@@ -20,7 +20,8 @@ Viewer2::Viewer2(QWidget * parent)
 	this->ui->setupUi(this);
 
     /* This macro is called the first thing */
-    QVTK_INIT_VIEWER_MACRO();
+    //QVTK_INIT_VIEWER_MACRO();
+	this->setupFirstRenderer();
 
     //////////////////////////////////////////////////////////////////////////
     /// Optional below, implemented according to requirements 

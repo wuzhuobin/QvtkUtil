@@ -25,7 +25,7 @@ public:
 	virtual void SetProjectionNormal(int normal);
 	virtual void SetProjectionPosition(double x, double y, double z);
 
-	virtual void DropSeed(double pos[3]) { this->DropSeed(pos[0], pos[1], pos[2]); }
+	virtual void DropSeed(const double pos[3]) { this->DropSeed(pos[0], pos[1], pos[2]); }
 	virtual void DropSeed(double x, double y, double z);
 	virtual void CleanAllSeed();
 	virtual void LoadSeedFromPolyData(vtkPolyData* polyData);

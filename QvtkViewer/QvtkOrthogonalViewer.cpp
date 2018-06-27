@@ -76,7 +76,7 @@ OrthogonalViewer::OrthogonalViewer(QWidget *parent)
 	this->righthandness = true;
 	this->orientation = Axial;
 
-    QVTK_INIT_VIEWER_MACRO();
+	this->setupFirstRenderer();
 
     this->InitializeStaticVariables();
 
@@ -132,8 +132,8 @@ void OrthogonalViewer::SetSagitalViewPlaneNormal(double e1, double e2, double e3
 	OrthogonalViewer dummy;
 	std::string classname = typeid(dummy).name();
 
-	for(QList<Viewer*>::const_iterator cit = s_viewersList.cbegin();
-			cit != s_viewersList.cend(); ++cit){
+	for(QList<Viewer*>::const_iterator cit = viewerList.cbegin();
+			cit != viewerList.cend(); ++cit){
 		if(classname == typeid(*cit).name())
 		{
 			static_cast<OrthogonalViewer*>(*cit)->UpdateCameraViewPlaneNormal();
@@ -141,7 +141,7 @@ void OrthogonalViewer::SetSagitalViewPlaneNormal(double e1, double e2, double e3
 	}
 
 //#ifdef _MSC_VER
-//	for each (Viewer *viewer in s_viewersList)
+//	for each (Viewer *viewer in viewerList)
 //	{
 //		if (classname == typeid(*viewer).name())
 //		{
@@ -151,7 +151,7 @@ void OrthogonalViewer::SetSagitalViewPlaneNormal(double e1, double e2, double e3
 //	}
 //#elif __linux
 //	typedef typename std::vector<Viewer *>:: IterType;
-//	for (IterType iter = s_viewersList.begin(); iter != s_viewersList.end(); iter++) {
+//	for (IterType iter = viewerList.begin(); iter != viewerList.end(); iter++) {
 //		Viewer *viewer = *iter;
 //		if (classname == typeid(*viewer).name()) {
 //			((OrthogonalViewer *)viewer)->UpdateCameraViewPlaneNormal();
@@ -307,7 +307,7 @@ void OrthogonalViewer::SetAxialViewPlaneNormal(double e1, double e2, double e3)
 	std::string classname = typeid(dummy).name();
 
 	typedef QList<Viewer *>::iterator IterType;
-	for (IterType iter = s_viewersList.begin(); iter != s_viewersList.end(); iter++) {
+	for (IterType iter = viewerList.begin(); iter != viewerList.end(); iter++) {
 		Viewer *viewer = *iter;
 		if (classname == typeid(*viewer).name()) {
 			((OrthogonalViewer *)viewer)->UpdateCameraViewPlaneNormal();

@@ -37,12 +37,12 @@ class QVTKDATA_EXPORT PlanarProp: public Prop
 public:
 	static const QString ORIGIN_AND_NORMAL_PREFIX[3];
 
-	enum ENUM_ORIENTATION {
+	typedef enum ENUM_ORIENTATION {
 		ORIENTATION_YZ = 0,
 		ORIENTATION_XZ = 1,
 		ORIENTATION_XY = 2,
 		ORIENTATION_OBLIQUE = 3
-	};
+	}ENUM_ORIENTATION;
 
     PlanarProp();
     virtual ~PlanarProp() override;

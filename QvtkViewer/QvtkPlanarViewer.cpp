@@ -228,9 +228,9 @@ void PlanarViewer::UpdateCursorPosition(double x, double y, double z)
 void PlanarViewer::IncrementSlice(bool sign)
 {
 	double pos[3] = {
-		GetCursorPosition()[0],
-		GetCursorPosition()[1],
-		GetCursorPosition()[2]
+		getCursorPosition()[0],
+		getCursorPosition()[1],
+		getCursorPosition()[2]
 	};
 	ORIENTATION orientation = static_cast<ORIENTATION>(GetOrientation());
 	switch (orientation)

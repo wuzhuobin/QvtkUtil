@@ -21,14 +21,14 @@
 //vtkTransform* NonCartesianViewer::s_nonCartesianCusorTransform = nullptr;
 namespace Q {
 namespace vtk{
-double* NonCartesianViewer::MapCoord2Cartesian(double* coord)
+const double* NonCartesianViewer::MapCoord2Cartesian(const double* coord) const 
 {
     return this->MapCoord2Cartesian(coord[0], coord[1], coord[2]);
 }
 
-double* NonCartesianViewer::MapCursor2Cartesian()
+const double* NonCartesianViewer::MapCursor2Cartesian() const
 {
-    return this->MapCoord2Cartesian(this->GetCursorPosition());
+    return this->MapCoord2Cartesian(this->getCursorPosition());
 }
 
 //vtkTransform* NonCartesianViewer::GetCursorTransform()

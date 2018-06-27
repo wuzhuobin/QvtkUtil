@@ -15,12 +15,12 @@ namespace Q {
 			)
 		public:
 
-			enum ENUM_ANNOTATION_STATUS
+			typedef enum ENUM_ANNOTATION_STATUS
 			{
 				NONE = 0,
 				HOVER = 1,
 				SELECTED = 2
-			};
+			}ENUM_ANNOTATION_STATUS;
 
 			AnnotationPolyData();
 			virtual ~AnnotationPolyData() override;

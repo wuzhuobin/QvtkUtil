@@ -35,9 +35,9 @@ namespace Q {
 			 * @param double e3 z-coordinate in viewer space
 			 * @return double*
 			 */
-			virtual double* MapCoord2Cartesian(double*);
-			virtual double* MapCoord2Cartesian(double e1, double e2, double e3) = 0;
-			virtual double* MapCursor2Cartesian();
+			virtual const double* MapCoord2Cartesian(const double*) const ;
+			virtual const double* MapCoord2Cartesian(double e1, double e2, double e3) const = 0;
+			virtual const double* MapCursor2Cartesian() const;
 			/**
 			 * @brief vtkTransform* GetCursorTransform
 			 *

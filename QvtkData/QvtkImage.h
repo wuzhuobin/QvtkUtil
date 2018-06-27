@@ -47,14 +47,14 @@ class QVTKDATA_EXPORT Image: public DataSet
 		Q_VTK_KEY(Level)
 	);
 public:
-	enum IMAGE_SUFFIX
+	typedef enum IMAGE_SUFFIX
 	{
 		UNKNOWN = 0,
 		VTK = 1,
 		VTI = 2,
 		NIFTI = 3,
 		DICOM = 4
-	};
+	}IMAGE_SUFFIX;
 
 	template<typename PixelType>
 	static bool _VTKImageToITKImage(itk::Image<PixelType, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4* userMatrix = nullptr);

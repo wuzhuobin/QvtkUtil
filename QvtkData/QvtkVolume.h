@@ -27,7 +27,7 @@ namespace Q {
 			/**
 			 * @brief preset property from slicer3D
 			 */
-			enum ENUM_PRESET
+			typedef enum ENUM_PRESET
 			{
 				NONE = 0,
 				CT_AAA,
@@ -56,7 +56,7 @@ namespace Q {
 				MRT2_BRAIN,
 				CBCT_DENTAL,
 				CBCT_DENTAL_PHANTOM
-			};
+			} ENUM_PRESET;
 			Q_ENUMS(ENUM_PRESET);
 			Volume();
 			virtual ~Volume() override;
