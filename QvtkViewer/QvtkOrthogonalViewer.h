@@ -19,15 +19,19 @@ namespace Q {
 		{
 			Q_OBJECT
 		public:
+			static const double ORIENTATION_YZ_NORMAL[3];
+			static const double ORIENTATION_XZ_NORMAL[3];
+			static const double ORIENTATION_XY_NORMAL[3];
 			explicit OrthogonalViewer(QWidget* parent = nullptr);
 			virtual ~OrthogonalViewer() override;
-
 			Ui::OrthogonalViewer* GetUi() { return this->ui; }
-
 			typedef enum ORIENTATION {
-				Sagital = 0,
-				Coronal = 1,
-				Axial = 2
+				ORIENTATION_YZ = 0,
+				ORIENTATION_XZ = 1,
+				ORIENTATION_XY = 2,
+				SAGITAL = 3,
+				CORONAL = 4,
+				AXIAL = 5
 			}ORIENTATION;
 			/**
 			* void SetAxialViewPlaneNormal
@@ -35,9 +39,9 @@ namespace Q {
 			* @brief
 			*
 			* Specify one of the three orthogonal directions.
-			* The axialViewPlaneNormal has a higher priority than sagitalViewPlaneNormal.
-			* Meaning specifying axialViewPlaneNormal can potentially change
-			* sagitalViewPlaneNormal if it is not orthogonal with the specified axialViewPlaneNormal.
+			* The GetAxiaViewPlaneNormal() has a higher priority than GetSagitalViewPlaneNormal().
+			* Meaning specifying GetAxiaViewPlaneNormal() can potentially change
+			* GetSagitalViewPlaneNormal() if it is not orthogonal with the specified GetAxiaViewPlaneNormal().
 			*
 			*
 			* @param double e1 x-component of desired view plane normal
@@ -45,33 +49,14 @@ namespace Q {
 			* @param double e3 z-component of desired view plane normal
 			* @return void
 			*/
-			static void SetAxialViewPlaneNormal(double*);
-			static void SetAxialViewPlaneNormal(double e1, double e2, double e3);
-			static void SetSagitalViewPlaneNormal(double*);
-			static void SetSagitalViewPlaneNormal(double e1, double e2, double e3);
-			static const double* GetAxiaViewPlaneNormal();
-			static const double* GetSagitalViewPlaneNormal();
-			static const double* GetCoronalViewPlaneNormal();
-			/**
-			* void UpdateCameraViewPlaneNormal
-			*
-			* @brief
-			*
-			* Update the view plane normal after the orientation is set
-			*
-			* @return void
-			*/
-			virtual void UpdateCameraViewPlaneNormal();
-			/**
-			* void UpdateViewUp
-			*
-			* @brief
-			*
-			* Inherit this method if you wish to force the view up to custom orientation
-			*
-			* @return void
-			*/
-			virtual void UpdateViewUp();
+			void SetAxialViewPlaneNormal(double*);
+			void SetAxialViewPlaneNormal(double e1, double e2, double e3);
+			void SetSagitalViewPlaneNormal(double*);
+			void SetSagitalViewPlaneNormal(double e1, double e2, double e3);
+			const double* GetAxiaViewPlaneNormal();
+			const double* GetSagitalViewPlaneNormal();
+			const double* GetCoronalViewPlaneNormal();
+
 			/**
 			* @brief GetRenderWindow
 			*
@@ -80,8 +65,7 @@ namespace Q {
 			*
 			* @return vtkGenericOpenGLRenderWindow*
 			*/
-			virtual vtkRenderWindow* GetRenderWindow() override;
-			//virtual vtkGenericOpenGLRenderWindow* GetGenericOpenGLRenderWindow();
+			virtual vtkRenderWindow* getRenderWindow() override;
 			/**
 			* @brief GetInteractor
 			*
@@ -91,7 +75,6 @@ namespace Q {
 			* @return QVTKInteractor*
 			*/
 			virtual vtkRenderWindowInteractor* GetInteractor() override;
-			//virtual QVTKInteractor* GetQVTKInteractor();
 			/**
 			* void SetRighthandness
 			*
@@ -111,26 +94,50 @@ namespace Q {
 			*/
 			virtual void SetRighthandness(bool right);
 			virtual bool GetRighthandness();
-			public slots:
-			virtual void SetOrientation(int orientation);
-			virtual void SetOrientationToAxial() { SetOrientation(Axial); }
-			virtual void SetOrientationToCoronal() { SetOrientation(Coronal); }
-			virtual void SetOrientationToSagital() { SetOrientation(Sagital); }
-			virtual int  GetOrientation();
-			void slotPushBtnMaximize();
-			void slotpushBtnNormal();
-			void slotPushBtnDropDownMenu();
-		signals:
+			virtual void setSyncViewPlaneNormalFlag(bool flag);
+			virtual bool getSynViewPlaneNormalFlag() const { return this->syncViewPlaneNormalFlag; }
+			virtual int  getOrientation() const { return this->orientation; }
+			const double* getCurrentPlaneNormal()const { return this->currentPlaneNormal; }
+		public Q_SLOTS:
+			virtual void setOrientation(int orientation);
+			void SetOrientationToAxial() { this->setOrientation(AXIAL); }
+			void SetOrientationToXY() { this->setOrientation(ORIENTATION_XY); }
+			void SetOrientationToCoronal() { this->setOrientation(CORONAL); }
+			void SetOrientationToXZ() { this->setOrientation(ORIENTATION_XZ); }
+			void SetOrientationToSagital() { this->setOrientation(SAGITAL); }
+			void setOrientationToYZ() { this->setOrientation(ORIENTATION_YZ); }
+		Q_SIGNALS:
 			void OrientationChanged(int orientation);
 		protected:
-			static void InitializeStaticVariables();
-			bool righthandness; // default True
-			int orientation;
+			/**
+			* void UpdateCameraViewPlaneNormal
+			*
+			* @brief
+			*
+			* Update the view plane normal after the orientation is set
+			*
+			* @return void
+			*/
+			const double* UpdateCameraViewPlaneNormal();
+			/**
+			* void UpdateViewUp
+			*
+			* @brief
+			*
+			* Inherit this method if you wish to force the view up to custom orientation
+			*
+			* @return void
+			*/
+			virtual double* UpdateViewUp();
 			Ui::OrthogonalViewer* ui;
-			static double axialViewPlaneNormal[3];
-			static double sagitalViewPlaneNormal[3];
-			static double coronalViewPlaneNormal[3];
-			static bool initializeFlag;
+		private:
+			int orientation;
+			bool syncViewPlaneNormalFlag;
+			bool righthandness; // default True
+			double sagitalViewPlaneNormal[3];
+			double coronalViewPlaneNormal[3];
+			double axialViewPlaneNormal[3];
+			double currentPlaneNormal[3];
 		};
 	}
 }

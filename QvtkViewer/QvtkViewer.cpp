@@ -31,7 +31,7 @@ namespace Q {
 				void *callData) VTK_OVERRIDE {
 				Viewer* self = static_cast<Viewer*>(this->ClientData);
 				vtkCursor3D* cursor = static_cast<vtkCursor3D*>(caller);
-				if (self->GetCursorDesyncFlag() && cursor != self->GetCursorSource()) {
+				if (!self->GetCursorSyncFlag() && cursor != self->GetCursorSource()) {
 					return;
 				}
 				double* xyz = reinterpret_cast<double*>(callData);
@@ -104,18 +104,18 @@ namespace Q {
 			//}
 		}
 
-		vtkRenderer* Viewer::AddRenderer(int layer)
+		vtkRenderer* Viewer::addRenderer(int layer)
 		{
 			vtkRenderer* ren = vtkRenderer::New();
 			//#TODO: Expand number of layer of renderwindo if layer > GetNumberofLayer()
-			if (layer >= this->GetRenderWindow()->GetNumberOfLayers()) {
-				this->GetRenderWindow()->SetNumberOfLayers(layer + 1);
+			if (layer >= this->getRenderWindow()->GetNumberOfLayers()) {
+				this->getRenderWindow()->SetNumberOfLayers(layer + 1);
 			}
-			AddRenderer(ren, layer);
+			addRenderer(ren, layer);
 			return ren;
 		}
 
-		void Viewer::AddRenderer(vtkRenderer* ren, int layer)
+		void Viewer::addRenderer(vtkRenderer* ren, int layer)
 		{
 			if (layer >= 0)
 			{
@@ -135,15 +135,15 @@ namespace Q {
 			this->renderers.push_back(ren);
 
 			/* Add to renderwindow if it exist*/
-			if (this->GetRenderWindow())
+			if (this->getRenderWindow())
 			{
-				if (this->GetRenderWindow()->GetNumberOfLayersMaxValue() < ren->GetLayer())
-					this->GetRenderWindow()->SetNumberOfLayers(ren->GetLayer());
-				this->GetRenderWindow()->AddRenderer(ren);
+				if (this->getRenderWindow()->GetNumberOfLayersMaxValue() < ren->GetLayer())
+					this->getRenderWindow()->SetNumberOfLayers(ren->GetLayer());
+				this->getRenderWindow()->AddRenderer(ren);
 			}
 		}
 
-		void Viewer::RemoveRenderer(int index)
+		void Viewer::removeRenderer(int index)
 		{
 			if (index < 0 || index > this->renderers.size()) {
 				qWarning() << "Renderer requested to delete doesn't exist.";
@@ -152,15 +152,15 @@ namespace Q {
 			vtkRenderer* ren = this->renderers[index];
 			this->renderers.removeAt(index);
 			RemoveAllProp(ren);
-			this->GetRenderWindow()->RemoveRenderer(ren);
+			this->getRenderWindow()->RemoveRenderer(ren);
 			ren->Delete();
 			qWarning() << "Renderer requested to delete doesn't exist.";
 		}
 
-		void Viewer::RemoveRenderer(vtkRenderer* ren)
+		void Viewer::removeRenderer(vtkRenderer* ren)
 		{
 			int index = this->renderers.indexOf(ren);
-			RemoveRenderer(index);
+			removeRenderer(index);
 		}
 
 		void Viewer::AddProp(Prop * prop)
@@ -245,14 +245,14 @@ namespace Q {
 			*/
 		}
 
-		void Viewer::SetCursorDesyncFlag(bool desync)
+		void Viewer::SetCursorDesyncFlag(bool sync)
 		{
-			if (this->desyncCursorFlag == desync) {
+			if (this->syncCursorFlag == sync) {
 				return;
 			}
 
-			this->desyncCursorFlag = desync;
-			if (desync) {
+			this->syncCursorFlag = sync;
+			if (!sync) {
 
 				this->cursorActor->GetMapper()->SetInputConnection(
 					this->GetCursorSource()->GetOutputPort());
@@ -274,7 +274,7 @@ namespace Q {
 				return;
 			}
 			double xyz[3] = { x, y, z };
-			if (this->desyncCursorFlag) {
+			if (!this->syncCursorFlag) {
 				this->cursorSource->SetFocalPoint(xyz);
 				// invoke event for synchronization
 				this->cursorSource->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
@@ -292,7 +292,7 @@ namespace Q {
 					 the pointer directly!
 			*/
 			//return this->GetCursorTransform()->TransformPoint(0, 0, 0);
-			if (this->desyncCursorFlag) {
+			if (!this->syncCursorFlag) {
 				return this->cursorSource->GetFocalPoint();
 			}
 			else {
@@ -304,17 +304,17 @@ namespace Q {
 		void Viewer::UpdateDepthPeeling()
 		{
 			// 1. Use a render window with alpha bits (as initial value is 0 (false)):
-			this->GetRenderWindow()->SetAlphaBitPlanes(this->depthPeelingFlag);
+			this->getRenderWindow()->SetAlphaBitPlanes(this->depthPeelingFlag);
 			if (this->depthPeelingFlag) {
 				// 2. Force to not pick a framebuffer with a multisample buffer
 				// (as initial value is 8):
-				this->GetRenderWindow()->SetMultiSamples(0);
+				this->getRenderWindow()->SetMultiSamples(0);
 			}
 			else {
-				this->GetRenderWindow()->SetMultiSamples(8);
+				this->getRenderWindow()->SetMultiSamples(8);
 			}
 
-			foreach(vtkRenderer* renderer, this->renderers) {
+			for(vtkRenderer *renderer: this->renderers){
 				// 3. Choose to use depth peeling (if supported) (initial vCurrentChangedEventalue is 0 (false)):
 				renderer->SetUseDepthPeeling(this->depthPeelingFlag);
 				if (!this->depthPeelingFlag) {
@@ -333,15 +333,15 @@ namespace Q {
 			return this->camera;
 		}
 
-		void Viewer::ResetCamera()
+		void Viewer::resetCamera()
 		{
 			qCritical() << "it not working well, camera is always defined by the last renderer";
 			qCritical() << "layer must be specified.";
 		}
 
-		void Viewer::ResetCamera(int layer /*= -1*/)
+		void Viewer::resetCamera(int layer /*= -1*/)
 		{
-			foreach(vtkRenderer* ren, this->renderers)
+			for(vtkRenderer *ren: this->renderers)
 			{
 				if (layer >= 0)
 				{
@@ -355,9 +355,9 @@ namespace Q {
 
 		}
 
-		void Viewer::ResetCameraClippingRange(int layer /*= -1*/)
+		void Viewer::resetCameraClippingRange(int layer /*= -1*/)
 		{
-			foreach(vtkRenderer* ren, this->renderers)
+			for(vtkRenderer *ren: this->renderers)
 			{
 				if (layer >= 0)
 				{
@@ -370,7 +370,7 @@ namespace Q {
 			}
 		}
 
-		void Viewer::ResetCameraClippingRange()
+		void Viewer::resetCameraClippingRange()
 		{
 			qCritical() << "it not working well, camera is always defined by the last renderer";
 			qCritical() << "layer must be specified.";
@@ -381,13 +381,19 @@ namespace Q {
 		//	this->GetRenderWindow()->Render();
 		//}
 
+		void Q::vtk::Viewer::update()
+		{
+			this->getRenderWindow()->Render();
+			QWidget::update();
+		}
+
 		void Viewer::RenderAllViewersOfThisClass()
 		{
 			typedef QList<Viewer *>::iterator IterType;
 			for (IterType iter = this->viewerList.begin(); iter != this->viewerList.end(); iter++) {
 				Viewer *viewer = *iter;
 				if (this->metaObject()->className() == viewer->metaObject()->className()) {
-					viewer->GetRenderWindow()->Render();
+					viewer->getRenderWindow()->Render();
 				}
 			}
 		}
@@ -429,8 +435,8 @@ namespace Q {
 				QString text = format.arg(x, 0, 'f', 2).arg(y, 0, 'f', 2).arg(z, 0, 'f', 2);
 				this->GetCornerAnnotation()->SetText(1, text.toStdString().c_str());
 			}
-			//this->update();
-			this->GetRenderWindow()->Render();
+			this->update();
+			//this->getRenderWindow()->Render();
 		}
 
 		void Viewer::SetEnableDepthPeeling(bool flag)
@@ -451,7 +457,7 @@ namespace Q {
 			:QWidget(parent)
 		{
 			Viewer::viewerList.push_back(this);
-			this->desyncCursorFlag = false;
+			this->syncCursorFlag = true;
 			this->cursorCallback = CursorCallbackCommand::New();
 			this->cursorCallback->SetClientData(this);
 			connect(this, &Viewer::CursorPositionChanged,
@@ -515,13 +521,13 @@ namespace Q {
 		}
 		void Viewer::setupFirstRenderer(vtkRenderer *firstRenderer) {
 			if (firstRenderer == nullptr) {
-				firstRenderer = vtkRenderer::New();
+				firstRenderer = this->addRenderer(0);
 			}
 			firstRenderer->AddActor(this->cursorActor);
 			firstRenderer->AddActor(this->cornerAnnotation);
 			firstRenderer->SetActiveCamera(this->camera);
-			this->AddRenderer(firstRenderer);
-			this->GetRenderWindow()->AddRenderer(firstRenderer);
+			//this->addRenderer(firstRenderer);
+			//this->getRenderWindow()->addRenderer(firstRenderer);
 			this->GetInteractor()->Initialize();
 		}
 	}

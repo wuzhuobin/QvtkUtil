@@ -47,9 +47,9 @@ void QvtkSceneExample::on_action_New_triggered(bool checked)
 	for (int i = 0; i < 5; ++i) {
 		this->m_viewer->AddProp(this->m_actors[i]);
 	}
-	this->m_viewer->ResetCamera(0);
+	this->m_viewer->resetCamera(0);
 	//this->m_viewer->Render();
-	this->m_viewer->ResetCameraClippingRange(0);
-	this->m_viewer->Render();
+	this->m_viewer->resetCameraClippingRange(0);
+	this->m_viewer->update();
 	qDebug() << __FUNCTION__;
 }

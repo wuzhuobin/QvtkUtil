@@ -318,7 +318,7 @@ void DataSet::setOrientation(double x, double y, double z)
 
 	//foreach(Prop* prop, *referenceProps)
 	//{
-	//	prop->getProp()->SetOrientation(
+	//	prop->getProp()->setOrientation(
 	//		this->orientation[0],
 	//		this->orientation[1],
 	//		this->orientation[2]

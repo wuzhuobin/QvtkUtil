@@ -20,11 +20,10 @@
 
 #ifndef __QVTK_PLANAR_PROP_H__
 #define __QVTK_PLANAR_PROP_H__
-
 #include "QvtkProp.h"
+#pragma once
 namespace Q {
 namespace vtk{
-
 class QVTKDATA_EXPORT PlanarProp: public Prop
 {
 	Q_OBJECT;
@@ -56,7 +55,7 @@ public:
 
 	virtual void propMatrixUpdate() override;
 
-public slots:
+public Q_SLOTS:
 
 	virtual void reset() override;
 

@@ -18,9 +18,9 @@ namespace Q {
 			vtkRenderer* GetAnnotationRenderer() { return this->renderers[1]; }
 			virtual bool getUpdateAxesFlag() const { return this->updateAxesFlag; }
 			virtual bool getOrientationTextFlag() const { return this->orientationTextFlag; }
-			public slots:
+			public Q_SLOTS:
 			virtual void IncrementSlice(bool sign);
-			virtual void SetOrientation(int orientation) override;
+			virtual void setOrientation(int orientation) override;
 			virtual void setUpdateAxesFlag(bool flag);
 			void updateAxesFlagOn() { this->setUpdateAxesFlag(true); }
 			void updateAxesFlagOff() { this->setUpdateAxesFlag(false); }
@@ -29,8 +29,7 @@ namespace Q {
 			void orientationTextFlagOff() { this->setOrientationTextFlag(false); }
 			virtual void UpdateCursorPosition(double x, double y, double z) override;
 		protected:
-			// fix to itksnap
-			virtual void UpdateCameraViewPlaneNormal() override;
+			virtual double* UpdateViewUp() override;
 			vtkTextActor* orientationActor[4];
 			vtkAxisActor2D* verticalAxis;
 			vtkAxisActor2D* horizontalAxis;

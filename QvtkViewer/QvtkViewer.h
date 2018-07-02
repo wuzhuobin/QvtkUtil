@@ -14,7 +14,6 @@
  *
  * \note
 */
-
 #ifndef __QVTK_VIEWER_H__
 #define __QVTK_VIEWER_H__
 #pragma once
@@ -30,7 +29,6 @@ namespace Q {
 #include <QWidget>
 template <class Key, class T>
 class QHash;
-
 // vtk
 class vtkRenderer;
 class vtkInteractorStyle;
@@ -40,17 +38,8 @@ class vtkCamera;
 class vtkRenderWindow;
 class vtkRenderWindowInteractor;
 class vtkActor;
-/* This macro should be called after setupUi in the constructor of the subclasses */
-//#define QVTK_INIT_VIEWER_MACRO() \
-//    this->GetRenderWindow()->AddRenderer(this->firstRenderer); \
-//    this->GetInteractor()->Initialize();
-//#define QVTK_INIT_VIEWER_MACRO() \
-//	this->AddRenderer(this->firstRenderer); \
-//    this->GetRenderWindow()->AddRenderer(this->firstRenderer); \
-//    this->GetInteractor()->Initialize();
 namespace Q {
 	namespace vtk {
-
 		class QVTKVIEWER_EXPORT Viewer : public QWidget
 		{
 			Q_OBJECT
@@ -70,7 +59,6 @@ namespace Q {
 			 * @param vtkInteractorStyle *
 			 * @return Viewer*
 			 */
-
 			static Viewer* getViewerOfInteractor(vtkInteractorStyle*);
 
 			/**
@@ -129,18 +117,18 @@ namespace Q {
 			virtual ~Viewer() override;
 			virtual void setupFirstRenderer(vtkRenderer *firstRenderer = nullptr);
 			/**
-			 * @brief vtkRenderer* AddRenderer
+			 * @brief vtkRenderer* addRenderer
 			 *
 			 * Add a vtkRenderer to the vtkRenderWindow of this viewer
 			 *
 			 * @param int layer
 			 * @return vtkRenderer*
 			 */
-			vtkRenderer* AddRenderer(int layer = -1);
-			void         AddRenderer(vtkRenderer*, int layer = -1);
+			vtkRenderer* addRenderer(int layer = -1);
+			void         addRenderer(vtkRenderer*, int layer = -1);
 
-			void RemoveRenderer(int);
-			void RemoveRenderer(vtkRenderer*);
+			void removeRenderer(int);
+			void removeRenderer(vtkRenderer*);
 			const QList<vtkRenderer*> GetRenderers() { return this->renderers; }
 			//virtual vtkRenderer *getFirstRenderer() { return GetRenderers().first(); }
 
@@ -155,7 +143,7 @@ namespace Q {
 			vtkCamera* GetActiveCamera();
 
 			/**
-			 * @brief void ResetCamera
+			 * @brief void resetCamera
 			 *
 			 * Reset camera of this viewer. Specify layer if necessary.
 			 *
@@ -163,12 +151,12 @@ namespace Q {
 			 * @return void
 			 */
 
-			virtual void ResetCamera();
-			virtual void ResetCamera(int layer);
+			virtual void resetCamera();
+			virtual void resetCamera(int layer);
 
 
 			/**
-			 * @brief void ResetCameraClippingRange
+			 * @brief void resetCameraClippingRange
 			 *
 			 * Reset the clipping range of this viewer. Specify layer if necessary
 			 *
@@ -176,8 +164,8 @@ namespace Q {
 			 * @return void
 			 */
 
-			virtual void ResetCameraClippingRange();
-			virtual void ResetCameraClippingRange(int layer);
+			virtual void resetCameraClippingRange();
+			virtual void resetCameraClippingRange(int layer);
 
 
 			/**
@@ -188,7 +176,7 @@ namespace Q {
 			 * @return void
 			 */
 
-			 //virtual void update();
+			virtual void update();
 			virtual void RenderAllViewersOfThisClass();
 			/**
 			 * @brief AddProp
@@ -248,7 +236,7 @@ namespace Q {
 			 * @return void
 			 */
 			 //////////////////////////////////////////////////////////////////////////
-			virtual vtkRenderWindow* GetRenderWindow() = 0;
+			virtual vtkRenderWindow* getRenderWindow() = 0;
 			virtual vtkRenderWindowInteractor* GetInteractor() = 0;
 			//////////////////////////////////////////////////////////////////////////
 			virtual void SetCursorAlwaysFaceCamera(bool);
@@ -263,7 +251,7 @@ namespace Q {
 			 */
 
 			virtual void SetCursorDesyncFlag(bool desync);
-			virtual bool GetCursorDesyncFlag() { return this->desyncCursorFlag; }
+			virtual bool GetCursorSyncFlag() { return this->syncCursorFlag; }
 
 			/**
 			 * @brief GetCursorPosition
@@ -381,7 +369,7 @@ namespace Q {
 			vtkCursor3D*  cursorSource;
 			vtkActor* cursorActor;
 			vtkCornerAnnotation* cornerAnnotation;
-			bool desyncCursorFlag;
+			bool syncCursorFlag;
 			int viewerGroup;
 			// prop's things. 
 			PropToRenderer* propToRenderer;

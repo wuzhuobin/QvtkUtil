@@ -43,7 +43,7 @@ namespace Q {
 			 *
 			 * @return vtkGenericOpenGLRenderWindow*
 			 */
-			virtual vtkRenderWindow* GetRenderWindow() override;
+			virtual vtkRenderWindow* getRenderWindow() override;
 			virtual vtkGenericOpenGLRenderWindow* GetGenericOpenGLRenderWindow();
 			/**
 			 * @brief GetInteractor

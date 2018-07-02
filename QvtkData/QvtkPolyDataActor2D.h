@@ -37,9 +37,9 @@ public slots:
 	virtual void reset() override;
 
 	virtual void setPlanarNormal(double x, double y, double z) override;
-
+	void setPlanarNormal(const double normal[3]) { this->setPlanarNormal(normal[0], normal[1], normal[2]); }
 	virtual void setPlanarOrigin(double x, double y, double z) override;
-
+	void setPlanarOrigin(const double origin[3]) { this->setPlanarOrigin(origin[0], origin[1], origin[2]); }
 	virtual void setDisplayRegion(const double region[6]) override;
 
 	virtual void setRenderDataSet(DataSet* data = nullptr) override;

@@ -20,7 +20,6 @@ namespace Q {
 			void orientationMarkerWidgetFlagOn() { this->setOrientationMarkerWidgetFlag(true); }
 			void orientationMarkerWidgetFlagOff() { this->setOrientationMarkerWidgetFlag(false); }
 		protected:
-			virtual void UpdateCameraViewPlaneNormal() override;
 			bool orientationMarkerWidgetFlag;
 			vtkOrientationMarkerWidget *orientationMarkerWidget;
 			vtkAxesActor *axesActor;

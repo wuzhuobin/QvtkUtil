@@ -5,7 +5,7 @@
 #include <vtkPolyData.h>
 #include <vtkPolyDataWriter.h>
 #include <vtkNIFTIImageReader.h>
-#include <vtkDisc>
+#include <vtkFlyingEdges3D.h>
 // std
 #include <ctime>
 int main(int argc, char **argv) {

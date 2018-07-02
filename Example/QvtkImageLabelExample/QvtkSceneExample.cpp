@@ -63,9 +63,9 @@ void QvtkSceneExample::on_action_New2_triggered(bool checked)
 	this->m_imageLabelSlice->setRenderDataSet(this->m_label);
 	this->m_viewer->AddProp(this->m_imageLabelSlice);
 	this->m_viewer->SetOrientationToAxial();
-	this->m_viewer->ResetCamera(1);
-	this->m_viewer->ResetCameraClippingRange(1);
-	this->m_viewer->Render();
+	this->m_viewer->resetCamera(1);
+	this->m_viewer->resetCameraClippingRange(1);
+	this->m_viewer->update();
 }
 
 void QvtkSceneExample::on_action_New_triggered(bool checked)
@@ -75,7 +75,7 @@ void QvtkSceneExample::on_action_New_triggered(bool checked)
 	this->m_imageSlice->setRenderDataSet(this->m_image);
 	this->m_viewer->AddProp(this->m_imageSlice);
 	this->m_viewer->SetOrientationToAxial();
-	this->m_viewer->ResetCamera(0);
-	this->m_viewer->ResetCameraClippingRange(0);
-	this->m_viewer->Render();
+	this->m_viewer->resetCamera(0);
+	this->m_viewer->resetCameraClippingRange(0);
+	this->m_viewer->update();
 }

@@ -26,7 +26,7 @@ Viewer2::Viewer2(QWidget * parent)
     //////////////////////////////////////////////////////////////////////////
     /// Optional below, implemented according to requirements 
 	//this->GetRenderWindow()->SetNumberOfLayers(2);
- //   vtkRenderer* ren = this->AddRenderer();
+ //   vtkRenderer* ren = this->addRenderer();
  //   ren->SetLayer(1);
 }
 
@@ -35,7 +35,7 @@ Viewer2::~Viewer2()
 	delete this->ui;
 }
 
-vtkRenderWindow * Viewer2::GetRenderWindow()
+vtkRenderWindow * Viewer2::getRenderWindow()
 {
 	return GetGenericOpenGLRenderWindow();
 }
