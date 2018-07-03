@@ -31,9 +31,9 @@ QvtkSceneExample::QvtkSceneExample(QWidget * parent)
 
 QvtkSceneExample::~QvtkSceneExample()
 {
-	//this->m_viewer->RemoveAllProp();
+	//this->m_viewer->removeAllProp();
 	for (int i = 0; i < 5; ++i) {
-		//this->m_viewer->RemoveProp(this->m_actors[i]);
+		//this->m_viewer->removeProp(this->m_actors[i]);
 		this->m_actors[i]->setRenderDataSet(nullptr);
 		delete this->m_actors[i];
 		delete this->m_sources[i];
@@ -45,7 +45,7 @@ QvtkSceneExample::~QvtkSceneExample()
 void QvtkSceneExample::on_action_New_triggered(bool checked)
 {
 	for (int i = 0; i < 5; ++i) {
-		this->m_viewer->AddProp(this->m_actors[i]);
+		this->m_viewer->addProp(this->m_actors[i]);
 	}
 	this->m_viewer->resetCamera(0);
 	//this->m_viewer->Render();

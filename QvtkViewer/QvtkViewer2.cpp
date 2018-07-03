@@ -45,7 +45,7 @@ vtkGenericOpenGLRenderWindow *Viewer2::GetGenericOpenGLRenderWindow()
 	return this->ui->qvtkWidget->GetRenderWindow();
 }
 
-vtkRenderWindowInteractor* Viewer2::GetInteractor()
+vtkRenderWindowInteractor* Viewer2::getInteractor()
 {
 	return GetQVTKInteractor();
 }

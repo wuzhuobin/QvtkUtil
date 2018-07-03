@@ -15,11 +15,13 @@ namespace Q {
 		public:
 			explicit PlanarViewer(QWidget* parent = nullptr);
 			virtual ~PlanarViewer() override;
-			vtkRenderer* GetAnnotationRenderer() { return this->renderers[1]; }
+			vtkRenderer* GetAnnotationRenderer() { return this->getRenderers()[1]; }
+			virtual double getSliceThickness() const { return this->sliceThickness; }
 			virtual bool getUpdateAxesFlag() const { return this->updateAxesFlag; }
 			virtual bool getOrientationTextFlag() const { return this->orientationTextFlag; }
-			public Q_SLOTS:
+		public Q_SLOTS:
 			virtual void IncrementSlice(bool sign);
+			virtual void setSliceThickness(double sliceThickness) { this->sliceThickness = sliceThickness; }
 			virtual void setOrientation(int orientation) override;
 			virtual void setUpdateAxesFlag(bool flag);
 			void updateAxesFlagOn() { this->setUpdateAxesFlag(true); }
@@ -27,14 +29,18 @@ namespace Q {
 			virtual void setOrientationTextFlag(bool flag);
 			void orientationTextFlagOn() { this->setOrientationTextFlag(true); }
 			void orientationTextFlagOff() { this->setOrientationTextFlag(false); }
-			virtual void UpdateCursorPosition(double x, double y, double z) override;
 		protected:
 			virtual double* UpdateViewUp() override;
+			double sliceThickness;
 			vtkTextActor* orientationActor[4];
 			vtkAxisActor2D* verticalAxis;
 			vtkAxisActor2D* horizontalAxis;
 			bool updateAxesFlag;
 			bool orientationTextFlag;
+		protected Q_SLOTS:
+			virtual void updateCursorPosition(double x, double y, double z) override;
+		private:
+			Q_DISABLE_COPY(PlanarViewer);
 		};
 	}
 }

@@ -26,9 +26,9 @@ namespace Q {
 			virtual void Execute(vtkObject *caller, unsigned long eventId,
 				void *callData) override {
 				// Do not process if any modifiers are ON
-				if (this->viewer->GetInteractor()->GetShiftKey() ||
-					this->viewer->GetInteractor()->GetControlKey() ||
-					this->viewer->GetInteractor()->GetAltKey())
+				if (this->viewer->getInteractor()->GetShiftKey() ||
+					this->viewer->getInteractor()->GetControlKey() ||
+					this->viewer->getInteractor()->GetAltKey())
 				{
 					return;
 				}
@@ -95,13 +95,15 @@ namespace Q {
 		PlanarViewer::PlanarViewer(QWidget * parent)
 			:OrthogonalViewer(parent)
 		{
-			this->camera->ParallelProjectionOn();
-			vtkRenderer* ren = this->addRenderer(1);
-			this->GetRenderers()[0]->RemoveActor(this->cursorActor);
-			this->GetRenderers()[0]->RemoveActor(this->cornerAnnotation);
-			this->GetAnnotationRenderer()->AddActor(this->cursorActor);
-			this->GetAnnotationRenderer()->AddActor(this->cornerAnnotation);
 			this->orientationTextFlag = false;
+			this->updateAxesFlag = false;
+			this->sliceThickness = 1;
+			this->getActiveCamera()->ParallelProjectionOn();
+			vtkRenderer* ren = this->addRenderer(1);
+			this->getRenderers()[0]->RemoveActor(this->getCursorActor());
+			this->getRenderers()[0]->RemoveActor(this->getCornerAnnotation());
+			this->GetAnnotationRenderer()->AddActor(this->getCursorActor());
+			this->GetAnnotationRenderer()->AddActor(this->getCornerAnnotation());
 			for (int i = 0; i < 4; i++)
 			{
 				this->orientationActor[i] = vtkTextActor::New();
@@ -121,7 +123,6 @@ namespace Q {
 			// axisActor;
 			this->setOrientationTextFlag(this->orientationTextFlag);
 			////////////////////////////////////////////////////
-			this->updateAxesFlag = false;
 			this->verticalAxis = vtkAxisActor2D::New();
 			this->verticalAxis->SetNumberOfMinorTicks(0);
 			this->verticalAxis->RulerModeOff();
@@ -147,15 +148,15 @@ namespace Q {
 			this->setUpdateAxesFlag(this->updateAxesFlag);
 			QvtkPlanarViewerAxisCallback* axisCallback = QvtkPlanarViewerAxisCallback::New();
 			axisCallback->viewer = this;
-			this->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent, axisCallback);
+			this->getActiveCamera()->AddObserver(vtkCommand::ModifiedEvent, axisCallback);
 			axisCallback->Delete();
 			PlanarViewerScrollCallback* callback = PlanarViewerScrollCallback::New();
 			callback->viewer = this;
-			this->GetInteractor()->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback, 0.6);
-			this->GetInteractor()->AddObserver(vtkCommand::MouseWheelForwardEvent, callback, 0.6);
+			this->getInteractor()->AddObserver(vtkCommand::MouseWheelBackwardEvent, callback, 0.6);
+			this->getInteractor()->AddObserver(vtkCommand::MouseWheelForwardEvent, callback, 0.6);
 			callback->Delete();
-			this->setSyncViewPlaneNormalFlag(false);
-			this->SetAxialViewPlaneNormal(0, 0, -1);
+			this->setViewPlaneNormalSyncFlag(false);
+			this->setAxialViewPlaneNormal(0, 0, -1);
 		}
 		PlanarViewer::~PlanarViewer()
 		{
@@ -179,7 +180,7 @@ namespace Q {
 				return;
 			}
 			// set the scale corresponding to world coordinate distance
-			double pdist = this->GetActiveCamera()->GetParallelScale(); // Parallel scale: the height of the viewport 
+			double pdist = this->getActiveCamera()->GetParallelScale(); // Parallel scale: the height of the viewport 
 			int *size = this->getRenderWindow()->GetSize();			  // (focal point to boarder)in world-coordinate distances
 			double horizontal = *(size);
 			double vertical = *(size + 1);
@@ -226,7 +227,7 @@ namespace Q {
 			}
 		}
 
-		void PlanarViewer::UpdateCursorPosition(double x, double y, double z)
+		void PlanarViewer::updateCursorPosition(double x, double y, double z)
 		{
 			QList<Prop*> props = this->propToRenderer->keys();
 
@@ -236,7 +237,7 @@ namespace Q {
 					planarProp->setPlanarOrigin(x, y, z);
 				}
 			}
-			OrthogonalViewer::UpdateCursorPosition(x, y, z);
+			OrthogonalViewer::updateCursorPosition(x, y, z);
 		}
 
 		void PlanarViewer::IncrementSlice(bool sign)
@@ -250,28 +251,31 @@ namespace Q {
 			switch (orientation)
 			{
 			case OrthogonalViewer::ORIENTATION_YZ:
-				pos[0] += (sign ? 1 : -1);
+				pos[0] += (sign ? 1 * this->sliceThickness : -1 * this->sliceThickness);
 				break;
 			case OrthogonalViewer::ORIENTATION_XZ:
-				pos[1] += (sign ? 1 : -1);
+				pos[1] += (sign ? 1 * this->sliceThickness : -1 * this->sliceThickness);
 				break;
 			case OrthogonalViewer::ORIENTATION_XY:
-				pos[2] += (sign ? 1 : -1);
+				pos[2] += (sign ? 1 * this->sliceThickness : -1 * this->sliceThickness);
 				break;
 			case OrthogonalViewer::SAGITAL:
 			case OrthogonalViewer::CORONAL:
 			case OrthogonalViewer::AXIAL: {
+				double translation[3];
+				std::copy(this->getCurrentPlaneNormal(), this->getCurrentPlaneNormal() + 3, translation);
+				vtkMath::MultiplyScalar(translation, this->sliceThickness);
 				if (sign) {
-					vtkMath::Add(pos, this->getCurrentPlaneNormal(), pos);
+					vtkMath::Add(pos, translation, pos);
 				}
 				else {
-					vtkMath::Subtract(pos, this->getCurrentPlaneNormal(), pos);
+					vtkMath::Subtract(pos, translation, pos);
 				}
 			}
 			default:
 				break;
 			}
-			this->SetCursorPosition(pos[0], pos[1], pos[2]);
+			this->setCursorPosition(pos[0], pos[1], pos[2]);
 			this->getRenderWindow()->Render();
 		}
 
@@ -279,16 +283,16 @@ namespace Q {
 		{
 			switch (this->getOrientation()) {
 			case AXIAL:
-				this->camera->SetViewUp(0, -1, 0);
+				this->getActiveCamera()->SetViewUp(0, -1, 0);
 				break;
 			case CORONAL:
 			case SAGITAL:
-				this->camera->SetViewUp(0, 0, 1);
+				this->getActiveCamera()->SetViewUp(0, 0, 1);
 				break;
 			default: 
 				return OrthogonalViewer::UpdateViewUp();
 			}
-			return this->camera->GetViewUp();
+			return this->getActiveCamera()->GetViewUp();
 		}
 	}
 }

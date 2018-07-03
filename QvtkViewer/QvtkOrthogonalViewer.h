@@ -24,7 +24,7 @@ namespace Q {
 			static const double ORIENTATION_XY_NORMAL[3];
 			explicit OrthogonalViewer(QWidget* parent = nullptr);
 			virtual ~OrthogonalViewer() override;
-			Ui::OrthogonalViewer* GetUi() { return this->ui; }
+			Ui::OrthogonalViewer* getUi() { return this->ui; }
 			typedef enum ORIENTATION {
 				ORIENTATION_YZ = 0,
 				ORIENTATION_XZ = 1,
@@ -49,13 +49,14 @@ namespace Q {
 			* @param double e3 z-component of desired view plane normal
 			* @return void
 			*/
-			void SetAxialViewPlaneNormal(double*);
-			void SetAxialViewPlaneNormal(double e1, double e2, double e3);
-			void SetSagitalViewPlaneNormal(double*);
-			void SetSagitalViewPlaneNormal(double e1, double e2, double e3);
-			const double* GetAxiaViewPlaneNormal();
-			const double* GetSagitalViewPlaneNormal();
-			const double* GetCoronalViewPlaneNormal();
+			void setAxialViewPlaneNormal(double*);
+			virtual void setAxialViewPlaneNormal(double e1, double e2, double e3);
+			void setSagitalViewPlaneNormal(double*);
+			virtual void setSagitalViewPlaneNormal(double e1, double e2, double e3);
+			virtual const double* getAxiaViewPlaneNormal();
+			virtual const double* getSagitalViewPlaneNormal();
+			virtual const double* getCoronalViewPlaneNormal();
+			virtual const double* getCurrentPlaneNormal()const { return this->currentPlaneNormal; }
 
 			/**
 			* @brief GetRenderWindow
@@ -67,14 +68,14 @@ namespace Q {
 			*/
 			virtual vtkRenderWindow* getRenderWindow() override;
 			/**
-			* @brief GetInteractor
+			* @brief getInteractor
 			*
 			* >>> MUST BE IMPLEMENTED <<<
 			* Return subclass of vtkInteractor built by QVTKWidget
 			*
 			* @return QVTKInteractor*
 			*/
-			virtual vtkRenderWindowInteractor* GetInteractor() override;
+			virtual vtkRenderWindowInteractor* getInteractor() override;
 			/**
 			* void SetRighthandness
 			*
@@ -92,19 +93,18 @@ namespace Q {
 			* @param bool  righthandness
 			* @return void
 			*/
-			virtual void SetRighthandness(bool right);
-			virtual bool GetRighthandness();
-			virtual void setSyncViewPlaneNormalFlag(bool flag);
-			virtual bool getSynViewPlaneNormalFlag() const { return this->syncViewPlaneNormalFlag; }
+			virtual void setRighthandness(bool right);
+			virtual bool getRighthandness();
+			virtual void setViewPlaneNormalSyncFlag(bool flag);
+			virtual bool getViewPlaneNormalSyncFlag() const { return this->viewPlaneNormalSyncFlag; }
 			virtual int  getOrientation() const { return this->orientation; }
-			const double* getCurrentPlaneNormal()const { return this->currentPlaneNormal; }
 		public Q_SLOTS:
 			virtual void setOrientation(int orientation);
-			void SetOrientationToAxial() { this->setOrientation(AXIAL); }
-			void SetOrientationToXY() { this->setOrientation(ORIENTATION_XY); }
-			void SetOrientationToCoronal() { this->setOrientation(CORONAL); }
-			void SetOrientationToXZ() { this->setOrientation(ORIENTATION_XZ); }
-			void SetOrientationToSagital() { this->setOrientation(SAGITAL); }
+			void setOrientationToAxial() { this->setOrientation(AXIAL); }
+			void setOrientationToXY() { this->setOrientation(ORIENTATION_XY); }
+			void setOrientationToCoronal() { this->setOrientation(CORONAL); }
+			void setOrientationToXZ() { this->setOrientation(ORIENTATION_XZ); }
+			void setOrientationToSagital() { this->setOrientation(SAGITAL); }
 			void setOrientationToYZ() { this->setOrientation(ORIENTATION_YZ); }
 		Q_SIGNALS:
 			void OrientationChanged(int orientation);
@@ -132,7 +132,7 @@ namespace Q {
 			Ui::OrthogonalViewer* ui;
 		private:
 			int orientation;
-			bool syncViewPlaneNormalFlag;
+			bool viewPlaneNormalSyncFlag;
 			bool righthandness; // default True
 			double sagitalViewPlaneNormal[3];
 			double coronalViewPlaneNormal[3];

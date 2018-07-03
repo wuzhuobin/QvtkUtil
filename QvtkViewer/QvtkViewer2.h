@@ -46,14 +46,14 @@ namespace Q {
 			virtual vtkRenderWindow* getRenderWindow() override;
 			virtual vtkGenericOpenGLRenderWindow* GetGenericOpenGLRenderWindow();
 			/**
-			 * @brief GetInteractor
+			 * @brief getInteractor
 			 *
 			 * >>> MUST BE IMPLEMENTED <<<
 			 * Return subclass of vtkInteractor built by QVTKWidget
 			 *
 			 * @return QVTKInteractor*
 			 */
-			virtual vtkRenderWindowInteractor* GetInteractor() override;
+			virtual vtkRenderWindowInteractor* getInteractor() override;
 			virtual QVTKInteractor* GetQVTKInteractor();
 			/**
 			 * QVTKWidget2* GetQVTKWidget

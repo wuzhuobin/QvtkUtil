@@ -33,7 +33,7 @@ const double* NonCartesianViewer::MapCursor2Cartesian() const
 
 //vtkTransform* NonCartesianViewer::GetCursorTransform()
 //{
-//    if (this->syncCursorFlag)
+//    if (this->cursorSyncFlag)
 //    {
 //        return this->desyncCursorPosTransform; // Note that the desync cursor here is also non-cartesian
 //    }

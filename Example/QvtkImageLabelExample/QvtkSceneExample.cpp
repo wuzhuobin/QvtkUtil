@@ -22,7 +22,7 @@ QvtkSceneExample::QvtkSceneExample(QWidget * parent)
 {
 	this->m_ui->setupUi(this);
 	this->m_ui->verticalLayout->addWidget(this->m_viewer);
-	this->m_viewer->GetCursorActor()->VisibilityOff();
+	this->m_viewer->getCursorActor()->VisibilityOff();
 	// Create a "grayscale" 16x16 image, 1-component pixels of type "unsigned short"
 	vtkSmartPointer<vtkImageData> image =
 		vtkSmartPointer<vtkImageData>::New();
@@ -58,11 +58,11 @@ QvtkSceneExample::~QvtkSceneExample()
 
 void QvtkSceneExample::on_action_New2_triggered(bool checked)
 {
-	this->m_viewer->RemoveAllProp();
+	this->m_viewer->removeAllProp();
 	this->m_imageLabelSlice->setRenderDataSet(nullptr);
 	this->m_imageLabelSlice->setRenderDataSet(this->m_label);
-	this->m_viewer->AddProp(this->m_imageLabelSlice);
-	this->m_viewer->SetOrientationToAxial();
+	this->m_viewer->addProp(this->m_imageLabelSlice);
+	this->m_viewer->setOrientationToAxial();
 	this->m_viewer->resetCamera(1);
 	this->m_viewer->resetCameraClippingRange(1);
 	this->m_viewer->update();
@@ -70,11 +70,11 @@ void QvtkSceneExample::on_action_New2_triggered(bool checked)
 
 void QvtkSceneExample::on_action_New_triggered(bool checked)
 {
-	this->m_viewer->RemoveAllProp();
+	this->m_viewer->removeAllProp();
 	this->m_imageSlice->setRenderDataSet(nullptr);
 	this->m_imageSlice->setRenderDataSet(this->m_image);
-	this->m_viewer->AddProp(this->m_imageSlice);
-	this->m_viewer->SetOrientationToAxial();
+	this->m_viewer->addProp(this->m_imageSlice);
+	this->m_viewer->setOrientationToAxial();
 	this->m_viewer->resetCamera(0);
 	this->m_viewer->resetCameraClippingRange(0);
 	this->m_viewer->update();

@@ -36,7 +36,7 @@ namespace Q {
 		{
 			this->orientationMarkerWidgetFlag = flag;
 			if (flag) {
-				this->orientationMarkerWidget->SetInteractor(this->GetInteractor());
+				this->orientationMarkerWidget->SetInteractor(this->getInteractor());
 				this->orientationMarkerWidget->SetEnabled(flag);
 			}
 			else {

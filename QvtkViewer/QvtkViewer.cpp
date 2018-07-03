@@ -31,11 +31,17 @@ namespace Q {
 				void *callData) VTK_OVERRIDE {
 				Viewer* self = static_cast<Viewer*>(this->ClientData);
 				vtkCursor3D* cursor = static_cast<vtkCursor3D*>(caller);
-				if (!self->GetCursorSyncFlag() && cursor != self->GetCursorSource()) {
+				if (cursor != self->getCursorSource()) {
 					return;
 				}
 				double* xyz = reinterpret_cast<double*>(callData);
-				emit self->CursorPositionChanged(xyz[0], xyz[1], xyz[2]);
+				double _xyz[3];
+				std::copy(xyz, xyz + 3, _xyz);
+				cursor->SetFocalPoint(xyz);
+				if (self->cursorTransformFunction != nullptr) {
+					self->cursorTransformFunction(_xyz, self->cursorActor->GetUserMatrix(), self);
+				}
+				emit self->cursorPositionChanged(_xyz[0], _xyz[1], _xyz[2]);
 			}
 
 		};
@@ -46,7 +52,7 @@ namespace Q {
 			typedef QList<Viewer*>::const_iterator Const_Iter;
 			for (Const_Iter iter = viewersVect.cbegin(); iter != viewersVect.cend(); iter++)
 			{
-				if ((*iter)->GetInteractor()->GetInteractorStyle() == style)
+				if ((*iter)->getInteractor()->GetInteractorStyle() == style)
 				{
 					return (*iter);
 				}
@@ -151,7 +157,7 @@ namespace Q {
 			}
 			vtkRenderer* ren = this->renderers[index];
 			this->renderers.removeAt(index);
-			RemoveAllProp(ren);
+			removeAllProp(ren);
 			this->getRenderWindow()->RemoveRenderer(ren);
 			ren->Delete();
 			qWarning() << "Renderer requested to delete doesn't exist.";
@@ -163,12 +169,12 @@ namespace Q {
 			removeRenderer(index);
 		}
 
-		void Viewer::AddProp(Prop * prop)
+		void Viewer::addProp(Prop * prop)
 		{
-			AddProp(prop, this->renderers[0]);
+			addProp(prop, this->renderers[0]);
 		}
 
-		void Viewer::AddProp(Prop * prop, vtkRenderer * renderer)
+		void Viewer::addProp(Prop * prop, vtkRenderer * renderer)
 		{
 			if (!this->renderers.contains(renderer)) {
 				qWarning() << "The renderer does not belong to this viewer.";
@@ -181,12 +187,12 @@ namespace Q {
 			propToRenderer->insert(prop, renderer);
 		}
 
-		QList<Prop*> Viewer::GetProps()
+		QList<Prop*> Viewer::getProps()
 		{
 			return this->propToRenderer->keys();
 		}
 
-		void Viewer::RemoveProp(Prop * prop)
+		void Viewer::removeProp(Prop * prop)
 		{
 			if (!this->propToRenderer->contains(prop)) {
 				qWarning() << "Remove prop" << prop->getUniqueName() << "fail.";
@@ -210,15 +216,15 @@ namespace Q {
 		}
 
 
-		void Viewer::RemoveAllProp()
+		void Viewer::removeAllProp()
 		{
 			for (QList<vtkRenderer*>::const_iterator cit = this->renderers.cbegin();
 				cit != this->renderers.cend(); ++cit) {
-				RemoveAllProp(*cit);
+				removeAllProp(*cit);
 			}
 		}
 
-		void Viewer::RemoveAllProp(vtkRenderer * renderer)
+		void Viewer::removeAllProp(vtkRenderer * renderer)
 		{
 			if (!this->renderers.contains(renderer)) {
 				qWarning() << "The renderer does not belong to this viewer.";
@@ -227,11 +233,11 @@ namespace Q {
 
 			for (QList<Prop* >::ConstIterator cit = keys.cbegin();
 				cit != keys.cend(); ++cit) {
-				RemoveProp(*cit);
+				removeProp(*cit);
 			}
 		}
 
-		void Viewer::SetCursorAlwaysFaceCamera(bool)
+		void Viewer::setCursorAlwaysFaceCamera(bool)
 		{
 			//throw std::logic_error("Not Implemented!");
 			qCritical() << "Not Implemented!";
@@ -245,17 +251,17 @@ namespace Q {
 			*/
 		}
 
-		void Viewer::SetCursorDesyncFlag(bool sync)
+		void Viewer::setCursorSyncFlag(bool sync)
 		{
-			if (this->syncCursorFlag == sync) {
+			if (this->cursorSyncFlag == sync) {
 				return;
 			}
 
-			this->syncCursorFlag = sync;
+			this->cursorSyncFlag = sync;
 			if (!sync) {
 
 				this->cursorActor->GetMapper()->SetInputConnection(
-					this->GetCursorSource()->GetOutputPort());
+					this->getCursorSource()->GetOutputPort());
 			}
 			else {
 				this->cursorActor->GetMapper()->SetInputConnection(
@@ -266,7 +272,7 @@ namespace Q {
 		}
 
 
-		void Viewer::SetCursorPosition(double x, double y, double z)
+		void Viewer::setCursorPosition(double x, double y, double z)
 		{
 			if (x == this->getCursorPosition()[0] &&
 				y == this->getCursorPosition()[1] &&
@@ -274,25 +280,12 @@ namespace Q {
 				return;
 			}
 			double xyz[3] = { x, y, z };
-			if (!this->syncCursorFlag) {
-				this->cursorSource->SetFocalPoint(xyz);
-				// invoke event for synchronization
-				this->cursorSource->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
-			}
-			else {
-				Viewer::getSyncCursorSource()->SetFocalPoint(xyz);
-				// invoke event for synchronization
-				Viewer::getSyncCursorSource()->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
-			}
+			this->getCursorSource()->InvokeEvent(vtkCommand::CursorChangedEvent, xyz);
 		}
 
 		const double* Viewer::getCursorPosition() const 
 		{
-			/* NOTE: the returned pointer will change with calls to TransformPoint() function, advoid using
-					 the pointer directly!
-			*/
-			//return this->GetCursorTransform()->TransformPoint(0, 0, 0);
-			if (!this->syncCursorFlag) {
+			if (!this->cursorSyncFlag) {
 				return this->cursorSource->GetFocalPoint();
 			}
 			else {
@@ -301,7 +294,27 @@ namespace Q {
 			}
 		}
 
-		void Viewer::UpdateDepthPeeling()
+		vtkCursor3D * Q::vtk::Viewer::getCursorSource() const
+		{
+			if (this->getCursorSyncFlag()) {
+				return syncCursorSource;
+			}
+			else {
+				return this->cursorSource;
+			}
+		}
+
+		void Q::vtk::Viewer::updateCursorPosition(double x, double y, double z)
+		{
+			if (this->getCornerAnnotation()->GetVisibility()) {
+				QString format = "%1, %2, %3";
+				QString text = format.arg(x, 0, 'f', 2).arg(y, 0, 'f', 2).arg(z, 0, 'f', 2);
+				this->getCornerAnnotation()->SetText(1, text.toStdString().c_str());
+			}
+			this->update();
+		}
+
+		void Viewer::updateDepthPeeling()
 		{
 			// 1. Use a render window with alpha bits (as initial value is 0 (false)):
 			this->getRenderWindow()->SetAlphaBitPlanes(this->depthPeelingFlag);
@@ -326,11 +339,6 @@ namespace Q {
 				// - Set the occlusion ratio (initial value is 0.0, exact image):
 				renderer->SetOcclusionRatio(this->occlusionRatio);
 			}
-		}
-
-		vtkCamera* Viewer::GetActiveCamera()
-		{
-			return this->camera;
 		}
 
 		void Viewer::resetCamera()
@@ -387,7 +395,7 @@ namespace Q {
 			QWidget::update();
 		}
 
-		void Viewer::RenderAllViewersOfThisClass()
+		void Viewer::updateAllViewersOfThisClass()
 		{
 			typedef QList<Viewer *>::iterator IterType;
 			for (IterType iter = this->viewerList.begin(); iter != this->viewerList.end(); iter++) {
@@ -400,52 +408,40 @@ namespace Q {
 
 		void Viewer::setEnableCornerAnnotation(bool b)
 		{
-			this->GetCornerAnnotation()->SetVisibility(b);
+			this->getCornerAnnotation()->SetVisibility(b);
 		}
 
-		void Viewer::AppendCornerAnnotation(int textPosition, QString text)
+		void Viewer::appendCornerAnnotation(int textPosition, QString text)
 		{
 			const char* oldText = this->cornerAnnotation->GetText(textPosition);
 			this->cornerAnnotation->SetText(textPosition, (oldText + text).toStdString().c_str());
 		}
 
-		void Viewer::SetMaxNoOfPeelings(int i)
+		void Viewer::setMaxNoOfPeelings(int i)
 		{
 			if (this->maxNoOfPeels == i) {
 				return;
 			}
 			this->maxNoOfPeels = i;
-			this->UpdateDepthPeeling();
+			this->updateDepthPeeling();
 		}
 
-		void Viewer::SetOcclusionRatio(double ratio)
+		void Viewer::setOcclusionRatio(double ratio)
 		{
 			if (this->occlusionRatio == ratio) {
 				return;
 			}
 			this->occlusionRatio = ratio;
-			this->UpdateDepthPeeling();
+			this->updateDepthPeeling();
 		}
 
-
-		void Viewer::UpdateCursorPosition(double x, double y, double z)
-		{
-			if (this->GetCornerAnnotation()->GetVisibility()) {
-				QString format = "%1, %2, %3";
-				QString text = format.arg(x, 0, 'f', 2).arg(y, 0, 'f', 2).arg(z, 0, 'f', 2);
-				this->GetCornerAnnotation()->SetText(1, text.toStdString().c_str());
-			}
-			this->update();
-			//this->getRenderWindow()->Render();
-		}
-
-		void Viewer::SetEnableDepthPeeling(bool flag)
+		void Viewer::setEnableDepthPeeling(bool flag)
 		{
 			if (this->depthPeelingFlag == flag) {
 				return;
 			}
 			this->depthPeelingFlag = flag;
-			this->UpdateDepthPeeling();
+			this->updateDepthPeeling();
 		}
 
 		vtkCursor3D * Q::vtk::Viewer::getSyncCursorSource()
@@ -457,11 +453,11 @@ namespace Q {
 			:QWidget(parent)
 		{
 			Viewer::viewerList.push_back(this);
-			this->syncCursorFlag = true;
+			this->cursorSyncFlag = true;
 			this->cursorCallback = CursorCallbackCommand::New();
 			this->cursorCallback->SetClientData(this);
-			connect(this, &Viewer::CursorPositionChanged,
-				this, static_cast<void(Viewer::*)(double, double, double)>(&Viewer::UpdateCursorPosition));
+			connect(this, &Viewer::cursorPositionChanged,
+				this, static_cast<void(Viewer::*)(double, double, double)>(&Viewer::updateCursorPosition));
 			if (syncCursorSource == nullptr) {
 				syncCursorSource = vtkCursor3D::New();
 				syncCursorSource->TranslationModeOn();
@@ -484,6 +480,7 @@ namespace Q {
 				syncCursorSource->GetOutputPort());
 			this->cursorActor->GetProperty()->SetColor(1, 1, 0);
 			this->cursorActor->SetPickable(false);
+			this->cursorTransformFunction = nullptr;
 			this->cornerAnnotation = vtkCornerAnnotation::New();
 			this->cornerAnnotation->SetPickable(false);
 			this->cornerAnnotation->SetMaximumFontSize(10);
@@ -520,6 +517,7 @@ namespace Q {
 			}
 		}
 		void Viewer::setupFirstRenderer(vtkRenderer *firstRenderer) {
+			
 			if (firstRenderer == nullptr) {
 				firstRenderer = this->addRenderer(0);
 			}
@@ -528,7 +526,6 @@ namespace Q {
 			firstRenderer->SetActiveCamera(this->camera);
 			//this->addRenderer(firstRenderer);
 			//this->getRenderWindow()->addRenderer(firstRenderer);
-			this->GetInteractor()->Initialize();
 		}
 	}
 }

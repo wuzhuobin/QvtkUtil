@@ -1,7 +1,6 @@
 // me
 #include "vtkPlanarSeedWidget.h"
 #include "vtkWidgetSet2.h"
-
 // vtk
 #include <vtkObjectFactory.h>
 #include <vtkSeedRepresentation.h>
@@ -15,11 +14,9 @@
 #include <vtkHandleRepresentation.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkEvent.h>
-
-
+#include <vtkPlane.h>
 vtkStandardNewMacro(vtkPlanarSeedWidget);
 vtkCxxSetObjectMacro(vtkPlanarSeedWidget, WidgetSet, vtkWidgetSet2);
-
 void vtkPlanarSeedWidget::PrintSelf(ostream & os, vtkIndent indent)
 {
 	Superclass::PrintSelf(os, indent);
@@ -27,11 +24,21 @@ void vtkPlanarSeedWidget::PrintSelf(ostream & os, vtkIndent indent)
 
 void vtkPlanarSeedWidget::SetProjectionNormal(int normal)
 {
-	static_cast<vtkBoundedPlanePointPlacer*>(
-		this->GetSeedRepresentation()->GetHandleRepresentation()->GetPointPlacer())->
-		SetProjectionNormal(normal);
+	vtkBoundedPlanePointPlacer* placer = static_cast<vtkBoundedPlanePointPlacer*>(
+		this->GetSeedRepresentation()->GetHandleRepresentation()->GetPointPlacer());
+	switch (normal)
+	{
+	case vtkBoundedPlanePointPlacer::XAxis:
+	case vtkBoundedPlanePointPlacer::YAxis:
+	case vtkBoundedPlanePointPlacer::ZAxis:
+		placer->SetProjectionNormal(normal);
+		break;
+	case vtkBoundedPlanePointPlacer::Oblique:
+	default:
+		placer->SetProjectionNormal(vtkBoundedPlanePointPlacer::Oblique);
+		break;
+	}
 	for (int i = 0; i < this->GetSeedRepresentation()->GetNumberOfSeeds(); ++i) {
-
 		EnabledHandleInRange(this->GetSeed(i));
 	}
 }
@@ -51,6 +58,8 @@ void vtkPlanarSeedWidget::SetProjectionPosition(double x, double y, double z)
 	case vtkBoundedPlanePointPlacer::ZAxis:
 		placer->SetProjectionPosition(z);
 		break;
+	case vtkBoundedPlanePointPlacer::Oblique:
+		placer->GetObliquePlane()->SetOrigin(x, y, z);
 	default:
 		break;
 	}
@@ -118,17 +127,14 @@ void vtkPlanarSeedWidget::SaveSeedToPolyData(vtkPolyData * polyData)
 
 vtkPlanarSeedWidget::vtkPlanarSeedWidget()
 {
-
 	// initialization.
+	vtkNew<vtkPlane> plane;
 	vtkNew<vtkBoundedPlanePointPlacer> pointPlacer;
-
+	pointPlacer->SetObliquePlane(plane.GetPointer());
 	vtkNew<vtkPointHandleRepresentation3D> handleRep;
 	handleRep->SetPointPlacer(pointPlacer.GetPointer());
-
 	this->CreateDefaultRepresentation();
 	this->GetSeedRepresentation()->SetHandleRepresentation(handleRep.GetPointer());
-
-
 	this->WidgetSet = nullptr;
 	this->Range = 0.5;
 	this->DeletedHandle = -1;
@@ -141,7 +147,6 @@ vtkPlanarSeedWidget::vtkPlanarSeedWidget()
 		vtkEvent::NoModifier, 127, 1, "Delete", 
 		vtkWidgetEvent::Delete, 
 		this, vtkPlanarSeedWidget::DeleteDispatcher);
-
 }
 
 void vtkPlanarSeedWidget::EnabledHandleInRange(vtkHandleWidget* handle)
@@ -149,17 +154,27 @@ void vtkPlanarSeedWidget::EnabledHandleInRange(vtkHandleWidget* handle)
 	vtkSeedRepresentation* rep = this->GetSeedRepresentation();
 	vtkBoundedPlanePointPlacer* placer = static_cast<vtkBoundedPlanePointPlacer*>(
 		handle->GetHandleRepresentation()->GetPointPlacer());
-
 	int orientation = placer->GetProjectionNormal();
-	double pos = placer->GetProjectionPosition();
-
-	const double* worldPos = handle->GetHandleRepresentation()->GetWorldPosition();
-	bool inRange = (abs(pos - worldPos[orientation]) > this->Range) ? false : true;
+	double* worldPos = handle->GetHandleRepresentation()->GetWorldPosition();
+	double distance = 0;
+	switch (orientation)
+	{
+	case vtkBoundedPlanePointPlacer::XAxis:
+	case vtkBoundedPlanePointPlacer::YAxis:
+	case vtkBoundedPlanePointPlacer::ZAxis: {
+		double pos = placer->GetProjectionPosition();
+		distance = abs(pos - worldPos[orientation]);
+	}
+	case vtkBoundedPlanePointPlacer::Oblique:
+	default:
+		distance = abs(placer->GetObliquePlane()->DistanceToPlane(worldPos));
+		break;
+	}
+	bool inRange = distance > this->Range ? false : true;
 	if (Range == 0) {
 		inRange = true;
 	}
 	handle->SetEnabled(inRange);
-
 }
 
 void vtkPlanarSeedWidget::AddPointDispatcher(vtkAbstractWidget * widget)
@@ -179,7 +194,6 @@ void vtkPlanarSeedWidget::MoveDispatcher(vtkAbstractWidget * widget)
 	vtkPlanarSeedWidget* self =
 		reinterpret_cast<vtkPlanarSeedWidget*>(widget);
 	if (self->WidgetSet) {
-
 		self->WidgetSet->DispatchAction(self, &vtkPlanarSeedWidget::MoveAction);
 	}
 	else {
@@ -218,9 +232,7 @@ void vtkPlanarSeedWidget::AddPointAction(vtkPlanarSeedWidget * dispatcher)
 						newSeed->GetHandleRepresentation()->GetWorldPosition(),
 						newSeed->GetHandleRepresentation()->GetWorldPosition() + 2,
 						oldSeed->GetHandleRepresentation()->GetWorldPosition())) {
-
 						return;
-
 					}
 				}
 				vtkHandleWidget* _newSeed = this->CreateNewHandle();

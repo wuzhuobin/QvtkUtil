@@ -62,12 +62,12 @@ void OrthogonalDockViewers::setViewer(int index, OrthogonalViewer * viewer)
 	}
 
 	this->dockers->at(index)->setWidget(this->viewers->at(index));
-	this->mapper->setMapping(this->viewers->at(index)->GetUi()->pushBtnMaximize, index * 2 + 1);
-	this->mapper->setMapping(this->viewers->at(index)->GetUi()->pushBtnNormal, index * 2);
+	this->mapper->setMapping(this->viewers->at(index)->getUi()->pushBtnMaximize, index * 2 + 1);
+	this->mapper->setMapping(this->viewers->at(index)->getUi()->pushBtnNormal, index * 2);
 	// connection
-	connect(this->viewers->at(index)->GetUi()->pushBtnMaximize, SIGNAL(clicked()),
+	connect(this->viewers->at(index)->getUi()->pushBtnMaximize, SIGNAL(clicked()),
 		this->mapper, SLOT(map()));
-	connect(this->viewers->at(index)->GetUi()->pushBtnNormal, SIGNAL(clicked()),
+	connect(this->viewers->at(index)->getUi()->pushBtnNormal, SIGNAL(clicked()),
 		this->mapper, SLOT(map()));
 	connect(this->mapper, SIGNAL(mapped(int)),
 		this, SLOT(showMaximizedOrNormal(int)));

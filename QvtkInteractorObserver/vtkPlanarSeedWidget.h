@@ -1,9 +1,8 @@
 #ifndef __VTK_PLANAR_SEED_WIDGET_H__
 #define __VTK_PLANAR_SEED_WIDGET_H__
-
+#pragma once
 // me
 #include "qvtkinteractorobserver_export.h"
-
 // vtk 
 #include "vtkSeedWidget.h"
 class vtkBoundedPlanePointPlacer;
