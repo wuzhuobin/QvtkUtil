@@ -32,10 +32,6 @@ vtkDiscreteMarchingCubesWithSmooth::vtkDiscreteMarchingCubesWithSmooth()
 	this->NormalizeCoordinates = 0;
 }
 
-static void Threading(vtkDiscreteMarchingCubesWithSmooth* _this) {
-
-}
-
 vtkDiscreteMarchingCubesWithSmooth::~vtkDiscreteMarchingCubesWithSmooth()
 {
 }
