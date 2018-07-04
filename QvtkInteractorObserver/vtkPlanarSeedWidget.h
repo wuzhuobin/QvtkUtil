@@ -16,16 +16,14 @@ public:
 	static vtkPlanarSeedWidget* New();
 	vtkTypeMacro(vtkPlanarSeedWidget, vtkSeedWidget);
 	virtual void PrintSelf(ostream& os, vtkIndent indent) VTK_OVERRIDE;
-
 	vtkGetObjectMacro(WidgetSet, vtkWidgetSet2);
 	virtual void SetWidgetSet(vtkWidgetSet2* widgetSet);
-
 	virtual void SetEnableHandleRange(double range) { this->Range = range; }
 	virtual void SetProjectionNormal(int normal);
 	virtual void SetProjectionPosition(double x, double y, double z);
-
-	virtual void DropSeed(const double pos[3]) { this->DropSeed(pos[0], pos[1], pos[2]); }
+	void SetProjectionPosition(const double *xyz) { this->SetProjectionPosition(xyz[0], xyz[1], xyz[2]); }
 	virtual void DropSeed(double x, double y, double z);
+	void DropSeed(const double pos[3]) { this->DropSeed(pos[0], pos[1], pos[2]); }
 	virtual void CleanAllSeed();
 	virtual void LoadSeedFromPolyData(vtkPolyData* polyData);
 	virtual void SaveSeedToPolyData(vtkPolyData* polyData);

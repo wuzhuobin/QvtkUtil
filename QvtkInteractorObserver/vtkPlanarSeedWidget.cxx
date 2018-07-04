@@ -38,9 +38,6 @@ void vtkPlanarSeedWidget::SetProjectionNormal(int normal)
 		placer->SetProjectionNormal(vtkBoundedPlanePointPlacer::Oblique);
 		break;
 	}
-	for (int i = 0; i < this->GetSeedRepresentation()->GetNumberOfSeeds(); ++i) {
-		EnabledHandleInRange(this->GetSeed(i));
-	}
 }
 
 void vtkPlanarSeedWidget::SetProjectionPosition(double x, double y, double z)
@@ -64,7 +61,6 @@ void vtkPlanarSeedWidget::SetProjectionPosition(double x, double y, double z)
 		break;
 	}
 	for (int i = 0; i < this->GetSeedRepresentation()->GetNumberOfSeeds(); ++i) {
-
 		EnabledHandleInRange(this->GetSeed(i));
 	}
 }

@@ -1,7 +1,6 @@
 // me
 #include "QvtkViewer.h"
 #include "QvtkProp.h"
-
 // vtk
 #include <vtkSmartPointer.h>
 #include <vtkPolyDataMapper.h>
@@ -15,7 +14,7 @@
 #include <vtkCornerAnnotation.h>
 #include <vtkNew.h>
 #include <vtkCallbackCommand.h>
-
+#include <vtkMatrix4x4.h>
 // qt
 #include <QDebug>
 namespace Q {
@@ -274,9 +273,9 @@ namespace Q {
 
 		void Viewer::setCursorPosition(double x, double y, double z)
 		{
-			if (x == this->getCursorPosition()[0] &&
-				y == this->getCursorPosition()[1] &&
-				z == this->getCursorPosition()[2]) {
+			if (x == this->getCursorSource()->GetFocalPoint()[0] &&
+				y == this->getCursorSource()->GetFocalPoint()[1] &&
+				z == this->getCursorSource()->GetFocalPoint()[2]) {
 				return;
 			}
 			double xyz[3] = { x, y, z };
@@ -285,13 +284,11 @@ namespace Q {
 
 		const double* Viewer::getCursorPosition() const 
 		{
-			if (!this->cursorSyncFlag) {
-				return this->cursorSource->GetFocalPoint();
+			std::copy(this->getCursorSource()->GetFocalPoint(), this->getCursorSource()->GetFocalPoint() + 3, this->cursorPosition);
+			if (this->cursorActor == nullptr) {
+				 this->cursorActor->GetUserMatrix()->MultiplyPoint(this->cursorPosition, this->cursorPosition);
 			}
-			else {
-				return Viewer::getSyncCursorSource()->GetFocalPoint();
-
-			}
+			return this->cursorPosition;
 		}
 
 		vtkCursor3D * Q::vtk::Viewer::getCursorSource() const
@@ -383,11 +380,6 @@ namespace Q {
 			qCritical() << "it not working well, camera is always defined by the last renderer";
 			qCritical() << "layer must be specified.";
 		}
-
-		//void Viewer::update()
-		//{
-		//	this->GetRenderWindow()->Render();
-		//}
 
 		void Q::vtk::Viewer::update()
 		{
@@ -524,8 +516,6 @@ namespace Q {
 			firstRenderer->AddActor(this->cursorActor);
 			firstRenderer->AddActor(this->cornerAnnotation);
 			firstRenderer->SetActiveCamera(this->camera);
-			//this->addRenderer(firstRenderer);
-			//this->getRenderWindow()->addRenderer(firstRenderer);
 		}
 	}
 }

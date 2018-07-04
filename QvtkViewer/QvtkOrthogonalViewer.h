@@ -24,6 +24,7 @@ namespace Q {
 			static const double ORIENTATION_XY_NORMAL[3];
 			explicit OrthogonalViewer(QWidget* parent = nullptr);
 			virtual ~OrthogonalViewer() override;
+			vtkRenderer *getFirstRenderer() { return this->getRenderers()[0]; }
 			Ui::OrthogonalViewer* getUi() { return this->ui; }
 			typedef enum ORIENTATION {
 				ORIENTATION_YZ = 0,

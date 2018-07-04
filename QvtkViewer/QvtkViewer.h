@@ -347,6 +347,7 @@ namespace Q {
 			/// Membership variables
 			vtkCursor3D*  cursorSource;
 			vtkActor* cursorActor;
+			mutable double cursorPosition[4];
 			friend class CursorCallbackCommand;
 			CursorCallbackCommand* cursorCallback;
 			CursorTransformFunction cursorTransformFunction;

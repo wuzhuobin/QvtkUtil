@@ -1,6 +1,5 @@
 // me
 #include "QvtkNonPlanarViewer.h"
-#include "QvtkImageSlice.h"
 //vtk
 #include <vtkOpenGLCamera.h>
 #include <vtkRenderer.h>
