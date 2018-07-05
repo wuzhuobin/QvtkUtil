@@ -1,6 +1,6 @@
 #include "vtkDiscreteMarchingCubesWithSmooth.h"
 // vtk
-#include <vtkSmartpointer.h>
+#include <vtkSmartPointer.h>
 #include <vtkNew.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataWriter.h>

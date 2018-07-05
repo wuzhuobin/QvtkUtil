@@ -1,6 +1,6 @@
 #ifndef __VTK_QDEBUG_WINDOW_H__
 #define __VTK_QDEBUG_WINDOW_H__
-#pragma once;
+#pragma once
 // me
 #include "qvtkdata_export.h"
 // vtk
