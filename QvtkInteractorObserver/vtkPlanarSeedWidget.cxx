@@ -56,8 +56,8 @@ void vtkPlanarSeedWidget::SetProjectionPosition(double x, double y, double z)
 		placer->SetProjectionPosition(z);
 		break;
 	case vtkBoundedPlanePointPlacer::Oblique:
-		placer->GetObliquePlane()->SetOrigin(x, y, z);
 	default:
+		placer->GetObliquePlane()->SetOrigin(x, y, z);
 		break;
 	}
 	for (int i = 0; i < this->GetSeedRepresentation()->GetNumberOfSeeds(); ++i) {
@@ -160,11 +160,13 @@ void vtkPlanarSeedWidget::EnabledHandleInRange(vtkHandleWidget* handle)
 	case vtkBoundedPlanePointPlacer::ZAxis: {
 		double pos = placer->GetProjectionPosition();
 		distance = abs(pos - worldPos[orientation]);
+		break;
 	}
 	case vtkBoundedPlanePointPlacer::Oblique:
-	default:
+	default:{
 		distance = abs(placer->GetObliquePlane()->DistanceToPlane(worldPos));
 		break;
+	}
 	}
 	bool inRange = distance > this->Range ? false : true;
 	if (Range == 0) {
@@ -212,12 +214,9 @@ void vtkPlanarSeedWidget::AddPointAction(vtkPlanarSeedWidget * dispatcher)
 		else if (dispatcher->WidgetState == vtkSeedWidget::PlacingSeeds) {
 			int numOfDispatcherSSeeds = dispatcher->GetSeedRepresentation()->GetNumberOfSeeds();
 			if (numOfDispatcherSSeeds > 0) {
-
 				vtkHandleWidget* newSeed =
 					dispatcher->GetSeed(numOfDispatcherSSeeds - 1);
-
 				int numOfSeeds = this->GetSeedRepresentation()->GetNumberOfSeeds();
-
 				// if there is no first seed, create new seed
 				if (numOfSeeds > 0) {
 					// if the recently created seed is not the same as the 

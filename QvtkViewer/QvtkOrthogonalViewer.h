@@ -50,15 +50,17 @@ namespace Q {
 			* @param double e3 z-component of desired view plane normal
 			* @return void
 			*/
-			void setAxialViewPlaneNormal(double*);
 			virtual void setAxialViewPlaneNormal(double e1, double e2, double e3);
-			void setSagitalViewPlaneNormal(double*);
+			void setAxialViewPlaneNormal(double*);
 			virtual void setSagitalViewPlaneNormal(double e1, double e2, double e3);
-			virtual const double* getAxiaViewPlaneNormal();
-			virtual const double* getSagitalViewPlaneNormal();
-			virtual const double* getCoronalViewPlaneNormal();
-			virtual const double* getCurrentPlaneNormal()const { return this->currentPlaneNormal; }
-
+			void setSagitalViewPlaneNormal(double*);
+			virtual const double* getAxialViewPlaneNormal() const;
+			void getAxialViewPlaneNormal(double normal[3]) const;
+			virtual const double* getSagitalViewPlaneNormal() const;
+			void getSagitalViewPlaneNormal(double normal[3]) const;
+			virtual const double* getCoronalViewPlaneNormal() const;
+			virtual const double* getCurrentPlaneNormal() const { return this->currentPlaneNormal; }
+			void getCurrentPlaneNormal(double normal[3]) const;
 			/**
 			* @brief GetRenderWindow
 			*
@@ -95,7 +97,7 @@ namespace Q {
 			* @return void
 			*/
 			virtual void setRighthandness(bool right);
-			virtual bool getRighthandness();
+			virtual bool getRighthandness() const;
 			virtual void setViewPlaneNormalSyncFlag(bool flag);
 			virtual bool getViewPlaneNormalSyncFlag() const { return this->viewPlaneNormalSyncFlag; }
 			virtual int  getOrientation() const { return this->orientation; }
@@ -136,7 +138,7 @@ namespace Q {
 			bool viewPlaneNormalSyncFlag;
 			bool righthandness; // default True
 			double sagitalViewPlaneNormal[3];
-			double coronalViewPlaneNormal[3];
+			mutable double coronalViewPlaneNormal[3];
 			double axialViewPlaneNormal[3];
 			double currentPlaneNormal[3];
 		};
