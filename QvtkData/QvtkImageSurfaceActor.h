@@ -9,9 +9,9 @@ namespace Q {
 	}
 }
 class vtkDiscreteMarchingCubesWithSmooth;
+class vtkDiscreteFlyingEdges3D;
+class vtkWindowedSincPolyDataFilter;
 // vtk
-//class vtkDiscreteMarchingCubes;
-//class vtkWindowedSincPolyDataFilter;
 namespace Q {
 	namespace vtk {
 		class QVTKDATA_EXPORT ImageSurfaceActor : public PolyDataActor
@@ -27,7 +27,8 @@ namespace Q {
 		protected:
 			virtual Data *newInstance() const override { return new ImageSurfaceActor; }
 			vtkDiscreteMarchingCubesWithSmooth *marchingCubes;
-			//vtkWindowedSincPolyDataFilter *windowedSincPolyDataFilter;
+			vtkDiscreteFlyingEdges3D *flyingEdge;
+			vtkWindowedSincPolyDataFilter *windowedSincPolyDataFilter;
 		};
 	}
 }

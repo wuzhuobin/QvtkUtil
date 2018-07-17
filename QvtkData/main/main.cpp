@@ -5,7 +5,7 @@
 #include <vtkPolyData.h>
 #include <vtkPolyDataWriter.h>
 #include <vtkNIFTIImageReader.h>
-#include <vtkFlyingEdges3D.h>
+#include <vtkDiscreteFlyingEdges3D.h>
 // std
 #include <ctime>
 int main(int argc, char **argv) {
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 	marchingCubes->Update();
 	std::cout << "marching cubes time used: " << std::clock() - cc << "ms.\n";
 	cc = std::clock();
-	vtkNew<vtkFlyingEdges3D> flyingEdges3d;
+	vtkNew<vtkDiscreteFlyingEdges3D> flyingEdges3d;
 	flyingEdges3d->SetInputConnection(reader->GetOutputPort());
 	flyingEdges3d->GenerateValues(130, 0, 129);
 	flyingEdges3d->Update();
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 
 
 	vtkNew<vtkPolyDataWriter> writer;
-	writer->SetInputConnection(flyingEdges3d->GetOutputPort());
+	writer->SetInputConnection(marchingCubes->GetOutputPort());
 	writer->SetFileName("asdf.vtk");
 	writer->Update();
 	writer->Write();
