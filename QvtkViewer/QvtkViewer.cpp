@@ -303,10 +303,10 @@ namespace Q {
 
 		void Q::vtk::Viewer::updateCursorPosition(double x, double y, double z)
 		{
-			if (this->getCornerAnnotation()->GetVisibility()) {
+			if (this->getCursorAnnotationFlag()) {
 				QString format = "%1, %2, %3";
 				QString text = format.arg(x, 0, 'f', 2).arg(y, 0, 'f', 2).arg(z, 0, 'f', 2);
-				this->getCornerAnnotation()->SetText(1, text.toStdString().c_str());
+				this->getCornerAnnotation()->SetText(vtkCornerAnnotation::LowerRight, text.toStdString().c_str());
 			}
 			this->update();
 		}
@@ -398,15 +398,13 @@ namespace Q {
 			}
 		}
 
-		void Viewer::setEnableCornerAnnotation(bool b)
+		void Viewer::setCursorAnnotation(bool b)
 		{
-			this->getCornerAnnotation()->SetVisibility(b);
-		}
-
-		void Viewer::appendCornerAnnotation(int textPosition, QString text)
-		{
-			const char* oldText = this->cornerAnnotation->GetText(textPosition);
-			this->cornerAnnotation->SetText(textPosition, (oldText + text).toStdString().c_str());
+			this->cursorAnnotationFlag = b;
+			if (!this->cursorAnnotationFlag) {
+				this->getCornerAnnotation()->SetText(vtkCornerAnnotation::LowerRight, "");
+				this->update();
+			}
 		}
 
 		void Viewer::setMaxNoOfPeelings(int i)
@@ -472,12 +470,13 @@ namespace Q {
 				syncCursorSource->GetOutputPort());
 			this->cursorActor->GetProperty()->SetColor(1, 1, 0);
 			this->cursorActor->SetPickable(false);
+			this->cursorAnnotationFlag = false;
 			this->cursorTransformFunction = nullptr;
 			this->cornerAnnotation = vtkCornerAnnotation::New();
 			this->cornerAnnotation->SetPickable(false);
 			this->cornerAnnotation->SetMaximumFontSize(10);
 			this->cornerAnnotation->SetMaximumLineHeight(0.3);
-			this->cornerAnnotation->SetVisibility(false);
+			this->cornerAnnotation->SetVisibility(true);
 			this->camera = vtkCamera::New();
 			this->propToRenderer = new PropToRenderer;
 			this->depthPeelingFlag = true;

@@ -237,7 +237,7 @@ namespace Q {
 			 */
 
 			virtual bool getCursorSyncFlag()const { return this->cursorSyncFlag; }
-
+			virtual bool getCursorAnnotationFlag() const { return this->cursorAnnotationFlag; }
 			/**
 			 * @brief GetCursorPosition
 			 *
@@ -253,16 +253,6 @@ namespace Q {
 			}
 			vtkCursor3D* getCursorSource() const;
 			vtkActor* getCursorActor() const { return this->cursorActor; }
-			/**
-			 * @brief void SetCornerAnnotation
-			 *
-			 * Wrapper of the vtkCornerAnnotation::SetText() method
-			 *
-			 * @param int textPosition
-			 * @param std::string text
-			 * @return void
-			 */
-			virtual void appendCornerAnnotation(int textPosition, QString text);
 			/**
 			 * @brief vtkCornerAnnotation* getCornerAnnotation
 			 *
@@ -305,14 +295,14 @@ namespace Q {
 			virtual void setMaxNoOfPeelings(int i);
 			virtual void setOcclusionRatio(double ratio);
 			/**
-			 * @brief void setEnableCornerAnnotation
+			 * @brief void setCursorAnnotation
 			 *
 			 * Show or hide the corner annotation text
 			 *
 			 * @param bool b True to show. False to hide
 			 * @return void
 			 */
-			virtual void setEnableCornerAnnotation(bool b);
+			virtual void setCursorAnnotation(bool b);
 
 			/**
 			 * @brief SetViewerGroup
@@ -338,11 +328,11 @@ namespace Q {
 			static ViewerList viewerList;
 			int viewerGroup;
 			bool cursorSyncFlag;
+			bool cursorAnnotationFlag;
 			bool depthPeelingFlag;
 			int maxNoOfPeels;
 			double occlusionRatio;
 			vtkCamera* camera;
-			//vtkRenderer* firstRenderer;
 			QList<vtkRenderer*> renderers;
 			/// Membership variables
 			vtkCursor3D*  cursorSource;

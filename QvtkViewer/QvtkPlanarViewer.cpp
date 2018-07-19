@@ -104,22 +104,22 @@ namespace Q {
 			this->getRenderers()[0]->RemoveActor(this->getCornerAnnotation());
 			this->GetAnnotationRenderer()->AddActor(this->getCursorActor());
 			this->GetAnnotationRenderer()->AddActor(this->getCornerAnnotation());
-			for (int i = 0; i < 4; i++)
-			{
-				this->orientationActor[i] = vtkTextActor::New();
-				this->orientationActor[i]->GetTextProperty()->SetColor(1, 0.749, 0);
-				this->orientationActor[i]->GetTextProperty()->SetFontSize(15);
-				this->orientationActor[i]->GetPositionCoordinate()->SetCoordinateSystemToNormalizedDisplay();
-				this->GetAnnotationRenderer()->AddActor2D(this->orientationActor[i]);
-			}
-			// superior	
-			this->orientationActor[0]->SetPosition(0.49, 0.95);
-			// inferior 
-			this->orientationActor[1]->SetPosition(0.49, 0.03);
-			// left
-			this->orientationActor[2]->SetPosition(0.03, 0.48);
-			// right
-			this->orientationActor[3]->SetPosition(0.98, 0.48);
+			//for (int i = 0; i < 4; i++)
+			//{
+			//	this->orientationActor[i] = vtkTextActor::New();
+			//	this->orientationActor[i]->GetTextProperty()->SetColor(1, 0.749, 0);
+			//	this->orientationActor[i]->GetTextProperty()->SetFontSize(15);
+			//	this->orientationActor[i]->GetPositionCoordinate()->SetCoordinateSystemToNormalizedDisplay();
+			//	this->GetAnnotationRenderer()->AddActor2D(this->orientationActor[i]);
+			//}
+			//// superior	
+			//this->orientationActor[0]->SetPosition(0.49, 0.95);
+			//// inferior 
+			//this->orientationActor[1]->SetPosition(0.49, 0.03);
+			//// left
+			//this->orientationActor[2]->SetPosition(0.03, 0.48);
+			//// right
+			//this->orientationActor[3]->SetPosition(0.98, 0.48);
 			// axisActor;
 			this->setOrientationTextFlag(this->orientationTextFlag);
 			////////////////////////////////////////////////////
@@ -160,11 +160,11 @@ namespace Q {
 		}
 		PlanarViewer::~PlanarViewer()
 		{
-			for (int i = 0; i < 4; i++)
-			{
-				this->GetAnnotationRenderer()->RemoveActor(this->orientationActor[i]);
-				this->orientationActor[i]->Delete();
-			}
+			//for (int i = 0; i < 4; i++)
+			//{
+			//	this->GetAnnotationRenderer()->RemoveActor(this->orientationActor[i]);
+			//	this->orientationActor[i]->Delete();
+			//}
 			this->GetAnnotationRenderer()->RemoveActor(this->verticalAxis);
 			this->verticalAxis->Delete();
 			this->GetAnnotationRenderer()->RemoveActor(this->horizontalAxis);
@@ -194,37 +194,58 @@ namespace Q {
 		void vtk::PlanarViewer::setOrientationTextFlag(bool flag)
 		{
 			this->orientationTextFlag = flag;
-			for (int i = 0; i < 4; ++i) {
-				this->orientationActor[i]->SetVisibility(flag);
-			}
-			if (!this->orientationTextFlag) {
-				return;
-			}
+			//for (int i = 0; i < 4; ++i) {
+			//	this->orientationActor[i]->SetVisibility(flag);
+			//}
 			ORIENTATION _orientation = static_cast<ORIENTATION>(this->getOrientation());
-			switch (_orientation)
-			{
-			case OrthogonalViewer::SAGITAL:
-				this->orientationActor[0]->SetInput("S");
-				this->orientationActor[1]->SetInput("I");
-				this->orientationActor[2]->SetInput("A");
-				this->orientationActor[3]->SetInput("P");
-				break;
-			case OrthogonalViewer::CORONAL:
-				this->orientationActor[0]->SetInput("S");
-				this->orientationActor[1]->SetInput("I");
-				this->orientationActor[2]->SetInput("R");
-				this->orientationActor[3]->SetInput("L");
-				break;
-			case OrthogonalViewer::AXIAL:
-				this->orientationActor[0]->SetInput("A");
-				this->orientationActor[1]->SetInput("P");
-				this->orientationActor[2]->SetInput("R");
-				this->orientationActor[3]->SetInput("L");
-				break;
-				break;
-			default:
-				break;
+			char orientationText[4][2];
+			orientationText[0][1] = '\0';
+			orientationText[1][1] = '\0';
+			orientationText[2][1] = '\0';
+			orientationText[3][1] = '\0';
+			if (this->orientationTextFlag) {
+				switch (_orientation)
+				{
+				case OrthogonalViewer::SAGITAL:
+					orientationText[0][0] = 'S';
+					orientationText[1][0] = 'I';
+					orientationText[2][0] = 'A';
+					orientationText[3][0] = 'P';
+					break;
+				case OrthogonalViewer::CORONAL:
+					orientationText[0][0] = 'S';
+					orientationText[1][0] = 'I';
+					orientationText[2][0] = 'R';
+					orientationText[3][0] = 'L';
+					break;
+				case OrthogonalViewer::AXIAL:
+					orientationText[0][0] = 'A';
+					orientationText[1][0] = 'P';
+					orientationText[2][0] = 'R';
+					orientationText[3][0] = 'L';
+					break;
+				default:
+					orientationText[0][0] = '\0';
+					orientationText[1][0] = '\0';
+					orientationText[2][0] = '\0';
+					orientationText[3][0] = '\0';
+					break;
+				}
 			}
+			else {
+				orientationText[0][0] = '\0';
+				orientationText[1][0] = '\0';
+				orientationText[2][0] = '\0';
+				orientationText[3][0] = '\0';
+			}
+			//this->orientationActor[0]->SetInput(orientationText[0]);
+			//this->orientationActor[1]->SetInput(orientationText[1]);
+			//this->orientationActor[2]->SetInput(orientationText[2]);
+			//this->orientationActor[3]->SetInput(orientationText[3]);
+			this->getCornerAnnotation()->SetText(vtkCornerAnnotation::UpperEdge, orientationText[0]);
+			this->getCornerAnnotation()->SetText(vtkCornerAnnotation::LowerEdge, orientationText[1]);
+			this->getCornerAnnotation()->SetText(vtkCornerAnnotation::LeftEdge, orientationText[2]);
+			this->getCornerAnnotation()->SetText(vtkCornerAnnotation::RightEdge, orientationText[3]);
 		}
 
 		void PlanarViewer::updateCursorPosition(double x, double y, double z)
