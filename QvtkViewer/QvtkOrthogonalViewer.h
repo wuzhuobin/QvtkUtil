@@ -30,7 +30,7 @@ namespace Q {
 				ORIENTATION_YZ = 0,
 				ORIENTATION_XZ = 1,
 				ORIENTATION_XY = 2,
-				SAGITAL = 3,
+				SAGITTAL = 3,
 				CORONAL = 4,
 				AXIAL = 5
 			}ORIENTATION;
@@ -52,12 +52,12 @@ namespace Q {
 			*/
 			virtual void setAxialViewPlaneNormal(double e1, double e2, double e3);
 			void setAxialViewPlaneNormal(double*);
-			virtual void setSagitalViewPlaneNormal(double e1, double e2, double e3);
-			void setSagitalViewPlaneNormal(double*);
+			virtual void setSagittalViewPlaneNormal(double e1, double e2, double e3);
+			void setSagittalViewPlaneNormal(double*);
 			virtual const double* getAxialViewPlaneNormal() const;
 			void getAxialViewPlaneNormal(double normal[3]) const;
-			virtual const double* getSagitalViewPlaneNormal() const;
-			void getSagitalViewPlaneNormal(double normal[3]) const;
+			virtual const double* getSagittalViewPlaneNormal() const;
+			void getSagittalViewPlaneNormal(double normal[3]) const;
 			virtual const double* getCoronalViewPlaneNormal() const;
 			virtual const double* getCurrentPlaneNormal() const { return this->currentPlaneNormal; }
 			void getCurrentPlaneNormal(double normal[3]) const;
@@ -107,7 +107,7 @@ namespace Q {
 			void setOrientationToXY() { this->setOrientation(ORIENTATION_XY); }
 			void setOrientationToCoronal() { this->setOrientation(CORONAL); }
 			void setOrientationToXZ() { this->setOrientation(ORIENTATION_XZ); }
-			void setOrientationToSagital() { this->setOrientation(SAGITAL); }
+			void setOrientationToSagittal() { this->setOrientation(SAGITTAL); }
 			void setOrientationToYZ() { this->setOrientation(ORIENTATION_YZ); }
 		Q_SIGNALS:
 			void OrientationChanged(int orientation);
@@ -137,7 +137,7 @@ namespace Q {
 			int orientation;
 			bool viewPlaneNormalSyncFlag;
 			bool righthandness; // default True
-			double sagitalViewPlaneNormal[3];
+			double sagittalViewPlaneNormal[3];
 			mutable double coronalViewPlaneNormal[3];
 			double axialViewPlaneNormal[3];
 			double currentPlaneNormal[3];

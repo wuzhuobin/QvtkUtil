@@ -72,7 +72,7 @@ namespace Q {
 				}
 				break;
 			}
-			case SAGITAL:
+			case SAGITTAL:
 			case CORONAL:
 			case AXIAL: {
 				QList<Prop*> props = this->propToRenderer->keys();
@@ -206,7 +206,7 @@ namespace Q {
 			if (this->orientationTextFlag) {
 				switch (_orientation)
 				{
-				case OrthogonalViewer::SAGITAL:
+				case OrthogonalViewer::SAGITTAL:
 					orientationText[0][0] = 'S';
 					orientationText[1][0] = 'I';
 					orientationText[2][0] = 'A';
@@ -280,7 +280,7 @@ namespace Q {
 			case OrthogonalViewer::ORIENTATION_XY:
 				pos[2] += (sign ? 1 * this->sliceThickness : -1 * this->sliceThickness);
 				break;
-			case OrthogonalViewer::SAGITAL:
+			case OrthogonalViewer::SAGITTAL:
 			case OrthogonalViewer::CORONAL:
 			case OrthogonalViewer::AXIAL: {
 				double translation[3];
@@ -307,7 +307,7 @@ namespace Q {
 				this->getActiveCamera()->SetViewUp(0, -1, 0);
 				break;
 			case CORONAL:
-			case SAGITAL:
+			case SAGITTAL:
 				this->getActiveCamera()->SetViewUp(0, 0, 1);
 				break;
 			default: 

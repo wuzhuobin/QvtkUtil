@@ -21,7 +21,7 @@ namespace Q {
 	namespace vtk {
 		/* set default value of x and y view plane normal */
 		bool righthandness_ = true;
-		double sagitalViewPlaneNormal_[3] = { 1, 0, 0 };
+		double sagittalViewPlaneNormal_[3] = { 1, 0, 0 };
 		double coronalViewPlaneNormal_[3] = { 0, 1, 0 };
 		double axialViewPlaneNormal_[3] = { 0, 0, 1 };
 		const double OrthogonalViewer::ORIENTATION_YZ_NORMAL[3] = { 1, 0, 0 };
@@ -47,8 +47,8 @@ namespace Q {
 			case OrthogonalViewer::CORONAL:
 				this->ui->pushButtonCoronal->setChecked(true);
 				break;
-			case OrthogonalViewer::SAGITAL:
-				this->ui->pushButtonSagital->setChecked(true);
+			case OrthogonalViewer::SAGITTAL:
+				this->ui->pushButtonSagittal->setChecked(true);
 				break;
 			default:
 				break;
@@ -69,14 +69,14 @@ namespace Q {
 			this->righthandness = true;
 			this->orientation = ORIENTATION_XY;
 			std::copy(ORIENTATION_XY_NORMAL, ORIENTATION_XY_NORMAL + 3, this->currentPlaneNormal);
-			std::copy(sagitalViewPlaneNormal_, sagitalViewPlaneNormal_ + 3, this->sagitalViewPlaneNormal);
+			std::copy(sagittalViewPlaneNormal_, sagittalViewPlaneNormal_ + 3, this->sagittalViewPlaneNormal);
 			std::copy(coronalViewPlaneNormal_, coronalViewPlaneNormal_ + 3, this->coronalViewPlaneNormal);
 			std::copy(axialViewPlaneNormal_, axialViewPlaneNormal_ + 3, this->axialViewPlaneNormal);
 			this->setupFirstRenderer();
 			// connection 
 			connect(this->ui->pushButtonAxial, &QPushButton::clicked, this, &OrthogonalViewer::setOrientationToAxial);
 			connect(this->ui->pushButtonCoronal, &QPushButton::clicked, this, &OrthogonalViewer::setOrientationToCoronal);
-			connect(this->ui->pushButtonSagital, &QPushButton::clicked, this, &OrthogonalViewer::setOrientationToSagital);
+			connect(this->ui->pushButtonSagittal, &QPushButton::clicked, this, &OrthogonalViewer::setOrientationToSagittal);
 			connect(this->ui->pushButtonYZ, &QPushButton::clicked, this, &OrthogonalViewer::setOrientationToYZ);
 			connect(this->ui->pushButtonXZ, &QPushButton::clicked, this, &OrthogonalViewer::setOrientationToXZ);
 			connect(this->ui->pushButtonXY, &QPushButton::clicked, this, &OrthogonalViewer::setOrientationToXY);
@@ -87,7 +87,7 @@ namespace Q {
 			delete this->ui;
 		}
 
-		void OrthogonalViewer::setSagitalViewPlaneNormal(double e1, double e2, double e3)
+		void OrthogonalViewer::setSagittalViewPlaneNormal(double e1, double e2, double e3)
 		{
 			double normal[] = { e1, e2, e3 };
 			if (vtkMath::Norm(normal) < 1e-15) {
@@ -96,21 +96,21 @@ namespace Q {
 			}
 			vtkMath::Normalize(normal);
 			if (this->viewPlaneNormalSyncFlag) {
-				std::copy(normal, normal + 3, sagitalViewPlaneNormal_);
+				std::copy(normal, normal + 3, sagittalViewPlaneNormal_);
 			}
 			else {
-				std::copy(normal, normal + 3, this->sagitalViewPlaneNormal);
+				std::copy(normal, normal + 3, this->sagittalViewPlaneNormal);
 			}
 			/* Check if this is orthogonal with xViewPlaneNormal, if not snap it to
 			the closest vect that is orthogonal with xViewPlaneNormal */
-			if (qAbs(vtkMath::Dot(this->getSagitalViewPlaneNormal(), this->getAxialViewPlaneNormal())) > 1e-10) {
+			if (qAbs(vtkMath::Dot(this->getSagittalViewPlaneNormal(), this->getAxialViewPlaneNormal())) > 1e-10) {
 				double _axialViewPlaneNormal[3];
 				if (this->getRighthandness()) {
-					vtkMath::Cross(this->getSagitalViewPlaneNormal(), this->getCoronalViewPlaneNormal(), _axialViewPlaneNormal);
+					vtkMath::Cross(this->getSagittalViewPlaneNormal(), this->getCoronalViewPlaneNormal(), _axialViewPlaneNormal);
 				}
 				else
 				{
-					vtkMath::Cross(this->getCoronalViewPlaneNormal(), this->getSagitalViewPlaneNormal(), _axialViewPlaneNormal);
+					vtkMath::Cross(this->getCoronalViewPlaneNormal(), this->getSagittalViewPlaneNormal(), _axialViewPlaneNormal);
 				}
 				vtkMath::Normalize(_axialViewPlaneNormal);
 				this->setAxialViewPlaneNormal(_axialViewPlaneNormal);
@@ -130,9 +130,9 @@ namespace Q {
 			}
 		}
 
-		void OrthogonalViewer::setSagitalViewPlaneNormal(double *normal)
+		void OrthogonalViewer::setSagittalViewPlaneNormal(double *normal)
 		{
-			OrthogonalViewer::setSagitalViewPlaneNormal(normal[0], normal[1], normal[2]);
+			OrthogonalViewer::setSagittalViewPlaneNormal(normal[0], normal[1], normal[2]);
 		}
 
 		const double *OrthogonalViewer::getAxialViewPlaneNormal() const
@@ -150,38 +150,38 @@ namespace Q {
 			std::copy(this->getAxialViewPlaneNormal(), this->getAxialViewPlaneNormal() + 3, normal);
 		}
 
-		const double *OrthogonalViewer::getSagitalViewPlaneNormal() const
+		const double *OrthogonalViewer::getSagittalViewPlaneNormal() const
 		{
 			if (this->viewPlaneNormalSyncFlag) {
-				return sagitalViewPlaneNormal_;
+				return sagittalViewPlaneNormal_;
 			}
 			else {
-				return this->sagitalViewPlaneNormal;
+				return this->sagittalViewPlaneNormal;
 			}
 		}
 
-		void OrthogonalViewer::getSagitalViewPlaneNormal(double normal[3]) const
+		void OrthogonalViewer::getSagittalViewPlaneNormal(double normal[3]) const
 		{
-			std::copy(this->getSagitalViewPlaneNormal(), this->getSagitalViewPlaneNormal() + 3, normal);
+			std::copy(this->getSagittalViewPlaneNormal(), this->getSagittalViewPlaneNormal() + 3, normal);
 		}
 
 		const double* OrthogonalViewer::getCoronalViewPlaneNormal() const
 		{
-			//double dotProduct = qAbs(vtkMath::Dot(this->getSagitalViewPlaneNormal(), this->getAxialViewPlaneNormal()));
+			//double dotProduct = qAbs(vtkMath::Dot(this->getSagittalViewPlaneNormal(), this->getAxialViewPlaneNormal()));
 			//if (dotProduct > 1e-10) {
-			//	qWarning() << "SAGITAL view plane normal and axial view plane normal are almowt ";
+			//	qWarning() << "SAGITTAL view plane normal and axial view plane normal are almowt ";
 			//	qWarning() << "The product of them is " << dotProduct;
 			//}
 			if (this->viewPlaneNormalSyncFlag) {
 				if (this->getRighthandness()) {
-					vtkMath::Cross(this->getAxialViewPlaneNormal(), this->getSagitalViewPlaneNormal(), coronalViewPlaneNormal_);
+					vtkMath::Cross(this->getAxialViewPlaneNormal(), this->getSagittalViewPlaneNormal(), coronalViewPlaneNormal_);
 				}
 				else {
-					vtkMath::Cross(this->getSagitalViewPlaneNormal(), this->getAxialViewPlaneNormal(), coronalViewPlaneNormal_);
+					vtkMath::Cross(this->getSagittalViewPlaneNormal(), this->getAxialViewPlaneNormal(), coronalViewPlaneNormal_);
 				}
 				vtkMath::Normalize(coronalViewPlaneNormal_);
 				//qDebug() << "sagitial view plane normal";
-				//qDebug() << sagitalViewPlaneNormal_[0] << sagitalViewPlaneNormal_[1] << sagitalViewPlaneNormal_[2];
+				//qDebug() << sagittalViewPlaneNormal_[0] << sagittalViewPlaneNormal_[1] << sagittalViewPlaneNormal_[2];
 				//qDebug() << "CORONAL View Plane Normal ";
 				//qDebug() << coronalViewPlaneNormal_[0] << coronalViewPlaneNormal_[1] << coronalViewPlaneNormal_[2];
 				//qDebug() << "axial view plane normal. ";
@@ -190,14 +190,14 @@ namespace Q {
 			}
 			else {
 				if (this->getRighthandness()) {
-					vtkMath::Cross(this->getAxialViewPlaneNormal(), this->getSagitalViewPlaneNormal(), this->coronalViewPlaneNormal);
+					vtkMath::Cross(this->getAxialViewPlaneNormal(), this->getSagittalViewPlaneNormal(), this->coronalViewPlaneNormal);
 				}
 				else {
-					vtkMath::Cross(this->getSagitalViewPlaneNormal(), this->getAxialViewPlaneNormal(), this->coronalViewPlaneNormal);
+					vtkMath::Cross(this->getSagittalViewPlaneNormal(), this->getAxialViewPlaneNormal(), this->coronalViewPlaneNormal);
 				}
 				vtkMath::Normalize(this->coronalViewPlaneNormal);
 				//qDebug() << "sagitial view plane normal";
-				//qDebug() << sagitalViewPlaneNormal[0] << sagitalViewPlaneNormal[1] << sagitalViewPlaneNormal[2];
+				//qDebug() << sagittalViewPlaneNormal[0] << sagittalViewPlaneNormal[1] << sagittalViewPlaneNormal[2];
 				//qDebug() << "CORONAL View Plane Normal ";
 				//qDebug() << coronalViewPlaneNormal[0] << coronalViewPlaneNormal[1] << coronalViewPlaneNormal[2];
 				//qDebug() << "axial view plane normal. ";
@@ -215,8 +215,8 @@ namespace Q {
 		{
 			switch (this->orientation)
 			{
-			case SAGITAL:
-				std::copy(this->getSagitalViewPlaneNormal(), this->getSagitalViewPlaneNormal() + 3, this->currentPlaneNormal);
+			case SAGITTAL:
+				std::copy(this->getSagittalViewPlaneNormal(), this->getSagittalViewPlaneNormal() + 3, this->currentPlaneNormal);
 				break;
 			case CORONAL:
 				std::copy(this->getCoronalViewPlaneNormal(), this->getCoronalViewPlaneNormal() + 3, this->currentPlaneNormal);
@@ -252,11 +252,11 @@ namespace Q {
 		double* OrthogonalViewer::UpdateViewUp()
 		{
 			switch (this->orientation) {
-			case SAGITAL:
+			case SAGITTAL:
 				this->getActiveCamera()->SetViewUp(this->getAxialViewPlaneNormal());
 				break;
 			case CORONAL:
-				this->getActiveCamera()->SetViewUp(this->getSagitalViewPlaneNormal());
+				this->getActiveCamera()->SetViewUp(this->getSagittalViewPlaneNormal());
 				break;
 			case AXIAL:
 				this->getActiveCamera()->SetViewUp(this->getCoronalViewPlaneNormal());
@@ -297,7 +297,7 @@ namespace Q {
 			else {
 				std::copy(normal, normal + 3, this->axialViewPlaneNormal);
 			}
-			if (qAbs(vtkMath::Dot(this->getSagitalViewPlaneNormal(), this->getAxialViewPlaneNormal())) > 1e-10) {
+			if (qAbs(vtkMath::Dot(this->getSagittalViewPlaneNormal(), this->getAxialViewPlaneNormal())) > 1e-10) {
 				double _sagitalViewPlaneNormal[3];
 				if (this->getRighthandness()) {
 					vtkMath::Cross(this->getCoronalViewPlaneNormal(), this->getAxialViewPlaneNormal(), _sagitalViewPlaneNormal);
@@ -306,7 +306,7 @@ namespace Q {
 					vtkMath::Cross(this->getAxialViewPlaneNormal(), this->getCoronalViewPlaneNormal(), _sagitalViewPlaneNormal);
 				}
 				vtkMath::Normalize(_sagitalViewPlaneNormal);
-				this->setSagitalViewPlaneNormal(_sagitalViewPlaneNormal);
+				this->setSagittalViewPlaneNormal(_sagitalViewPlaneNormal);
 			}
 			if (this->getViewPlaneNormalSyncFlag()) {
 				for (Viewer *viewer : getAllViewers()) {
