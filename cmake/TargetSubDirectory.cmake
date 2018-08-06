@@ -1,0 +1,3 @@
+add_subdirectory(QvtkData)
+add_subdirectory(QvtkViewer)
+add_subdirectory(QvtkInteractorObserver)
