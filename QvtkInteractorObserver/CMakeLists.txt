@@ -1,34 +1,9 @@
-# @file	TemplateCMakeLists.txt
-# @brief	A template CMakeLists.txt which can automatically generate project
+# @file	CMakeLists.txt
+# @brief	A CMakeLists.txt which can automatically generate project
 # @author	WUZHUOBIN
-# @version	1.8.0
-# @since	Dec.08.2017
-# @date 	Apr.19.2018
-# 
-# <h1>How to use</h1>
-# <ul>
-#     <li>Create a folder to place all header files, implementation files and the 'TemplateCMakeLists.txt'.</li>
-#     <li>Place 'Config.cmake.in' and 'CMakeListsConfig.cmake.in' properly. </li>
-#     <li>Rename the folder as the project name. Since the folder name will become the project name.</li>
-#     <li>Rename 'TemplateCMakeLists.txt' to 'CMakeLists.txt'.</li>
-#     <li>Configure with CMake and follow normal cmake pipeline.</li>
-#     <li>If build executable, create 'mahin/main.cpp' as the program entry point.</li>
-#     <li>If build library, no need to do the previous procedure.</li>
-#     <li>DO NOT modify things not in 'CHANGE BELOW'. </li>
-#     <li>If need other Qt module, add modules in 'DEPENDENCY' module.</li>
-#     <li>If need other package, add packages in 'DEPENDENCY' module.</li>
-#     <li>If need resource, add resources in 'DEPENDENCY' module.</li>
-#     <li>If need other libraries and headers, add them in <code>PROJECT_LIBRARY</code> and <code>PROJECT_INCLUDE</code> in 'LIBRARIES' module. </li>
-#     <li>If need build shared libraries, using export macro in header files and check <code>BUILD_SHARED_LIB</code> option. </li>
-# </ul>
-# <h1>What happen</h1>
-# <ul>
-#     <li>CMake will find all '*.c*' '*.h*' files for building. </li>
-#     <li>CMake will find all '*.qrc' files as Qt qrc. </li>
-#     <li>CMake will find all '*.ui' as Qt UI form. </li>
-#     <li>If 'main/main.cpp' exists, the project will create both static library files and executable files. </li>
-#     <li>CMake will export necessary files for CMake package and install.</li>
-# </ul>
+# @version	0.0.0
+# @since	Aug.06.2018
+# @date 	Aug.06.2018
 # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #			Copyright (c) WUZHUOBIN 											    #
@@ -39,7 +14,7 @@
 #			PURPOSE.  See the above copyright notice for more information.		    #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 cmake_minimum_required(VERSION 3.1) 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 get_filename_component(
 	FOLDER_NAME 
 	${CMAKE_CURRENT_SOURCE_DIR} 
@@ -76,8 +51,8 @@ endif()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # Allow the developer to build example.
 option(BUILD_EXAMPLE "Build Example" OFF)
-if(BUILD_EXAMPLE AND EXISTS ${PROJECT_SOURCE_DIR}/Example)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/Example)
+if(BUILD_EXAMPLE AND EXISTS ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Example)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Example)
 endif()
 # Allow the developer to do testing or not.
 option(BUILD_TESTING "Build Testing" OFF)
@@ -163,7 +138,6 @@ include(GenerateExportHeader)
 # # # # # # # # # # # # # # # # # BUILD LIBRARY # # # # # # # # # # # # # # # #  
 # Enable always build static library
 # set(LIB_TYPE STATIC)
-
 if(PROJECT_SRC)
 	add_library(
 		${PROJECT_NAME}
@@ -172,7 +146,7 @@ if(PROJECT_SRC)
 		${PROJECT_INC}
 	)
 endif()
-# # # # # # # # # # # # # # # # # BUILD EXECUTABLE # # # # # # # # # # # # # # # #  
+# # # # # # # # # # # # # # # # # BUILD EXECUTABLE # # # # # # # # # # # # # # 
 if(PROJECT_MAIN_SRC)
 	add_executable(
 		${PROJECT_NAME}_main
@@ -190,7 +164,7 @@ file(
 foreach(ONE ${PROJECT_TARGET_CMAKE})
 	include(${ONE})
 endforeach()
-# # # # # # # # # # # # # # # # # LINKAGE # # # # # # # # # # # # # # # #  
+# # # # # # # # # # # # # # # # # LINKAGE # # # # # # # # # # # # # # # # # # # 
 # Adding a prefix for exporting target
 foreach(ONE ${PROJECT_INCLUDE})
 	list(
@@ -224,12 +198,12 @@ if(TARGET ${PROJECT_NAME}_main)
 		${PROJECT_LIBRARY}
 	)
 	target_include_directories(
-		${PROJECT_NAME}
+		${PROJECT_NAME}_main
 		PUBLIC
 		${PROJECT_INCLUDE}
 	)
 endif()
-# # # # # # # # # # # # # # # # # EXPORT # # # # # # # # # # # # # # # #  
+# # # # # # # # # # # # # # # # # EXPORT # # # # # # # # # # # # # # # # # # # # # 
 # installation to be continue.
 # comment following for normal source project
 if(TARGET ${PROJECT_NAME})
