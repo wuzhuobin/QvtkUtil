@@ -15,7 +15,7 @@ namespace Q {
 		ImageSliceColor::ImageSliceColor()
 		{
 			this->getImageActor()->GetProperty()->SetLookupTable(this->lookupTable);
-			this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(true);
+			//this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(true);
 			this->getImageActor()->GetProperty()->SetInterpolationTypeToLinear();
 			this->defaultColorFile = createAttribute(K.DefaultColorFile, static_cast<int>(0), true);
 			this->insertSlotFunction(this->defaultColorFile, &ImageSliceColor::setDefaultColorFile);
@@ -93,7 +93,7 @@ namespace Q {
 				this->setColorFile(DEFAULT_COLOR_FILES[i]);
 			}
 			else if(i >= DEFAULT_COLOR_FILES.size()) {
-				this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(false);
+				//this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(false);
 				this->getImageActor()->GetProperty()->SetLookupTable(nullptr);
 			}
 		}
@@ -108,7 +108,7 @@ namespace Q {
 				return;
 			}
 			this->getImageActor()->GetProperty()->SetLookupTable(this->lookupTable);
-			this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(true);
+			//this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(true);
 			this->namedColorsToLookupTable();
 			this->namedColosrToTransferFunction();
 		}

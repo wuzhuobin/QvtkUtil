@@ -7,7 +7,7 @@
  */
 #ifndef __QVTK_IMAGE_H__
 #define __QVTK_IMAGE_H__
-
+#pragma once
 #define Qvtk_TEMPLATE_MACRO_CASE(typeN, type, call)     \
   case typeN: { typedef type ITK_IMAGE_IO_BASE_IO_COMPONENT_TYPE; call; }; break
 #define Qvtk_ITK_TEMPLATE_MACRO(call) \
