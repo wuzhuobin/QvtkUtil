@@ -34,7 +34,10 @@ class vtkImageReslice;
 class vtkImageChangeInformation;
 
 // itk
-namespace itk {template< typename TPixel, unsigned int VImageDimension > class Image; }
+namespace itk {
+	template< typename TPixel, unsigned int VImageDimension > class Image;
+	template< typename TParametersValueType, unsigned int NDimensions> class AffineTransform;
+}
 namespace Q {
 namespace vtk{
 
@@ -55,6 +58,10 @@ public:
 		NIFTI = 3,
 		DICOM = 4
 	}IMAGE_SUFFIX;
+
+	//template<typename TParametersValueType, unsigned int NDimensions> 
+	typedef itk::AffineTransform<double, 3> AffineTransformType;
+	static void vtkMatrix4x4ToitkAffineTransform(AffineTransformType *itkTransform, vtkMatrix4x4 *vtkMatrix);
 
 	template<typename PixelType>
 	static bool _VTKImageToITKImage(itk::Image<PixelType, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4* userMatrix = nullptr);
@@ -91,7 +98,7 @@ public:
 	template<typename PixelType>
 	void getITKImageData(itk::Image<PixelType, 3>* itkImage) const;
 	template<typename PixelType>
-	void copyITKImageData(itk::Image<PixelType, 3>* itkImage);
+	void setITKImageData(itk::Image<PixelType, 3>* itkImage);
 	static bool readDataSuffix(
 		QStringList fileNames,
 		vtkImageData* data,

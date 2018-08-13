@@ -1,7 +1,6 @@
 // me
 #include "QvtkImage.h"
 #include "QvtkImageSlice.h"
-
 //vtk
 #include <vtkImageData.h>
 #include <vtkMatrix4x4.h>
@@ -15,7 +14,6 @@
 #include <vtkImageChangeInformation.h>
 #include <vtkImageActor.h>
 #include <vtkImageProperty.h>
-
 //itk
 #include <itkImage.h>
 #include <itkImageIOBase.h>
@@ -27,8 +25,9 @@
 #include <itkVTKImageToImageFilter.h>
 #include <itkOrientImageFilter.h>
 #include <itkChangeInformationImageFilter.h>
-#include <itkCastImageFilter.h>
-
+#include <itkCastImagefILter.h>
+#include <itkResampleImageFilter.h>
+#include <itkAffineTransform.h>
 //qt
 #include <QDebug>
 #include <QDir>
@@ -66,9 +65,7 @@ Image::~Image()
 void Image::printSelf() const
 {
 	DataSet::printSelf();
-
 }
-
 
 bool Image::readData(QString rootDirectory)
 {
@@ -254,6 +251,20 @@ bool Image::readITKImage(QStringList paths, vtkImageData * image, double orienta
 	}
 	return false;
 
+}
+
+void Image::vtkMatrix4x4ToitkAffineTransform(AffineTransformType *itkTransform, vtkMatrix4x4 *vtkMatrix)
+{
+	AffineTransformType::MatrixType matrix;
+	AffineTransformType::OffsetType offset;
+	for (int i = 0; i < 3; ++i) {
+		for (int j = 0; j < 3; ++j) {
+			matrix[i][j] = vtkMatrix->GetElement(i, j);
+		}
+		offset[i] = vtkMatrix->GetElement(i, 3);
+	}
+	itkTransform->SetOffset(offset);
+	itkTransform->SetMatrix(matrix);
 }
 
 template<typename PixelType>
@@ -607,11 +618,19 @@ template<typename PixelType>
 void Image::getITKImageData(itk::Image<PixelType, 3>* itkImage) const
 {
 	_VTKImageToITKImage(itkImage, this->getImageData(), this->getOrientation(), this->getPosition(), this->getScale());
-
+	AffineTransformType::Pointer itkTransform = AffineTransformType::New();
+	vtkMatrix4x4ToitkAffineTransform(itkTransform, this->getUserMatrix());
+	typedef typename itk::ResampleImageFilter<itk::Image<PixelType, 3>, itk::Image<PixelType, 3>> ResampleImageFilter;
+	ResampleImageFilter::Pointer resampleImageFilter = ResampleImageFilter::New();
+	resampleImageFilter->SetInput(itkImage);
+	resampleImageFilter->SetSize(itkImage->GetLargestPossibleRegion().GetSize());
+	resampleImageFilter->SetTransform(itkTransform);
+	resampleImageFilter->Update();
+	itkImage->Graft(resampleImageFilter->GetOutput());
 }
 
 template<typename PixelType>
-void Image::copyITKImageData(itk::Image<PixelType, 3>* itkImage)
+void Image::setITKImageData(itk::Image<PixelType, 3>* itkImage)
 {
 	typedef itk::Image<PixelType, 3> TImageType;
 	typedef itk::OrientImageFilter< TImageType, TImageType > OrientImageFilter;
@@ -913,16 +932,16 @@ template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<unsigned long, 3
 template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<long, 3>* itkImage) const;
 template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<float, 3>* itkImage) const;
 template QVTKDATA_EXPORT void Image::getITKImageData(itk::Image<double, 3>* itkImage) const;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned char, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<char, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned short, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<short, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned int, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<int, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<unsigned long, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<long, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<float, 3>* itkImage) ;
-template QVTKDATA_EXPORT void Image::copyITKImageData(itk::Image<double, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned char, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<char, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned short, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<short, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned int, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<int, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<unsigned long, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<long, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<float, 3>* itkImage) ;
+template QVTKDATA_EXPORT void Image::setITKImageData(itk::Image<double, 3>* itkImage) ;
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<unsigned char, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix);
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<char, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix);
 template QVTKDATA_EXPORT bool Image::_VTKImageToITKImage(itk::Image<unsigned short, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix);
