@@ -560,7 +560,7 @@ template void Image::_ITKImageCasting<double, double>(itk::Image<double, 3>* out
 //	return true;
 //}
 
-bool Image::writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3])
+bool Image::writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix)
 {
 	switch (image->GetScalarType())
 	{
@@ -570,7 +570,7 @@ bool Image::writeITKImage(QStringList paths, vtkImageData* image, const double o
 }
 
 template<typename PixelType>
-bool Image::writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3])
+bool Image::writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix)
 {
 	using namespace itk;
 //	typedef float PixelType;
@@ -590,7 +590,17 @@ bool Image::writeImage(QStringList paths, vtkImageData* image, const double orie
 	}
 	else if (paths.size() == 1)
 	{
-
+		if (userMatrix != nullptr) {
+			AffineTransformType::Pointer itkTransform = AffineTransformType::New();
+			vtkMatrix4x4ToitkAffineTransform(itkTransform, userMatrix);
+			typedef typename itk::ResampleImageFilter<itk::Image<PixelType, 3>, itk::Image<PixelType, 3>> ResampleImageFilter;
+			ResampleImageFilter::Pointer resampleImageFilter = ResampleImageFilter::New();
+			resampleImageFilter->SetInput(itkImage);
+			resampleImageFilter->SetSize(itkImage->GetLargestPossibleRegion().GetSize());
+			resampleImageFilter->SetTransform(itkTransform);
+			resampleImageFilter->Update();
+			itkImage = resampleImageFilter->GetOutput();
+		}
 		try {
 			typedef ImageFileWriter<TImageType> ImageFileWriter;
 

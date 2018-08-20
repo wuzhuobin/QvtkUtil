@@ -71,7 +71,7 @@ public:
 
 	static bool readITKImage(QStringList paths, vtkImageData* image, double orientation[3], double position[3], double scale[3]);
 
-	static bool writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3]);
+	static bool writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4* userMatrix = nullptr);
 
 	Image();
 
@@ -140,7 +140,7 @@ protected:
 	static void setLevel(Data* self, QStandardItem* item);
 
 	template<typename PixelType>
-	static bool writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3]);
+	static bool writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix = nullptr);
 
 	template<typename PixelType>
 	static bool readImage(QStringList paths, vtkImageData* image, double orientation[3], double position[3], double scale[3]);
