@@ -1,0 +1,17 @@
+file(
+	GLOB
+	PROJECT_CONFIGURE_CMAKE
+	${PROJECT_SOURCE_DIR}/cmake/*Config.cmake.in
+)
+configure_file(
+	${PROJECT_CONFIGURE_CMAKE}
+	${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}Config.cmake
+	@ONLY
+)
+install(
+	FILES
+	${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}Config.cmake
+	${PROJECT_FIND_CMAKE}
+	DESTINATION
+	lib/cmake
+)

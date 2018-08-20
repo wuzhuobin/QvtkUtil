@@ -1,0 +1,15 @@
+include(${CMAKE_CURRENT_LIST_DIR}/QvtkDataConfig.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/QvtkViewerConfig.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/QvtkInteractorObserverConfig.cmake)
+get_filename_component(
+    FOLDER_NAME 
+	${CMAKE_CURRENT_SOURCE_DIR} 
+	NAME
+    )
+set(${FOLDER_NAME}_FOUND TRUE)
+set(
+    ${FOLDER_NAME}_LIBRARY
+    QvtkData
+    QvtkViewer
+    QvtkInteractorObserver
+)

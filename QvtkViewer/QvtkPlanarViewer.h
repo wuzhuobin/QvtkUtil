@@ -4,7 +4,7 @@
 // me
 #include "QvtkOrthogonalViewer.h"
 // vtk
-//class vtkTextActor;
+class vtkTextActor;
 class vtkAxisActor2D;
 namespace Q {
 	namespace vtk {
@@ -32,7 +32,7 @@ namespace Q {
 		protected:
 			virtual double* UpdateViewUp() override;
 			double sliceThickness;
-			//vtkTextActor* orientationActor[4];
+			vtkTextActor* orientationActor[4];
 			vtkAxisActor2D* verticalAxis;
 			vtkAxisActor2D* horizontalAxis;
 			bool updateAxesFlag;

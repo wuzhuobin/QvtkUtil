@@ -7,7 +7,7 @@
  */
 #ifndef __QVTK_IMAGE_H__
 #define __QVTK_IMAGE_H__
-
+#pragma once
 #define Qvtk_TEMPLATE_MACRO_CASE(typeN, type, call)     \
   case typeN: { typedef type ITK_IMAGE_IO_BASE_IO_COMPONENT_TYPE; call; }; break
 #define Qvtk_ITK_TEMPLATE_MACRO(call) \
@@ -34,7 +34,10 @@ class vtkImageReslice;
 class vtkImageChangeInformation;
 
 // itk
-namespace itk {template< typename TPixel, unsigned int VImageDimension > class Image; }
+namespace itk {
+	template< typename TPixel, unsigned int VImageDimension > class Image;
+	template< typename TParametersValueType, unsigned int NDimensions> class AffineTransform;
+}
 namespace Q {
 namespace vtk{
 
@@ -56,6 +59,10 @@ public:
 		DICOM = 4
 	}IMAGE_SUFFIX;
 
+	//template<typename TParametersValueType, unsigned int NDimensions> 
+	typedef itk::AffineTransform<double, 3> AffineTransformType;
+	static void vtkMatrix4x4ToitkAffineTransform(AffineTransformType *itkTransform, vtkMatrix4x4 *vtkMatrix);
+
 	template<typename PixelType>
 	static bool _VTKImageToITKImage(itk::Image<PixelType, 3>* output, vtkImageData* input, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4* userMatrix = nullptr);
 
@@ -64,7 +71,7 @@ public:
 
 	static bool readITKImage(QStringList paths, vtkImageData* image, double orientation[3], double position[3], double scale[3]);
 
-	static bool writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3]);
+	static bool writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4* userMatrix = nullptr);
 
 	Image();
 
@@ -91,7 +98,7 @@ public:
 	template<typename PixelType>
 	void getITKImageData(itk::Image<PixelType, 3>* itkImage) const;
 	template<typename PixelType>
-	void copyITKImageData(itk::Image<PixelType, 3>* itkImage);
+	void setITKImageData(itk::Image<PixelType, 3>* itkImage);
 	static bool readDataSuffix(
 		QStringList fileNames,
 		vtkImageData* data,
@@ -133,7 +140,7 @@ protected:
 	static void setLevel(Data* self, QStandardItem* item);
 
 	template<typename PixelType>
-	static bool writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3]);
+	static bool writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix = nullptr);
 
 	template<typename PixelType>
 	static bool readImage(QStringList paths, vtkImageData* image, double orientation[3], double position[3], double scale[3]);

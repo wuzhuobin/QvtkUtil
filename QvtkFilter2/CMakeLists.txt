@@ -1,10 +1,13 @@
 # @file	CMakeLists.txt
 # @brief	A CMakeLists.txt which can automatically generate project
 # @author	WUZHUOBIN
-# @version	0.0.0
+# @version	2.1
 # @since	Aug.06.2018
-# @date 	Aug.06.2018
-# 
+# @date 	Aug.14.2018
+# @log
+# The Previous TemplateCMakeLists.txt should be version 1 easycmake.
+# This should be version 2.0.
+# Removing install things make this cmake only export things when it is needed.
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #			Copyright (c) WUZHUOBIN 											    #
 #			All rights reserved.												    #
@@ -203,36 +206,6 @@ if(TARGET ${PROJECT_NAME}_main)
 		${PROJECT_NAME}_main
 		PUBLIC
 		${PROJECT_INCLUDE}
-	)
-endif()
-# # # # # # # # # # # # # # # # # EXPORT # # # # # # # # # # # # # # # # # # # # # 
-# installation to be continue.
-# comment following for normal source project
-if(TARGET ${PROJECT_NAME})
-	install(
-		TARGETS ${PROJECT_NAME}
-		EXPORT ${PROJECT_NAME} 
-		RUNTIME DESTINATION bin
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
-		INCLUDES DESTINATION include
-	)
-	export(
-		EXPORT
-		${PROJECT_NAME}
-		FILE
-		${CMAKE_BINARY_DIR}/lib/cmake/${PROJECT_NAME}.cmake
-	)
-	install(
-		FILES 
-		${PROJECT_BINARY_DIR}/${PROJECT_NAME}_export.h
-		${PROJECT_INC}
-		DESTINATION
-		include
-	)
-	install(
-		EXPORT ${PROJECT_NAME}
-		DESTINATION lib/cmake
 	)
 endif()
 message(
