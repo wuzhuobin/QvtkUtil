@@ -9,7 +9,7 @@
 #define __QVTK_IMAGE_H__
 #pragma once
 #define Qvtk_TEMPLATE_MACRO_CASE(typeN, type, call)     \
-  case typeN: { typedef type ITK_IMAGE_IO_BASE_IO_COMPONENT_TYPE; call; }; break
+  case typeN: { typedef type ScalarType; call; }; break
 #define Qvtk_ITK_TEMPLATE_MACRO(call) \
 default: \
 case itk::ImageIOBase::UNKNOWNCOMPONENTTYPE: \
@@ -23,8 +23,25 @@ Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::INT, int, call); \
 Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::ULONG, unsigned long, call); \
 Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::LONG, long, call); \
 Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::FLOAT, float, call); \
-Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::DOUBLE, double, call); \
-
+Qvtk_TEMPLATE_MACRO_CASE(itk::ImageIOBase::DOUBLE, double, call); 
+#define Qvtk_TEMPLATE_MACRO2_CASE(component, type, call) \
+case component: { \
+constexpr unsigned int COMPONENT = component; \
+typedef itk::Vector<type, component> PixelType; \
+call; } break
+#define Qvtk_ITK_TEMPLATE_MACRO2(type, call1, callN) \
+default: \
+case 10: \
+std::cerr << "Unsupported number of components! Only 1~9 are supported. " << std::endl; break;\
+Qvtk_TEMPLATE_MACRO2_CASE(1, type, call1); \
+Qvtk_TEMPLATE_MACRO2_CASE(2, type, callN); \
+Qvtk_TEMPLATE_MACRO2_CASE(3, type, callN); \
+Qvtk_TEMPLATE_MACRO2_CASE(4, type, callN); \
+Qvtk_TEMPLATE_MACRO2_CASE(5, type, callN); \
+Qvtk_TEMPLATE_MACRO2_CASE(6, type, callN); \
+Qvtk_TEMPLATE_MACRO2_CASE(7, type, callN); \
+Qvtk_TEMPLATE_MACRO2_CASE(8, type, callN); \
+Qvtk_TEMPLATE_MACRO2_CASE(9, type, callN); 
 // me
 #include "QvtkDataSet.h"
 

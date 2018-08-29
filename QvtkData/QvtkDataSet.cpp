@@ -63,7 +63,6 @@ DataSet::DataSet():
 	this->portProducer = vtkTrivialProducer::New();
 
 	this->referenceProps = new QList<Prop*>;
-
 }
 
 DataSet::~DataSet()

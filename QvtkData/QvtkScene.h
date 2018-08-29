@@ -19,15 +19,12 @@
  *			NOT publish and distribute without the author's permission.  	     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-
 #ifndef __QVTK_SCENE_H__
 #define __QVTK_SCENE_H__
-
 // me
 #include "qvtkdata_export.h"
 namespace Q {
 namespace vtk {
-
 class Data;
 class DataList;
 class DataBase;
@@ -35,11 +32,9 @@ class DataNameCounts;
 struct SceneConfiguration;
 }
 }
-
 // qt
 #include <QObject>
 #include <QList>
-
 /**
  * @class	Scene
  * @brief	Util Scene.
