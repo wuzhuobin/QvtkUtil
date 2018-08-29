@@ -13,7 +13,13 @@ namespace Q {
 		public:
 			explicit Filter2(QWidget *parent = nullptr);
 			virtual ~Filter2() override;
+		public Q_SLOTS:
+			virtual void Update() = 0;
+		Q_SIGNALS:
+			void finished();
 		private:
+			 void run();
+			 void finish();
 			Q_DISABLE_COPY(Filter2);
 		};
 
