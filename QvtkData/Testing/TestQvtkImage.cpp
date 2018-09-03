@@ -178,7 +178,7 @@ class TestQvtkImage : public QObject
 	}
 	void setComponent3ITKImageData()
 	{
-		this->image->setITKImageData(this->testComponent3ITKImage.GetPointer());
+		this->image->setITKImageData(this->testComponent3ITKImage);
 		QCOMPARE(static_cast<unsigned int>(this->image->getImageData()->GetNumberOfScalarComponents()), 
 			this->testComponent3ITKImage->GetNumberOfComponentsPerPixel());
 		QCOMPARE(COMPONENT, this->testComponent3ITKImage->GetNumberOfComponentsPerPixel());

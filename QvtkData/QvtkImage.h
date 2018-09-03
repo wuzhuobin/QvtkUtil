@@ -151,8 +151,14 @@ public:
 
 	template<typename PixelType>
 	void getITKImageData(itk::Image<PixelType, 3>* itkImage) const;
+	template<typename ImageType>
+	void getITKImageData(ImageType itkImage) const
+	{ this->getITKImageData<typename ImageType::ObjectType::PixelType>(itkImage.GetPointer());}
 	template<typename PixelType>
 	void setITKImageData(itk::Image<PixelType, 3>* itkImage);
+	template<typename ImageType>
+	void setITKImageData(ImageType itkImage)
+	{this->setITKImageData<typename ImageType::ObjectType::PixelType>(itkImage.GetPointer());}
 	static bool readDataSuffix(
 		QStringList fileNames,
 		vtkImageData* data,
