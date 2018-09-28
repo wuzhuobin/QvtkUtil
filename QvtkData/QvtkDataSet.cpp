@@ -93,26 +93,26 @@ double DataSet::getOpacity() const
 
 void DataSet::dataSetCoordinateToWorldCoordinate(const double dataSet[3], double world[3]) const
 {
-	double dataSet1[4] = { dataSet[0], dataSet[2], dataSet[4], 1 };
+	double dataSet1[4]{ dataSet[0], dataSet[1], dataSet[2], 1 };
 	double world1[4];
 	vtkTransform* transform = vtkTransform::New();
 	this->getTransform(transform);
 	transform->MultiplyPoint(dataSet1, world1);
 	transform->Delete();
-	std::copy_n(world1, 3, world);
+	memcpy(world, world1, 3 * sizeof(const double));
 }
 
 void DataSet::worldCoordinateToDataSetCoordinate(const double world[3], double dataSet[3]) const
 {
 
-	double world1[4] = { world[0], world[2], world[4], 1 };
-
+	double world1[4]{ world[0], world[1], world[2], 1 };
 	double dataSet1[4];
 	vtkTransform* transform = vtkTransform::New();
 	this->getTransform(transform);
+	transform->Inverse();
 	transform->MultiplyPoint(world1, dataSet1);
 	transform->Delete();
-	std::copy_n(dataSet1, 3, dataSet);
+	memcpy(dataSet, dataSet1, 3 * sizeof(const double));
 }
 
 void DataSet::dataSetRegionToWorldRegion(const double dataSet[6], double world[6]) const
@@ -145,6 +145,7 @@ void DataSet::worldRegionToDataSetRegion(const double world[6], double dataSet[6
 
 	vtkTransform* transform = vtkTransform::New();
 	this->getTransform(transform);
+	transform->Inverse();
 	transform->MultiplyPoint(world1, dataSet1);
 	transform->MultiplyPoint(world2, dataSet2);
 	transform->Delete();

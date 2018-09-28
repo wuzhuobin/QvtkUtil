@@ -1,6 +1,4 @@
 #include "vtkInteractorStyleNavigation.h"
-
-
 // vtk
 #include <vtkRenderWindowInteractor.h>
 #include <vtkAbstractPicker.h>
@@ -105,8 +103,8 @@ void vtkInteractorStyleNavigation::EndNavigation()
 void vtkInteractorStyleNavigation::Navigation()
 {
 	double index[3];
-	if (CalculateIndex(index)) {
-		SetCursorPosition(index);
+	if (this->CalculateIndex(index)) {
+		this->SetCursorPosition(index);
 	}
 }
 
@@ -128,7 +126,7 @@ void vtkInteractorStyleNavigation::Dolly()
 
 void vtkInteractorStyleNavigation::SetCursorPosition(const double index[3])
 {
-	SetCursorPosition(index[0], index[1], index[2]);
+	this->SetCursorPosition(index[0], index[1], index[2]);
 }
 
 void vtkInteractorStyleNavigation::SetCameraScale(double scale)
@@ -144,7 +142,6 @@ void vtkInteractorStyleNavigation::SetCameraScale(double scale)
 		camera->SetParallelScale(scale);
 	}
 	this->Interactor->Render();
-
 }
 
 vtkInteractorStyleNavigation::vtkInteractorStyleNavigation()
@@ -169,5 +166,4 @@ bool vtkInteractorStyleNavigation::CalculateIndex(double index[3])
 
 	this->GetInteractor()->GetPicker()->GetPickPosition(index);
 	return picked != 0;
-
 }

@@ -11,6 +11,7 @@
 #include <vtkXMLImageDataWriter.h>
 #include <vtkXMLImageDataReader.h>
 #include <vtkTransform.h>
+#include <vtkMath.h>
 //#include <vtkImageActor.h>
 //#include <vtkImageProperty.h>
 #include <vtkImageChangeInformation.h>
@@ -202,6 +203,38 @@ bool Image::writeData(QString rootDirectory) const
 		}
 	}
 	return returnValue;
+}
+
+void Image::imageCoordinateToDataSetCoordinate(const int imageCoordinate[3], double dataSet[3]) const
+{
+	const double *spacing = this->getImageData()->GetSpacing();
+	const double *origin = this->getImageData()->GetOrigin();
+	dataSet[0] = imageCoordinate[0] * spacing[0] + origin[0];
+	dataSet[1] = imageCoordinate[1] * spacing[1] + origin[1];
+	dataSet[2] = imageCoordinate[2] * spacing[2] + origin[2];
+}
+
+void Image::dataSetCoordinateToImageCoordiante(const double dataSet[3], int imageCoordinate[3]) const
+{
+	const double *spacing = this->getImageData()->GetSpacing();
+	const double *origin = this->getImageData()->GetOrigin();
+	imageCoordinate[0] = vtkMath::Round((dataSet[0] - origin[0]) / spacing[0]);
+	imageCoordinate[1] = vtkMath::Round((dataSet[1] - origin[1]) / spacing[1]);
+	imageCoordinate[2] = vtkMath::Round((dataSet[2] - origin[2]) / spacing[2]);
+}
+
+void Image::imageCoordinateToWorldCoordinate(const int imageCoordinate[3], double worldCoordinate[3]) const
+{
+	double dataSet[3];
+	this->imageCoordinateToDataSetCoordinate(imageCoordinate, dataSet);
+	this->dataSetCoordinateToWorldCoordinate(dataSet, worldCoordinate);
+}
+
+void Image::worldCoordinateToImageCoordinate(const double worldCoordinate[3], int imageCoordinate[3]) const
+{
+	double dataSet[3];
+	this->worldCoordinateToDataSetCoordinate(worldCoordinate, dataSet);
+	this->dataSetCoordinateToImageCoordiante(dataSet, imageCoordinate);
 }
 
 void Image::vtkMatrix4x4ToitkAffineTransform(AffineTransformType *itkTransform, vtkMatrix4x4 *vtkMatrix)

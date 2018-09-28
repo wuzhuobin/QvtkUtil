@@ -81,12 +81,10 @@ QVTK_IMAGE_EXPORT_FUNCTION_TYPE(float, component) \
 QVTK_IMAGE_EXPORT_FUNCTION_TYPE(double, component) 
 // me
 #include "QvtkDataSet.h"
-
 // vtk
 class vtkImageData;
 class vtkImageReslice;
 class vtkImageChangeInformation;
-
 // itk
 namespace itk {
 	template< typename TPixel, unsigned int VImageDimension > class Image;
@@ -137,7 +135,10 @@ public:
 
 	virtual bool writeData(QString rootDirectory = QString()) const override;
 
-	//virtual void addReference(Prop* prop) override;
+	virtual void imageCoordinateToDataSetCoordinate(const int imageCoordinate[3], double dataSet[3]) const;
+	virtual void dataSetCoordinateToImageCoordiante(const double dataSet[3], int imageCoordinate[3]) const;
+	virtual void imageCoordinateToWorldCoordinate(const int imageCoordinate[3], double worldCoordinate[3]) const;
+	virtual void worldCoordinateToImageCoordinate(const double worldCoordinate[3], int imageCoordinate[3]) const;
 
 	virtual double getWindow() const;
 	virtual double getResetWindow() const;
@@ -181,13 +182,13 @@ public:
 		int suffix = -1
 	);
 
-public slots:
+public Q_SLOTS:
 
 	virtual void setWindow(double window);
 	virtual void setLevel(double level);
 	virtual void resetWindowLevel();
 
-signals:
+Q_SIGNALS:
 	void windowChanged(double window);
 	void levelChanged(double level);
 
