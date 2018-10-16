@@ -2,7 +2,6 @@
  * @file		QvtkData\QvtkData.h.
  * @language	C++
  * @author		WUZHUOBIN jiejin2022@163.com
- * @version		1.0
  * @since		Jun.19.2017
  * 
  * Qvtk for 	QvtkUtil
