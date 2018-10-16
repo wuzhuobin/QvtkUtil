@@ -1,12 +1,10 @@
 /**
  * @file		QvtkData\QvtkData.h.
- * @brief		Declares the QvtkUtil abstract data class.
  * @language	C++
  * @author		WUZHUOBIN jiejin2022@163.com
- * @version		?
- * @date		2017/06/19-
- * @since		2017/06/19
- * @copyright	COPYRIGHT
+ * @version		1.0
+ * @since		Jun.19.2017
+ * 
  * Qvtk for 	QvtkUtil
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *			This program is distributed in the hope that it will be useful, but	 *
@@ -47,9 +45,11 @@ namespace vtk {
 /**
  * @class	Data
  * @brief	QvtkUtil Data
- * @author	WUZHUOBIN
- * @date	2017/06/19-
- * @since	2017/06/19
+ * @author	WUZHUOBIN 
+ * @version 1.0
+ * @since	Jun.19.2017
+ * @date	Jun.19.2017
+ * 
  * <p>
  * QvtkUtil Data to Saving data in QvtkScene
  * Attributes of Data is in tree-like structue. 

@@ -1,10 +1,10 @@
 /**
- * @file	Data\Scene.h.
- * @brief	Declares the Util scene class.
+ * @file		QvtkData/QvtkScene.h.
  * @language	C++
- * @author	wuzhuobin jiejin2022@163.com
- * @date	2017/6/19
- *  for Util
+ * @author		WUZHUOBIN jiejin2022@163.com
+ * @since		Jun.19.2017
+ * 
+ * for Util
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *			This program is distributed in the hope that it will be useful, but	 *
  *			WITHOUT ANY WARRANTY; without even the implied warranty of			 * 
@@ -21,6 +21,7 @@
  */
 #ifndef __QVTK_SCENE_H__
 #define __QVTK_SCENE_H__
+#pragma once
 // me
 #include "qvtkdata_export.h"
 namespace Q {
@@ -39,7 +40,9 @@ struct SceneConfiguration;
  * @class	Scene
  * @brief	Util Scene.
  * @author	WUZHUOBIN
- * @date	2017/6/19
+ * @version	1.0
+ * @since	Jun.19.2017
+ * @date	Oct.16.2018
  * 
  * This class is designed for doing the IoC(Inverse of Control). It can store
  * data which inherits Data.
