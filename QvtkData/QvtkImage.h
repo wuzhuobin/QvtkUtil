@@ -79,6 +79,7 @@ QVTK_IMAGE_EXPORT_FUNCTION_TYPE(unsigned long long, component) \
 QVTK_IMAGE_EXPORT_FUNCTION_TYPE(long long, component) \
 QVTK_IMAGE_EXPORT_FUNCTION_TYPE(float, component) \
 QVTK_IMAGE_EXPORT_FUNCTION_TYPE(double, component) 
+
 // me
 #include "QvtkDataSet.h"
 // vtk
@@ -225,4 +226,13 @@ private:
 
 }
 }
+#define QVTK_MANUAL_INSTANTIATION
+#ifndef QVTK_MANUAL_INSTANTIATION
+#include "QvtkImageIO__ITKImageToVTKImage.hpp"
+#include "QvtkImageIO__VTKImageToITKImage.hpp"
+#include "QvtkImageIO_getITKImageData.hpp"
+#include "QvtkImageIO_readITKImage.hpp"
+#include "QvtkImageIO_setITKImageData.hpp"
+#include "QvtkImageIO_writeITKImage.hpp"
+#endif // !QVTK_MANUAL_INSTANTIATION
 #endif // !__QVTK_IMAGE_H__

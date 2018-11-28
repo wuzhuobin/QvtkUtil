@@ -1,6 +1,14 @@
 // me
 #include "QvtkImage.h"
 #include "QvtkImageSlice.h"
+#ifdef QVTK_MANUAL_INSTANTIATION
+#include "QvtkImageIO__ITKImageToVTKImage.hpp"
+#include "QvtkImageIO__VTKImageToITKImage.hpp"
+#include "QvtkImageIO_getITKImageData.hpp"
+#include "QvtkImageIO_readITKImage.hpp"
+#include "QvtkImageIO_setITKImageData.hpp"
+#include "QvtkImageIO_writeITKImage.hpp"
+#endif // !QVTK_MANUAL_INSTANTIATION
 //vtk
 #include <vtkImageData.h>
 #include <vtkMatrix4x4.h>

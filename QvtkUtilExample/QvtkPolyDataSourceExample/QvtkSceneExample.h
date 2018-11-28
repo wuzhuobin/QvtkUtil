@@ -2,6 +2,7 @@
 #define __QVTK_SCENE_EXAMPLE_H__
 #pragma once
 // me
+#include "qvtkpolydatasourceexample_export.h"
 namespace Ui{ class QvtkSceneExample; }
 namespace Q {
 	namespace vtk {
@@ -13,7 +14,7 @@ namespace Q {
 }
 // qt
 #include <QMainWindow>
-class  QvtkSceneExample: public QMainWindow
+class QVTKPOLYDATASOURCEEXAMPLE_EXPORT QvtkSceneExample: public QMainWindow
 {
 	Q_OBJECT;
 public:
