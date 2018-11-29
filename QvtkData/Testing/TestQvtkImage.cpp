@@ -197,5 +197,8 @@ private:
 	const QString NII_GZ_IMAGE = "testImage.nii.gz";
 	const QString COMPONENT_3_IMAGE = "Component3Image.nii.gz";
 };
+// definition.
+constexpr unsigned int TestQvtkImage::COMPONENT;
+constexpr unsigned int TestQvtkImage::DIMENSION;
 QTEST_APPLESS_MAIN(TestQvtkImage)
 #include "TestQvtkImage.moc"

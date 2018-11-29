@@ -126,6 +126,12 @@ public:
 
 	static bool writeITKImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4* userMatrix = nullptr);
 
+	template<typename PixelType>
+	static bool writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix = nullptr);
+
+	template<typename PixelType>
+	static bool readImage(QStringList paths, vtkImageData* image, double orientation[3], double position[3], double scale[3]);
+
 	Image();
 
 	virtual ~Image() override;
@@ -200,12 +206,6 @@ protected:
 	static void setWindow(Data* self, QStandardItem* item);
 
 	static void setLevel(Data* self, QStandardItem* item);
-
-	template<typename PixelType>
-	static bool writeImage(QStringList paths, vtkImageData* image, const double orientation[3], const double position[3], const double scale[3], vtkMatrix4x4 *userMatrix = nullptr);
-
-	template<typename PixelType>
-	static bool readImage(QStringList paths, vtkImageData* image, double orientation[3], double position[3], double scale[3]);
 
 	template<typename OPixelType, typename IPixelType>
 	static void _ITKImageCasting(itk::Image<OPixelType, 3>* output, vtkImageData* input);

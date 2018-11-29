@@ -1,6 +1,19 @@
 // me
 #include "QvtkImage.h"
 #include "QvtkImageIO_readITKImage.hpp"
+template <typename ScalarType>
+static bool call(itk::ImageIOBase::Pointer &imageIO, QStringList &paths, vtkImageData *&image, double *&orientation, double *&position, double *&scale)
+{
+			switch (imageIO->GetNumberOfComponents()) 
+			{
+				Qvtk_ITK_TEMPLATE_MACRO2(
+					ScalarType,
+						return Q::vtk::Image::readImage<ScalarType>(paths, image, orientation, position, scale),
+						return Q::vtk::Image::readImage<PixelType>(paths, image, orientation, position, scale)
+					);
+			}
+}
+
 bool Q::vtk::Image::readITKImage(QStringList paths, vtkImageData * image, double orientation[3], double position[3], double scale[3])
 {
 	itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(
@@ -20,16 +33,10 @@ bool Q::vtk::Image::readITKImage(QStringList paths, vtkImageData * image, double
 	bool returnValue = false;
 	switch (imageIO->GetComponentType())
 	{
-		Qvtk_ITK_TEMPLATE_MACRO(
-			switch (imageIO->GetNumberOfComponents()) 
-			{
-				Qvtk_ITK_TEMPLATE_MACRO2(
-					ScalarType,
-					return Image::readImage<ScalarType>(paths, image, orientation, position, scale),
-					return Image::readImage<PixelType>(paths, image, orientation, position, scale)
-					);
-			}
+  		Qvtk_ITK_TEMPLATE_MACRO(
+			  call<ScalarType>(imageIO, paths, image, orientation, position, scale)
 		);
+
 	}
 	//switch (imageIO->GetNumberOfComponents())
 	//{

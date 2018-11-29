@@ -13,7 +13,7 @@ void Q::vtk::Image::getITKImageData(itk::Image<PixelType, 3>* itkImage) const
 	AffineTransformType::Pointer itkTransform = AffineTransformType::New();
 	vtkMatrix4x4ToitkAffineTransform(itkTransform, this->getUserMatrix());
 	typedef typename itk::ResampleImageFilter<itk::Image<PixelType, 3>, itk::Image<PixelType, 3>> ResampleImageFilter;
-	ResampleImageFilter::Pointer resampleImageFilter = ResampleImageFilter::New();
+	typename ResampleImageFilter::Pointer resampleImageFilter = ResampleImageFilter::New();
 	resampleImageFilter->SetInput(itkImage);
 	resampleImageFilter->SetSize(itkImage->GetLargestPossibleRegion().GetSize());
 	resampleImageFilter->SetTransform(itkTransform);
