@@ -24,6 +24,7 @@ public:
 	virtual double GetWindow() = 0;
 	virtual void SetLevel(double level) = 0;
 	virtual double GetLevel() = 0;
+	virtual void ResetWindowLevel();
 
 
 	virtual double GetResetWindow() = 0;
@@ -41,7 +42,6 @@ protected:
 	virtual void StartWindowLevel();
 	virtual void WindowLevel();
 	virtual void EndWindowLevel();
-	virtual void ResetWindowLevel();
 
 	double InitialWindow;
 	double InitialLevel;
