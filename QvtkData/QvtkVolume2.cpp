@@ -1,5 +1,5 @@
 // me
-#include "QvtkVolume.h"
+#include "QvtkVolume2.h"
 #include "QvtkDataSet.h"
 void set_volume_property(vtkVolume *&volume, const int & preset, const double & shift, const double & opacity);
 // vtk
@@ -10,21 +10,21 @@ void set_volume_property(vtkVolume *&volume, const int & preset, const double & 
 #include <QDebug>
 // std
 #include <sstream>
-const struct QvtkVolumeInit{
-	QvtkVolumeInit(){
+const struct QvtkVolume2Init{
+	QvtkVolume2Init(){
 		VTK_MODULE_INIT(vtkRenderingVolumeOpenGL2);
 	}
 } Init;
 namespace Q {
 namespace vtk{
-Q_VTK_DATA_CPP(Volume)
-Volume::Volume()
+Q_VTK_DATA_CPP(Volume2)
+Volume2::Volume2()
 {
 	this->volumeOpacity = 1;
 	this->shift = createAttribute(K.Shift, static_cast<double>(0), true);
-	insertSlotFunction(this->shift, &Volume::setShift);
-	this->preset = createAttribute(K.Preset, static_cast<int>(0), true);
-	insertSlotFunction(this->preset, &Volume::setPreset);
+	insertSlotFunction(this->shift, &Volume2::setShift);
+	// this->preset = createAttribute(K.Preset, static_cast<int>(0), true);
+	insertSlotFunction(this->preset, &Volume2::setPreset);
 	vtkNew<vtkSmartVolumeMapper> mapper;
 	this->smartVolumeMapper = mapper.GetPointer();
 	this->smartVolumeMapper->SetRequestedRenderModeToGPU();
@@ -33,16 +33,15 @@ Volume::Volume()
 	vtkVolume* volume = vtkVolume::New();
 	volume->SetMapper(this->smartVolumeMapper);
 	this->setProp(volume);
-	setPreset(CT_AAA);
 
 }
 
-Volume::~Volume()
+Volume2::~Volume2()
 {
 	setRenderDataSet(nullptr);
 }
 
-void Volume::printSelf() const
+void Volume2::printSelf() const
 {
 	Prop::printSelf();
 
@@ -58,33 +57,33 @@ void Volume::printSelf() const
 
 }
 
-void Volume::readXML(const QDomElement& xml, QString directoryPath)
+void Volume2::readXML(const QDomElement& xml, QString directoryPath)
 {
 	Prop::readXML(xml, directoryPath);
 }
 
-void Volume::writeXML(QDomElement& xml, QString directoryPath) const
+void Volume2::writeXML(QDomElement& xml, QString directoryPath) const
 {
 	Prop::writeXML(xml, directoryPath);
 }
 
-void Volume::setShift(double shift)
+void Volume2::setShift(double shift)
 {
 	setAttribute(this->shift, shift);
 	this->setPreset(this->getPreset());
 }
 
-double Volume::getShift() const
+double Volume2::getShift() const
 {
 	return getAttribute(this->shift).toDouble();
 }
 
-vtkVolume* Volume::getVolume() const
+vtkVolume* Volume2::getVolume() const
 {
 	return vtkVolume::SafeDownCast(this->getProp());
 }
 
-void Volume::setPreset(int preset)
+void Volume2::setPreset(int preset)
 {
 	if (preset > 25) {
 		return;
@@ -95,12 +94,12 @@ void Volume::setPreset(int preset)
 	set_volume_property(volume, preset, shift, this->volumeOpacity);
 }
 
-int Volume::getPreset() const
+int Volume2::getPreset() const
 {
 	return getAttribute(this->preset).toInt();
 }
 
-void Volume::setRenderDataSet(DataSet* data)
+void Volume2::setRenderDataSet(DataSet* data)
 {
 	if (data == this->getRenderDataSet()) {
 		return;
@@ -119,7 +118,7 @@ void Volume::setRenderDataSet(DataSet* data)
 	}
 }
 
-void Volume::setOpacity(double opacity)
+void Volume2::setOpacity(double opacity)
 {
 	if (opacity > 1) {
 		opacity = 1;
@@ -131,7 +130,7 @@ void Volume::setOpacity(double opacity)
 	this->setPreset(this->getPreset());
 }
 
-void Volume::setDisplayRegion(const double region[6])
+void Volume2::setDisplayRegion(const double region[6])
 {
 	Prop::setDisplayRegion(region);
 	double _region[6];
@@ -142,20 +141,20 @@ void Volume::setDisplayRegion(const double region[6])
 
 }
 
-Data* Volume::newInstance() const
+Data* Volume2::newInstance() const
 {
-	return new Volume;
+	return new Volume2;
 }
 
-void Volume::setShift(Data * self, QStandardItem * item)
+void Volume2::setShift(Data * self, QStandardItem * item)
 {
-	Volume* _self = static_cast<Volume*>(self);
+	Volume2* _self = static_cast<Volume2*>(self);
 	_self->setShift(getAttribute(item).toDouble());
 }
 
-void Volume::setPreset(Data* self, QStandardItem* item)
+void Volume2::setPreset(Data* self, QStandardItem* item)
 {
-	Volume* _self = static_cast<Volume*>(self);
+	Volume2* _self = static_cast<Volume2*>(self);
 	_self->setPreset(getAttribute(item).toUInt());
 }
 }

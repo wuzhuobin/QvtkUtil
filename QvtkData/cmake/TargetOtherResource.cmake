@@ -3,7 +3,7 @@
 set(
     PROJECT_RESOURCE
 #    PATH
-    ${PROJECT_SOURCE_DIR}/ColorFiles
+	${PROJECT_SOURCE_DIR}/ColorFiles
 )
 # Create target
 add_custom_target(
