@@ -10,48 +10,48 @@
 class QVTKINTERACTOROBSERVER_EXPORT vtkInteractorStyleWindowLevel : public vtkInteractorStyleTrackballCamera
 {
 public:
-	static const int VTKIS_WINDOW_LEVEL = 1024;
+  static const int VTKIS_WINDOW_LEVEL = 1024;
 
-	vtkTypeMacro(vtkInteractorStyleWindowLevel, vtkInteractorStyleTrackballCamera);
-	void PrintSelf(ostream& os, vtkIndent indent);
+  vtkTypeMacro(vtkInteractorStyleWindowLevel, vtkInteractorStyleTrackballCamera);
+  void PrintSelf(ostream& os, vtkIndent indent);
 
-	virtual void OnMouseMove() override;
-	virtual void OnLeftButtonDown() override;
-	virtual void OnLeftButtonUp() override;
-	virtual void OnChar() override;
+  virtual void OnMouseMove() override;
+  virtual void OnLeftButtonDown() override;
+  virtual void OnLeftButtonUp() override;
+  virtual void OnChar() override;
 
-	virtual void SetWindow(double window) = 0;
-	virtual double GetWindow() = 0;
-	virtual void SetLevel(double level) = 0;
-	virtual double GetLevel() = 0;
-	virtual void ResetWindowLevel();
+  virtual void SetWindow(double window) = 0;
+  virtual double GetWindow() = 0;
+  virtual void SetLevel(double level) = 0;
+  virtual double GetLevel() = 0;
+  virtual void ResetWindowLevel();
 
 
-	virtual double GetResetWindow() = 0;
-	virtual double GetResetLevel() = 0;
+  virtual double GetResetWindow() = 0;
+  virtual double GetResetLevel() = 0;
 
 protected:
-	vtkInteractorStyleWindowLevel();
-	virtual ~vtkInteractorStyleWindowLevel() override;
+  vtkInteractorStyleWindowLevel();
+  virtual ~vtkInteractorStyleWindowLevel() override;
 
-	/**
-	* @override
-	* almost the same as #vtkInteractorStyleImage, except for specifying vtkImageActor
-	* by using #SetCurrentImageToNthImage() .
-	*/
-	virtual void StartWindowLevel();
-	virtual void WindowLevel();
-	virtual void EndWindowLevel();
+  /**
+  * @override
+  * almost the same as #vtkInteractorStyleImage, except for specifying vtkImageActor
+  * by using #SetCurrentImageToNthImage() .
+  */
+  virtual void StartWindowLevel();
+  virtual void WindowLevel();
+  virtual void EndWindowLevel();
 
-	double InitialWindow;
-	double InitialLevel;
+  double InitialWindow;
+  double InitialLevel;
 
-	int WindowLevelStartPosition[2];
-	int WindowLevelCurrentPosition[2];
+  int WindowLevelStartPosition[2];
+  int WindowLevelCurrentPosition[2];
 
 private:
-	vtkInteractorStyleWindowLevel(const vtkInteractorStyleTrackballCamera&) VTK_DELETE_FUNCTION;
-	void operator=(const vtkInteractorStyleWindowLevel&) VTK_DELETE_FUNCTION;
+  vtkInteractorStyleWindowLevel(const vtkInteractorStyleTrackballCamera&) VTK_DELETE_FUNCTION;
+  void operator=(const vtkInteractorStyleWindowLevel&) VTK_DELETE_FUNCTION;
 
 };
 
