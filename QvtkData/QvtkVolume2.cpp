@@ -1,11 +1,12 @@
 // me
 #include "QvtkVolume2.h"
 #include "QvtkDataSet.h"
-void set_volume_property(vtkVolume *&volume, const int & preset, const double & shift, const double & opacity);
 // vtk
 #include <vtkVolume.h>
 #include <vtkSmartVolumeMapper.h>
 #include <vtkNew.h>
+#include <vtkVolumeProperty.h>
+#include <vtkDiscretizableColorTransferFunction.h>
 // qt
 #include <QDebug>
 // std
@@ -20,20 +21,20 @@ namespace vtk{
 Q_VTK_DATA_CPP(Volume2)
 Volume2::Volume2()
 {
-  this->volumeOpacity = 1;
-  this->shift = createAttribute(K.Shift, static_cast<double>(0), true);
-  insertSlotFunction(this->shift, &Volume2::setShift);
-  // this->preset = createAttribute(K.Preset, static_cast<int>(0), true);
-  insertSlotFunction(this->preset, &Volume2::setPreset);
   vtkNew<vtkSmartVolumeMapper> mapper;
   this->smartVolumeMapper = mapper.GetPointer();
-  this->smartVolumeMapper->SetRequestedRenderModeToGPU();
-  //this->smartVolumeMapper->SetRequestedRenderModeToDefault();
+  this->smartVolumeMapper->SetRequestedRenderModeToDefault();
   this->smartVolumeMapper->CroppingOn();
-  vtkVolume* volume = vtkVolume::New();
+  vtkVolume *volume = vtkVolume::New();
   volume->SetMapper(this->smartVolumeMapper);
+  volume->GetProperty()->SetColor(this->getColorTransferFunction());
+  volume->GetProperty()->SetScalarOpacity(this->getColorTransferFunction()->GetScalarOpacityFunction());
   this->setProp(volume);
-
+  this->defaultColorFile = this->createAttribute(K.ColorFile, static_cast<int>(0), true);
+  this->insertSlotFunction(this->defaultColorFile, &Volume2::setDefaultColorFile);
+  this->colorFile = createAttribute(K.ColorFile, "", true);
+  this->insertSlotFunction(this->colorFile, &Volume2::setColorFile);
+  this->setDefaultColorFile(DEFAULT_COLOR_FILES.size());
 }
 
 Volume2::~Volume2()
@@ -67,36 +68,19 @@ void Volume2::writeXML(QDomElement& xml, QString directoryPath) const
   Prop::writeXML(xml, directoryPath);
 }
 
-void Volume2::setShift(double shift)
+int Volume2::getDefaultColorFile() const
 {
-  setAttribute(this->shift, shift);
-  this->setPreset(this->getPreset());
+  return Data::getAttribute(this->defaultColorFile).toInt();
 }
 
-double Volume2::getShift() const
+QString Volume2::getColorFile() const
 {
-  return getAttribute(this->shift).toDouble();
+  return Data::getAttribute(this->colorFile).toString();
 }
 
-vtkVolume* Volume2::getVolume() const
+vtkVolume * Volume2::getVolume() const
 {
   return vtkVolume::SafeDownCast(this->getProp());
-}
-
-void Volume2::setPreset(int preset)
-{
-  if (preset > 25) {
-    return;
-  }
-  setAttribute(this->preset, preset);
-  vtkVolume * volume = this->getVolume();
-  unsigned int shift = this->getShift();
-  set_volume_property(volume, preset, shift, this->volumeOpacity);
-}
-
-int Volume2::getPreset() const
-{
-  return getAttribute(this->preset).toInt();
 }
 
 void Volume2::setRenderDataSet(DataSet* data)
@@ -111,23 +95,64 @@ void Volume2::setRenderDataSet(DataSet* data)
   if (this->getRenderDataSet()) {
     if (!data->isClass("Q::vtk::Image")) {
       qCritical() << "data is not Q::vtk::Image.";
+      return;
     }
     this->getVolume()->GetMapper()->SetInputConnection(data->getOutputPort());
-    // Make shift work;
-    this->setShift(this->getShift());
   }
 }
 
-void Volume2::setOpacity(double opacity)
+void Volume2::setDefaultColorFile(int i)
 {
-  if (opacity > 1) {
-    opacity = 1;
+  this->setAttribute(this->defaultColorFile, i);
+  if (i > -1 && i < DEFAULT_COLOR_FILES.size())
+  {
+    this->setColorFile(DEFAULT_COLOR_FILES[i]);
   }
-  if (opacity < 0) {
-    opacity = 0;
+  else if (i >= DEFAULT_COLOR_FILES.size())
+  {
+    //this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(false);
+    //this->getVolume->GetProperty()->SetLookupTable(nullptr);
   }
-  this->volumeOpacity = opacity;
-  this->setPreset(this->getPreset());
+}
+
+void Volume2::setColorFile(QString colorFile)
+{
+  Data::setAttribute(this->colorFile, colorFile);
+  if (!DEFAULT_COLOR_FILES.contains(colorFile))
+  {
+    this->setDefaultColorFile(-1);
+  }
+  if (!this->readColorFile(colorFile))
+  {
+    qCritical() << "Cannot find color file: " << colorFile;
+    return;
+  }
+  this->getVolume()->GetProperty()->SetColor(this->getColorTransferFunction());
+  this->getVolume()->GetProperty()->SetScalarOpacity(this->getColorTransferFunction()->GetScalarOpacityFunction());
+  //   this->getImageActor()->GetProperty()->SetUseLookupTableScalarRange(true);
+  this->namedColorsToLookupTable();
+  this->namedColosrToTransferFunction();
+}
+
+void Volume2::setLevel(double level)
+{
+}
+
+void Volume2::setWindow(double window)
+{
+
+}
+
+void Volume2::setDefaultColorFile(Data *self, QStandardItem *item)
+{
+  Volume2 *_self = static_cast<Volume2*>(self);
+  _self->setDefaultColorFile(getAttribute(item).toInt());
+}
+
+void Volume2::setColorFile(Data *self, QStandardItem *item)
+{
+  Volume2 *_self = static_cast<Volume2*>(self);
+  _self->setColorFile(getAttribute(item).toString());
 }
 
 void Volume2::setDisplayRegion(const double region[6])
@@ -144,18 +169,6 @@ void Volume2::setDisplayRegion(const double region[6])
 Data* Volume2::newInstance() const
 {
   return new Volume2;
-}
-
-void Volume2::setShift(Data * self, QStandardItem * item)
-{
-  Volume2* _self = static_cast<Volume2*>(self);
-  _self->setShift(getAttribute(item).toDouble());
-}
-
-void Volume2::setPreset(Data* self, QStandardItem* item)
-{
-  Volume2* _self = static_cast<Volume2*>(self);
-  _self->setPreset(getAttribute(item).toUInt());
 }
 }
 }

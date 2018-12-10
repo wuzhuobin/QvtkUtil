@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>VolumeRendering/presets.xml</file>
-    </qresource>
-</RCC>

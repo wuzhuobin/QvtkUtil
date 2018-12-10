@@ -101,15 +101,15 @@ namespace Q {
 				else {
 #ifndef VTK_SMP_TBB
 					this->marchingCubes->GenerateValues(
-						label->getLookupTable()->GetNumberOfTableValues(),
+						label->getLookupTable()->GetNumberOfAvailableColors(),
 						0,
-						label->getLookupTable()->GetNumberOfTableValues() - 1);
+						label->getLookupTable()->GetNumberOfAvailableColors() - 1);
 					this->marchingCubes->SetInputConnection(this->getRenderDataSet()->getOutputPort());
 #else
 					this->flyingEdge->GenerateValues(
-						label->getLookupTable()->GetNumberOfTableValues(),
+						label->getLookupTable()->GetNumberOfAvailableColors(),
 						0, 
-						label->getLookupTable()->GetNumberOfTableValues() - 1);
+						label->getLookupTable()->GetNumberOfAvailableColors() - 1);
 					this->flyingEdge->SetInputConnection(this->getRenderDataSet()->getOutputPort());
 #endif // !VTK_SMP_TBB
 					this->polyDataMapper->SetLookupTable(label->getLookupTable());

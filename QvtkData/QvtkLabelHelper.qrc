@@ -20,5 +20,6 @@
         <file>ColorFiles/SPL-BrainAtlas-2012-ColorFile.txt</file>
         <file>ColorFiles/SPL-BrainAtlas-ColorFile.txt</file>
         <file>ColorFiles/Viridis.txt</file>
+        <file>PresetFiles/presets.xml</file>
     </qresource>
 </RCC>

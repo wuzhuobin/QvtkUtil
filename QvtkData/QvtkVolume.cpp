@@ -27,8 +27,8 @@ Volume::Volume()
 	insertSlotFunction(this->preset, &Volume::setPreset);
 	vtkNew<vtkSmartVolumeMapper> mapper;
 	this->smartVolumeMapper = mapper.GetPointer();
-	this->smartVolumeMapper->SetRequestedRenderModeToGPU();
-	//this->smartVolumeMapper->SetRequestedRenderModeToDefault();
+	// this->smartVolumeMapper->SetRequestedRenderModeToGPU();
+	this->smartVolumeMapper->SetRequestedRenderModeToDefault();
 	this->smartVolumeMapper->CroppingOn();
 	vtkVolume* volume = vtkVolume::New();
 	volume->SetMapper(this->smartVolumeMapper);

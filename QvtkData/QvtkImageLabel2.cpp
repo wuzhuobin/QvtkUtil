@@ -25,7 +25,7 @@ namespace Q {
 		{
 			this->imageMapToColors = vtkImageMapToColors::New();
 			this->imageMapToColors->SetInputData(this->getImageData());
-			this->imageMapToColors->SetLookupTable(this->lookupTable);
+			this->imageMapToColors->SetLookupTable(this->getLookupTable());
 			this->defaultColorFile = createAttribute(K.DefaultColorFile, static_cast<int>(0), true);
 			this->insertSlotFunction(this->defaultColorFile, &ImageLabel2::setDefaultColorFile);
 			this->colorFile = createAttribute(K.ColorFile, "", true);
@@ -154,7 +154,7 @@ namespace Q {
 			if (!DEFAULT_COLOR_FILES.contains(colorFile)) {
 				this->setDefaultColorFile(-1);
 			}
-			if (!this->readLabelFile(colorFile)) {
+			if (!this->readColorFile(colorFile)) {
 				qCritical() << "Cannot find color file: " << colorFile;
 				return;
 			}
