@@ -200,8 +200,12 @@ public:
 	virtual void getWorldBounds(double bounds[6]) const;
 
 	virtual void addReference(Prop* prop);
+
+	virtual void addReference(Prop* prop, bool propSetRenderDataset);
 	
 	virtual void removeReference(Prop* prop);
+
+	virtual void removeReference(Prop* prop, bool propSetRenderDataset);
 	
 	virtual const QList<Prop*>* getReferenceProps() const { return this->referenceProps; }
 
