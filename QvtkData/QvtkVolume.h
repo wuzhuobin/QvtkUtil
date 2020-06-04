@@ -67,7 +67,7 @@ namespace Q {
 			virtual vtkVolume* getVolume() const;
 			virtual void readXML(const QDomElement& xml, QString directoryPath = QString()) override;
 			virtual void writeXML(QDomElement& xml, QString directoryPath = QString()) const override;
-			public Q_SLOTS:
+		public Q_SLOTS:
 			virtual void setDisplayRegion(const double region[6]) override;
 			/**
 			 * @brief	Change the preseting of vtkVolumeProperty
@@ -102,7 +102,7 @@ namespace Q {
 			void setPresetToCBCTDental() { setPreset(CBCT_DENTAL); }
 			void setPresetToCBCTDentalPhanton() { setPreset(CBCT_DENTAL_PHANTOM); }
 			virtual void setShift(double shift);
-			virtual void setRenderDataSet(DataSet* data) override;
+			virtual void setRenderDataSet(DataSet* data = nullptr) override;
 			virtual void setOpacity(double opacity) override;
 		protected:
 			virtual Data* newInstance() const override;
