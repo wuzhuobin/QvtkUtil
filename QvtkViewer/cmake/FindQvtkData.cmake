@@ -1,5 +1,8 @@
-list(
-    APPEND
-    PROJECT_LIBRARY
-    QvtkData
-)
+IF(NOT QVTKDATA_FOUND)
+	list(
+	    APPEND
+	    PROJECT_LIBRARY
+	    QvtkData
+	)
+	SET(QVTKDATA_FOUND TRUE)
+ENDIF()
