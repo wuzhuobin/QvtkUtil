@@ -3,7 +3,6 @@
 #include "QvtkDataSet.h"
 #include "QvtkScene.h"
 
-
 // qt
 #include <QDebug>
 #include <QDomElement>
@@ -112,29 +111,31 @@ void Prop::setRenderDataSet(DataSet* data)
 		return;
 	}
 
-	// remove the old one reference if it is not nullptr
-	if(this->renderDataSet){
-		this->renderDataSet->removeReference(this);
-		// remove connection
+	DataSet* data_ = this->renderDataSet;
+	this->renderDataSet = data;
+
+	// clear connections for old dataset
+	if (data_) {
+		// remove the old one reference if it is not nullptr
+		data_->removeReference(this,false);
+
 		setUserMatrix(nullptr);
-		// a checking for disable disconnect warning 
-		if (this->renderDataSet) {
-			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::originChanged),
-				this, &Prop::setOrigin);
-			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::positionChanged),
-				this, &Prop::setPosition);
-			disconnect(this->renderDataSet, &DataSet::DataSet::opacityChanged,
-				this, &Prop::setOpacity);
-			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::originChanged),
-				this, &Prop::setOrigin);
-			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::orientationChanged),
-				this, &Prop::setOrientation);
-			disconnect(this->renderDataSet, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::scaleChanged),
-				this, &Prop::setScale);
-		}
+
+		// remove connection
+		disconnect(data_, static_cast<void(DataSet::*)(const double*) const>(&DataSet::originChanged),
+			this, &Prop::setOrigin);
+		disconnect(data_, static_cast<void(DataSet::*)(const double*) const>(&DataSet::positionChanged),
+			this, &Prop::setPosition);
+		disconnect(data_, &DataSet::DataSet::opacityChanged,
+			this, &Prop::setOpacity);
+		disconnect(data_, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::originChanged),
+			this, &Prop::setOrigin);
+		disconnect(data_, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::orientationChanged),
+			this, &Prop::setOrientation);
+		disconnect(data_, static_cast<void(DataSet::*)(const double*) const>(&DataSet::DataSet::scaleChanged),
+			this, &Prop::setScale);
 	}
 
-	this->renderDataSet = data;
 	// nullptr for removing, so do nothing
 	if(this->renderDataSet){
 		// normally prop3D is not a nullptr
@@ -144,7 +145,8 @@ void Prop::setRenderDataSet(DataSet* data)
 		}
 
 		// renderData add reference
-		this->renderDataSet->addReference(this);
+		this->renderDataSet->addReference(this, false);
+
 		this->prop3D->SetOrigin(
 			const_cast<const DataSet*>(this->renderDataSet)->getOrigin()[0],
 			const_cast<const DataSet*>(this->renderDataSet)->getOrigin()[1],
@@ -193,7 +195,6 @@ void Prop::setRenderDataSet(DataSet* data)
 		setDisplayRegion(region);
 		propMatrixUpdate();
 	}
-
 }
 
 void Prop::setUserMatrix(vtkMatrix4x4 * matrix)
@@ -326,7 +327,6 @@ void Prop::printSelf() const
 	ss.clear();
 	this->prop3D->Print(ss);
 	qDebug() << "prop3D" << '=' << QString::fromStdString(ss.str());
-
 	qDebug() << "rednerDataSet" << '=' << this->renderDataSet;
 
 }

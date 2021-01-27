@@ -508,34 +508,47 @@ void DataSet::printSelf() const
 
 void DataSet::addReference(Prop* prop)
 {
-	if(!prop){
+	this->addReference(prop, true);
+}
+
+void vtk::DataSet::addReference(Prop * prop, bool propSetRenderDataset = true)
+{
+	if (!prop) {
 		qCritical() << "input is a nullptr";
 		return;
 	}
 
 	// repeatedly add reference and do nothing.
-	if(this->referenceProps->contains(prop)){
+	if (this->referenceProps->contains(prop)) {
 		return;
 	}
 
 	this->referenceProps->append(prop);
-	prop->setRenderDataSet(this);
+
+	if (propSetRenderDataset)
+		prop->setRenderDataSet(this);
 }
 
 void DataSet::removeReference(Prop* prop)
 {
-	if(!prop){
+	this->removeReference(prop,true);
+}
+
+void vtk::DataSet::removeReference(Prop * prop, bool propSetRenderDataset = true)
+{
+	if (!prop) {
 		qCritical() << "input is a nullptr";
 		return;
 	}
 	//qDebug() << prop->getClassName();
 	// repeated remove reference and do nothing.
-	if(!this->referenceProps->contains(prop)){
+	if (!this->referenceProps->contains(prop)) {
 		return;
 	}
 
 	this->referenceProps->removeOne(prop);
-	prop->setRenderDataSet(nullptr);
+	if (propSetRenderDataset)
+		prop->setRenderDataSet(nullptr);
 }
 
 void DataSet::reset()

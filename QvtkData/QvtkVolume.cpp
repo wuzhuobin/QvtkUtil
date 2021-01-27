@@ -6,6 +6,8 @@ void set_volume_property(vtkVolume *&volume, const int & preset, const double & 
 #include <vtkVolume.h>
 #include <vtkSmartVolumeMapper.h>
 #include <vtkNew.h>
+#include <vtkDataSet.h>
+
 // qt
 #include <QDebug>
 // std
@@ -34,7 +36,6 @@ Volume::Volume()
 	volume->SetMapper(this->smartVolumeMapper);
 	this->setProp(volume);
 	setPreset(CT_AAA);
-
 }
 
 Volume::~Volume()
@@ -47,15 +48,11 @@ void Volume::printSelf() const
 	Prop::printSelf();
 
 	std::stringstream ss;
-
-
 	ss.clear();
 	this->smartVolumeMapper->Print(ss);
 	qDebug() << "smartVolumeMapper" << '=' << QString::fromStdString(ss.str());
-
+	qDebug() << "shift" << '=' << this->getShift();
 	ss. clear();
-
-
 }
 
 void Volume::readXML(const QDomElement& xml, QString directoryPath)
@@ -105,15 +102,23 @@ void Volume::setRenderDataSet(DataSet* data)
 	if (data == this->getRenderDataSet()) {
 		return;
 	}
-	if (this->getRenderDataSet()) {
-		this->getVolume()->GetMapper()->SetInputConnection(nullptr);
-	}
+
+	// bug issue: https://gitlab.kitware.com/vtk/vtk/-/issues/17328
+	data->getDataSet()->Modified();
+
+	//if (this->getRenderDataSet()) {
+	//	this->getVolume()->GetMapper()->SetInputConnection(nullptr);
+	//}
+
 	Prop::setRenderDataSet(data);
+
 	if (this->getRenderDataSet()) {
 		if (!data->isClass("Q::vtk::Image")) {
 			qCritical() << "data is not Q::vtk::Image.";
 		}
-		this->getVolume()->GetMapper()->SetInputConnection(data->getOutputPort());
+
+		this->smartVolumeMapper->SetInputData(data->getDataSet());
+		//this->getVolume()->GetMapper()->SetInputData(data->getOutputPort());
 		// Make shift work;
 		this->setShift(this->getShift());
 	}
