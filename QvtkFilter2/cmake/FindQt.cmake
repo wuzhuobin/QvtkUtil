@@ -1,13 +1,36 @@
-# Qt5Core & Qt5Widgets
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-# LIBRARIES
-list(
-    APPEND
-    PROJECT_LIBRARY
-    Qt5::Core
-    Qt5::Widgets
-)
+# Qt5Core 
+IF(NOT QT_QTCORE_FOUND)
+    find_package(Qt5Core REQUIRED)
+    # LIBRARIES
+    list(
+        APPEND
+        PROJECT_LIBRARY
+        Qt5::Core
+    )
+ENDIF()
+
+# Qt5Widgets
+IF(NOT QT_QTWIDGETS_FOUND)
+    find_package(Qt5Widgets REQUIRED)
+    # LIBRARIES
+    list(
+        APPEND
+        PROJECT_LIBRARY
+        Qt5::Widgets
+    )
+ENDIF()
+
+# Qt5Widgets
+IF(NOT QT_QTCONCURRENT_FOUND)
+    find_package(Qt5Concurrent REQUIRED)
+    # LIBRARIES
+    list(
+        APPEND
+        PROJECT_LIBRARY
+        Qt5::Concurrent
+    )
+ENDIF()
+
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
